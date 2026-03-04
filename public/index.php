@@ -22,6 +22,20 @@ echo "Running main entry point public index.php file.";
 // Create router instance
 $router = new Router();
 
+// Add home route
+$router->get('/', function ($request) {
+    $data = [
+        'message' => 'Welcome to Airigo Job Portal API',
+        'version' => '1.0',
+        'endpoints' => [
+            'auth' => '/api/auth/login, /api/auth/register',
+            'jobs' => '/api/jobs',
+            'users' => '/api/users/profile'
+        ]
+    ];
+    return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'application/json'], json_encode($data, JSON_PRETTY_PRINT));
+});
+
 // Add CORS middleware globally
 $router->addGlobalMiddleware(new \App\Core\Http\Middleware\CorsMiddleware());
 
