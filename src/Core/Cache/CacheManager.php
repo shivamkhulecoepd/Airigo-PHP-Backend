@@ -42,9 +42,34 @@ class CacheManager
             $timeout = AppConfig::get('redis.timeout', 2.5);
             
             if ($this->redis->connect($host, $port, $timeout)) {
-                // Set serializer option using constants
-                $this->redis->setOption(1, 1); // OPT_SERIALIZER = 1, SERIALIZER_JSON = 1
-                $this->useRedis = true;
+                try {
+                    // Authenticate with Redis if credentials are provided
+                    $password = AppConfig::get('redis.password');
+                    $username = AppConfig::get('redis.username');
+                    
+                    if ($password) {
+                        if ($username) {
+                            // Use username and password for authentication (Redis 6.0+)
+                            $this->redis->auth([$username, $password]);
+                        } else {
+                            // Use password only for authentication
+                            $this->redis->auth($password);
+                        }
+                    }
+                    
+                    // Select database if specified
+                    $database = AppConfig::get('redis.database');
+                    if ($database !== null) {
+                        $this->redis->select($database);
+                    }
+                    
+                    // Set serializer option using constants
+                    $this->redis->setOption(1, 1); // OPT_SERIALIZER = 1, SERIALIZER_JSON = 1
+                    $this->useRedis = true;
+                } catch (\Exception $e) {
+                    $this->useRedis = false;
+                    error_log('Redis authentication failed: ' . $e->getMessage());
+                }
             }
         } catch (\Exception $e) {
             $this->useRedis = false;
@@ -59,9 +84,14 @@ class CacheManager
     {
         // Try Redis first
         if ($this->useRedis) {
-            $result = $this->redis->get($key);
-            if ($result !== false) {
-                return $result;
+            try {
+                $result = $this->redis->get($key);
+                if ($result !== false) {
+                    return $result;
+                }
+            } catch (\Exception $e) {
+                error_log('Redis get failed: ' . $e->getMessage());
+                // Fallback to memory cache if Redis fails
             }
         }
         
@@ -87,7 +117,12 @@ class CacheManager
         
         // Store in Redis if available
         if ($this->useRedis) {
-            $success = $this->redis->setex($key, $ttl, $data);
+            try {
+                $success = $this->redis->setex($key, $ttl, $data);
+            } catch (\Exception $e) {
+                error_log('Redis set failed: ' . $e->getMessage());
+                $success = false;
+            }
         }
         
         // Store in memory cache
@@ -112,7 +147,12 @@ class CacheManager
         $success = true;
         
         if ($this->useRedis) {
-            $success = $this->redis->del($key) > 0;
+            try {
+                $success = $this->redis->del($key) > 0;
+            } catch (\Exception $e) {
+                error_log('Redis delete failed: ' . $e->getMessage());
+                $success = false;
+            }
         }
         
         unset($this->memoryCache[$key]);
@@ -127,7 +167,12 @@ class CacheManager
         $success = true;
         
         if ($this->useRedis) {
-            $success = $this->redis->flushDB();
+            try {
+                $success = $this->redis->flushDB();
+            } catch (\Exception $e) {
+                error_log('Redis clear failed: ' . $e->getMessage());
+                $success = false;
+            }
         }
         
         $this->memoryCache = [];
@@ -139,8 +184,14 @@ class CacheManager
      */
     public function exists(string $key): bool
     {
-        if ($this->useRedis && $this->redis->exists($key)) {
-            return true;
+        if ($this->useRedis) {
+            try {
+                if ($this->redis->exists($key)) {
+                    return true;
+                }
+            } catch (\Exception $e) {
+                error_log('Redis exists failed: ' . $e->getMessage());
+            }
         }
         
         return isset($this->memoryCache[$key]) && 
@@ -158,6 +209,15 @@ class CacheManager
             'memory_cache_size' => $this->memoryCacheSize,
             'using_redis' => $this->useRedis
         ];
+        
+        if ($this->useRedis) {
+            try {
+                $info = $this->redis->info();
+                $stats['redis_info'] = $info;
+            } catch (\Exception $e) {
+                error_log('Redis info failed: ' . $e->getMessage());
+            }
+        }
         
         return $stats;
     }
