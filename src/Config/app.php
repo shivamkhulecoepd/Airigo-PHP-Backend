@@ -42,10 +42,11 @@ class AppConfig
                 'storage_bucket' => $_ENV['FIREBASE_STORAGE_BUCKET'] ?? 'airigo-jobs.firebasestorage.app',
             ],
             'redis' => [
-                'host' => $_ENV['REDIS_HOST'] ?? 'localhost',
-                'port' => (int) ($_ENV['REDIS_PORT'] ?? 6379),
-                'password' => $_ENV['REDIS_PASSWORD'] ?? null,
-                'database' => (int) ($_ENV['REDIS_DATABASE'] ?? 0),
+                'host' => $_ENV['REDIS_HOST'] ?? 'redis-16020.crce281.ap-south-1-3.ec2.cloud.redislabs.com',
+                'port' => (int) ($_ENV['REDIS_PORT'] ?? 16020),
+                'password' => $_ENV['REDIS_PASSWORD'] ?? 'H7ShCq9UPNRHYrQhkqxztFnvXmabtBN8',
+                "username" => $_ENV["REDIS_USERNAME"] ?? 'default',
+                'database' => (int) ($_ENV['REDIS_DATABASE'] ?? 14052033),
             ]
         ];
 
