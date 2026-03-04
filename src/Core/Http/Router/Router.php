@@ -64,6 +64,24 @@ class Router
         $method = $request->getMethod();
         $path = $request->getUri()->getPath();
         
+        // Normalize path by removing script name if present in path
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        if (!empty($scriptName) && strpos($path, $scriptName) === 0) {
+            $path = substr($path, strlen($scriptName));
+            if (empty($path)) {
+                $path = '/';
+            }
+        }
+        
+        // Also handle case where path includes public directory
+        $publicDir = '/public';
+        if (strpos($path, $publicDir . '/') === 0) {
+            $path = substr($path, strlen($publicDir));
+            if (empty($path)) {
+                $path = '/';
+            }
+        }
+        
         // Generate cache key for route lookup
         $cacheKey = "route_lookup:{$method}:{$path}";
         
