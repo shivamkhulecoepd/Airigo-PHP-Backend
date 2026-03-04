@@ -1,0 +1,1401 @@
+{
+  "info": {
+    "_postman_id": "airigo-job-portal-api-collection",
+    "name": "Airigo Job Portal API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Complete API collection for Airigo Job Portal Backend"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Test@12345\",\n  \"user_type\": \"jobseeker\",\n  \"name\": \"John Doe\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"New York\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register a new user (jobseeker or recruiter)"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User (with Email)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Test@12345\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login with email and password"
+          },
+          "response": []
+        },
+        {
+          "name": "Login User (with Phone)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567890\",\n  \"password\": \"Test@12345\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login with phone number and password"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Logout user and invalidate session"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh-token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "refresh-token"]
+            },
+            "description": "Refresh access token using refresh token"
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "forgot-password"]
+            },
+            "description": "Request password reset"
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password (with Phone)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "forgot-password"]
+            },
+            "description": "Request password reset with phone number"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reset_token\": \"reset_token_here\",\n  \"new_password\": \"NewPassword@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "reset-password"]
+            },
+            "description": "Reset password with reset token"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "profile"]
+            },
+            "description": "Get authenticated user profile"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Panel",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/dashboard/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "dashboard", "stats"]
+            },
+            "description": "Get admin dashboard statistics"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Full Admin Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/dashboard/full-stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "dashboard", "full-stats"]
+            },
+            "description": "Get comprehensive admin statistics"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users"]
+            },
+            "description": "Get all users with filtering and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Jobseekers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobseekers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobseekers"]
+            },
+            "description": "Get all jobseekers with filtering and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Recruiters",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/recruiters",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "recruiters"]
+            },
+            "description": "Get all recruiters with filtering and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs"]
+            },
+            "description": "Get all jobs with filtering and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pending Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/pending",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "pending"]
+            },
+            "description": "Get pending jobs for approval"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Applications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/applications",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "applications"]
+            },
+            "description": "Get all applications with filtering and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Issue Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/issues-reports",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "issues-reports"]
+            },
+            "description": "Get all reported issues with filtering and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approved_by\": {{admin_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "{{job_id}}", "approve"]
+            },
+            "description": "Approve a pending job",
+            "variable": [
+              {
+                "key": "job_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update Job Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "{{job_id}}", "status"]
+            },
+            "description": "Update job active status",
+            "variable": [
+              {
+                "key": "job_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/{{job_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "{{job_id}}"]
+            },
+            "description": "Delete a job",
+            "variable": [
+              {
+                "key": "job_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}", "status"]
+            },
+            "description": "Update user status",
+            "variable": [
+              {
+                "key": "user_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Recruiter",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/recruiters/{{user_id}}/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "recruiters", "{{user_id}}", "approve"]
+            },
+            "description": "Approve a recruiter",
+            "variable": [
+              {
+                "key": "user_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Recruiter",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rejection_reason\": \"Not verified\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/recruiters/{{user_id}}/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "recruiters", "{{user_id}}", "reject"]
+            },
+            "description": "Reject a recruiter",
+            "variable": [
+              {
+                "key": "user_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update Application Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"shortlisted\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/applications/{{application_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "applications", "{{application_id}}", "status"]
+            },
+            "description": "Update application status",
+            "variable": [
+              {
+                "key": "application_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update Issue Report Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\",\n  \"admin_response\": \"We are looking into this issue\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/issues-reports/{{issue_report_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "issues-reports", "{{issue_report_id}}", "status"]
+            },
+            "description": "Update issue report status",
+            "variable": [
+              {
+                "key": "issue_report_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Search All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/search?q=developer&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "developer"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Search across all entities"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            },
+            "description": "Get current user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"Updated Location\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            },
+            "description": "Update current user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/account",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "account"]
+            },
+            "description": "Delete current user account"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Resume",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/upload-resume",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "upload-resume"]
+            },
+            "description": "Upload user resume file"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/upload-profile-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "upload-profile-image"]
+            },
+            "description": "Upload user profile image"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Job Management",
+      "item": [
+        {
+          "name": "Create Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Software Engineer\",\n  \"description\": \"We are looking for a skilled software engineer...\",\n  \"requirements\": \"Bachelor's degree in Computer Science, 3+ years experience...\",\n  \"location\": \"San Francisco, CA\",\n  \"salary_min\": 80000,\n  \"salary_max\": 120000,\n  \"job_type\": \"full-time\",\n  \"category\": \"Technology\",\n  \"experience_level\": \"mid-level\",\n  \"remote_work\": true,\n  \"benefits\": \"Health insurance, PTO, Stock options\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs"]
+            },
+            "description": "Create a new job posting"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs"]
+            },
+            "description": "Get all available jobs"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", ":id"]
+            },
+            "description": "Get job by ID",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Software Engineer\",\n  \"description\": \"We are looking for a senior software engineer...\",\n  \"requirements\": \"Bachelor's degree in Computer Science, 5+ years experience...\",\n  \"location\": \"San Francisco, CA\",\n  \"salary_min\": 100000,\n  \"salary_max\": 150000,\n  \"job_type\": \"full-time\",\n  \"category\": \"Technology\",\n  \"experience_level\": \"senior\",\n  \"remote_work\": true,\n  \"benefits\": \"Health insurance, PTO, Stock options, Bonus\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/jobs/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", ":id"]
+            },
+            "description": "Update job posting",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", ":id"]
+            },
+            "description": "Delete job posting",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Search Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/search?query=engineer&location=San+Francisco&category=Technology&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "search"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "engineer"
+                },
+                {
+                  "key": "location",
+                  "value": "San+Francisco"
+                },
+                {
+                  "key": "category",
+                  "value": "Technology"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Search jobs with filters"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "categories"]
+            },
+            "description": "Get all job categories"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Locations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/locations",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "locations"]
+            },
+            "description": "Get all job locations"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Application Management",
+      "item": [
+        {
+          "name": "Apply for Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": 1,\n  \"cover_letter\": \"I am excited to apply for this position...\",\n  \"expected_salary\": 90000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/applications",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications"]
+            },
+            "description": "Apply for a job"
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Applications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/applications/my",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", "my"]
+            },
+            "description": "Get current user's applications"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Applications for Job",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/applications/job/:jobId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", "job", ":jobId"]
+            },
+            "description": "Get applications for a specific job",
+            "variable": [
+              {
+                "key": "jobId",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update Application Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"accepted\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/applications/:id/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", ":id", "status"]
+            },
+            "description": "Update application status",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Application",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/applications/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", ":id"]
+            },
+            "description": "Delete application",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Panel",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/dashboard/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "dashboard", "stats"]
+            },
+            "description": "Get admin dashboard statistics"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users"]
+            },
+            "description": "Get all users"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Pending Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/pending",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "pending"]
+            },
+            "description": "Get pending jobs for approval"
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approved_by\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/:id/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", ":id", "approve"]
+            },
+            "description": "Approve a pending job",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/:id/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", ":id", "status"]
+            },
+            "description": "Update user status",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Issues/Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/issues-reports",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "issues-reports"]
+            },
+            "description": "Get all reported issues"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Issue/Report Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/issues-reports/:id/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "issues-reports", ":id", "status"]
+            },
+            "description": "Update issue/report status",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "enabled": true
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "jobseeker_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "recruiter_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "job_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "application_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "issue_report_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "admin_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "test_email",
+      "value": "test@example.com",
+      "enabled": true
+    },
+    {
+      "key": "test_phone",
+      "value": "+1234567890",
+      "enabled": true
+    },
+    {
+      "key": "test_password",
+      "value": "Test@12345",
+      "enabled": true
+    },
+    {
+      "key": "test_user_type",
+      "value": "jobseeker",
+      "enabled": true
+    }
+  ],
+  "timestamp": 1709122140000,
+  "_postman_exported_at": "2026-02-28T09:09:00.000Z",
+  "_postman_exported_using": "Postman/10.0.0"
+}

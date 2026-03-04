@@ -1,0 +1,449 @@
+<?php
+
+namespace App\Core\Http\Controllers;
+
+use Psr\Http\Message\ServerRequestInterface;
+use App\Core\Utils\ResponseBuilder;
+use App\Core\Utils\Validator;
+use App\Repositories\JobRepository;
+use App\Repositories\UserRepository;
+
+class JobController extends BaseController
+{
+    private JobRepository $jobRepository;
+    private UserRepository $userRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->jobRepository = new JobRepository();
+        $this->userRepository = new UserRepository();
+    }
+
+    public function create(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        if ($user['user_type'] !== 'recruiter') {
+            return ResponseBuilder::forbidden(['message' => 'Only recruiters can create jobs']);
+        }
+
+        $data = $this->getRequestBody($request);
+
+        // Validate required fields
+        $errors = $this->validateJobData($data);
+        if (!empty($errors)) {
+            return ResponseBuilder::unprocessableEntity([
+                'message' => 'Validation failed',
+                'errors' => $errors
+            ]);
+        }
+
+        try {
+            // Prepare job data
+            $jobData = [
+                'recruiter_user_id' => $user['id'],
+                'company_name' => $data['company_name'],
+                'designation' => $data['designation'],
+                'ctc' => $data['ctc'],
+                'location' => $data['location'],
+                'category' => $data['category'],
+                'description' => $data['description'] ?? null,
+                'requirements' => isset($data['requirements']) ? json_encode($data['requirements']) : json_encode([]),
+                'skills_required' => isset($data['skills_required']) ? json_encode($data['skills_required']) : json_encode([]),
+                'experience_required' => $data['experience_required'] ?? null,
+                'is_active' => $data['is_active'] ?? true,
+                'approval_status' => 'pending', // Jobs need admin approval
+                'is_urgent_hiring' => $data['is_urgent_hiring'] ?? false,
+                'job_type' => $data['job_type'] ?? 'Full-time'
+            ];
+
+            $jobId = $this->jobRepository->create($jobData);
+
+            if (!$jobId) {
+                return ResponseBuilder::serverError([
+                    'message' => 'Failed to create job'
+                ]);
+            }
+
+            // Fetch the created job
+            $job = $this->jobRepository->findById($jobId);
+
+            return ResponseBuilder::created([
+                'message' => 'Job created successfully. Awaiting admin approval.',
+                'job' => $job
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to create job',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getAll(ServerRequestInterface $request)
+    {
+        $page = (int) $this->getQueryParam($request, 'page', 1);
+        $limit = (int) $this->getQueryParam($request, 'limit', 10);
+        $location = $this->getQueryParam($request, 'location');
+        $category = $this->getQueryParam($request, 'category');
+        $jobType = $this->getQueryParam($request, 'job_type');
+        $minCtc = $this->getQueryParam($request, 'min_ctc');
+        $maxCtc = $this->getQueryParam($request, 'max_ctc');
+        $isUrgent = $this->getQueryParam($request, 'is_urgent_hiring');
+
+        $filters = [];
+        if ($location) $filters['location'] = $location;
+        if ($category) $filters['category'] = $category;
+        if ($jobType) $filters['job_type'] = $jobType;
+        if ($minCtc) $filters['min_ctc'] = $minCtc;
+        if ($maxCtc) $filters['max_ctc'] = $maxCtc;
+        if ($isUrgent !== null) $filters['is_urgent_hiring'] = filter_var($isUrgent, FILTER_VALIDATE_BOOLEAN);
+
+        try {
+            $jobs = $this->jobRepository->findApprovedJobs($filters, $limit, ($page - 1) * $limit);
+            $totalCount = $this->jobRepository->count(['approval_status' => 'approved', 'is_active' => true]);
+
+            return ResponseBuilder::ok([
+                'jobs' => $jobs,
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => $totalCount,
+                    'pages' => ceil($totalCount / $limit)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch jobs',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getById(ServerRequestInterface $request)
+    {
+        $jobId = (int) $request->getAttribute('id');
+
+        if ($jobId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid job ID']);
+        }
+
+        try {
+            $job = $this->jobRepository->findById($jobId);
+
+            if (!$job) {
+                return ResponseBuilder::notFound(['message' => 'Job not found']);
+            }
+
+            // Only return approved and active jobs unless the requester is the recruiter
+            $user = $this->getUser($request);
+            $canView = $job['approval_status'] === 'approved' && $job['is_active'] === 1;
+            
+            if (!$canView && (!$user || $user['id'] != $job['recruiter_user_id'])) {
+                return ResponseBuilder::forbidden(['message' => 'Job is not available']);
+            }
+
+            return ResponseBuilder::ok(['job' => $job]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch job',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function update(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        $jobId = (int) $request->getAttribute('id');
+        $data = $this->getRequestBody($request);
+
+        if ($jobId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid job ID']);
+        }
+
+        try {
+            $job = $this->jobRepository->findById($jobId);
+
+            if (!$job) {
+                return ResponseBuilder::notFound(['message' => 'Job not found']);
+            }
+
+            if ($user['id'] != $job['recruiter_user_id']) {
+                return ResponseBuilder::forbidden(['message' => 'You can only update your own jobs']);
+            }
+
+            // Validate updated data
+            $errors = $this->validateJobData($data, false); // Not required for partial updates
+            if (!empty($errors)) {
+                return ResponseBuilder::unprocessableEntity([
+                    'message' => 'Validation failed',
+                    'errors' => $errors
+                ]);
+            }
+
+            // Prepare update data
+            $updateData = [];
+            $fields = [
+                'company_name', 'designation', 'ctc', 'location', 
+                'category', 'description', 'experience_required', 
+                'is_active', 'is_urgent_hiring', 'job_type'
+            ];
+
+            foreach ($fields as $field) {
+                if (isset($data[$field])) {
+                    $updateData[$field] = $data[$field];
+                }
+            }
+
+            // Handle JSON fields separately
+            if (isset($data['requirements'])) {
+                $updateData['requirements'] = json_encode($data['requirements']);
+            }
+            if (isset($data['skills_required'])) {
+                $updateData['skills_required'] = json_encode($data['skills_required']);
+            }
+
+            // Reset approval status if significant changes were made
+            if (isset($data['designation']) || isset($data['company_name']) || 
+                isset($data['ctc']) || isset($data['location']) || isset($data['category'])) {
+                $updateData['approval_status'] = 'pending';
+            }
+
+            $result = $this->jobRepository->update($jobId, $updateData);
+
+            if (!$result) {
+                return ResponseBuilder::serverError([
+                    'message' => 'Failed to update job'
+                ]);
+            }
+
+            // Fetch updated job
+            $updatedJob = $this->jobRepository->findById($jobId);
+
+            $message = 'Job updated successfully';
+            if ($updateData['approval_status'] ?? null === 'pending') {
+                $message .= '. Changes are awaiting admin approval.';
+            }
+
+            return ResponseBuilder::ok([
+                'message' => $message,
+                'job' => $updatedJob
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to update job',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function delete(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        $jobId = (int) $request->getAttribute('id');
+
+        if ($jobId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid job ID']);
+        }
+
+        try {
+            $job = $this->jobRepository->findById($jobId);
+
+            if (!$job) {
+                return ResponseBuilder::notFound(['message' => 'Job not found']);
+            }
+
+            if ($user['id'] != $job['recruiter_user_id']) {
+                return ResponseBuilder::forbidden(['message' => 'You can only delete your own jobs']);
+            }
+
+            $result = $this->jobRepository->delete($jobId);
+
+            if (!$result) {
+                return ResponseBuilder::serverError([
+                    'message' => 'Failed to delete job'
+                ]);
+            }
+
+            return ResponseBuilder::ok([
+                'message' => 'Job deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to delete job',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function search(ServerRequestInterface $request)
+    {
+        $page = (int) $this->getQueryParam($request, 'page', 1);
+        $limit = (int) $this->getQueryParam($request, 'limit', 10);
+        $location = $this->getQueryParam($request, 'location');
+        $category = $this->getQueryParam($request, 'category');
+        $designation = $this->getQueryParam($request, 'designation');
+        $companyName = $this->getQueryParam($request, 'company_name');
+        $jobType = $this->getQueryParam($request, 'job_type');
+        $minCtc = $this->getQueryParam($request, 'min_ctc');
+        $maxCtc = $this->getQueryParam($request, 'max_ctc');
+        $experienceRequired = $this->getQueryParam($request, 'experience_required');
+        $isUrgent = $this->getQueryParam($request, 'is_urgent_hiring');
+
+        $searchParams = [];
+        if ($location) $searchParams['location'] = $location;
+        if ($category) $searchParams['category'] = $category;
+        if ($designation) $searchParams['designation'] = $designation;
+        if ($companyName) $searchParams['company_name'] = $companyName;
+        if ($jobType) $searchParams['job_type'] = $jobType;
+        if ($minCtc) $searchParams['min_ctc'] = $minCtc;
+        if ($maxCtc) $searchParams['max_ctc'] = $maxCtc;
+        if ($experienceRequired) $searchParams['experience_required'] = $experienceRequired;
+        if ($isUrgent !== null) $searchParams['is_urgent_hiring'] = filter_var($isUrgent, FILTER_VALIDATE_BOOLEAN);
+
+        try {
+            $jobs = $this->jobRepository->searchJobs($searchParams, $limit, ($page - 1) * $limit);
+            $totalCount = $this->jobRepository->count(['is_active' => 1, 'approval_status' => 'approved']);
+
+            return ResponseBuilder::ok([
+                'jobs' => $jobs,
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => $totalCount,
+                    'pages' => ceil($totalCount / $limit)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to search jobs',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getCategories(ServerRequestInterface $request)
+    {
+        try {
+            $categories = $this->jobRepository->getTopCategories(50); // Get top 50 categories
+            
+            return ResponseBuilder::ok([
+                'categories' => array_column($categories, 'category')
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch categories',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getLocations(ServerRequestInterface $request)
+    {
+        try {
+            $locations = $this->jobRepository->getTopLocations(50); // Get top 50 locations
+            
+            return ResponseBuilder::ok([
+                'locations' => array_column($locations, 'location')
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch locations',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    private function validateJobData(array $data, bool $required = true): array
+    {
+        $errors = [];
+
+        // Validate required fields
+        if ($required) {
+            if (empty($data['company_name'])) {
+                $errors['company_name'] = 'Company name is required';
+            } elseif (!$this->validator->isValidLength($data['company_name'], 1, 255)) {
+                $errors['company_name'] = 'Company name must be between 1 and 255 characters';
+            }
+
+            if (empty($data['designation'])) {
+                $errors['designation'] = 'Designation is required';
+            } elseif (!$this->validator->isValidLength($data['designation'], 1, 255)) {
+                $errors['designation'] = 'Designation must be between 1 and 255 characters';
+            }
+
+            if (empty($data['ctc'])) {
+                $errors['ctc'] = 'CTC is required';
+            }
+
+            if (empty($data['location'])) {
+                $errors['location'] = 'Location is required';
+            } elseif (!$this->validator->isValidLength($data['location'], 1, 255)) {
+                $errors['location'] = 'Location must be between 1 and 255 characters';
+            }
+
+            if (empty($data['category'])) {
+                $errors['category'] = 'Category is required';
+            } elseif (!$this->validator->isValidLength($data['category'], 1, 100)) {
+                $errors['category'] = 'Category must be between 1 and 100 characters';
+            }
+        } else {
+            // Validate if fields are present
+            if (isset($data['company_name']) && !$this->validator->isValidLength($data['company_name'], 1, 255)) {
+                $errors['company_name'] = 'Company name must be between 1 and 255 characters';
+            }
+
+            if (isset($data['designation']) && !$this->validator->isValidLength($data['designation'], 1, 255)) {
+                $errors['designation'] = 'Designation must be between 1 and 255 characters';
+            }
+
+            if (isset($data['location']) && !$this->validator->isValidLength($data['location'], 1, 255)) {
+                $errors['location'] = 'Location must be between 1 and 255 characters';
+            }
+
+            if (isset($data['category']) && !$this->validator->isValidLength($data['category'], 1, 100)) {
+                $errors['category'] = 'Category must be between 1 and 100 characters';
+            }
+        }
+
+        // Validate optional fields if present
+        if (isset($data['experience_required']) && !$this->validator->isValidLength($data['experience_required'], 1, 50)) {
+            $errors['experience_required'] = 'Experience required must be between 1 and 50 characters';
+        }
+
+        if (isset($data['job_type']) && !$this->validator->isIn($data['job_type'], ['Full-time', 'Part-time', 'Contract', 'Internship'])) {
+            $errors['job_type'] = 'Job type must be Full-time, Part-time, Contract, or Internship';
+        }
+
+        if (isset($data['is_active']) && !$this->validator->isBoolean($data['is_active'])) {
+            $errors['is_active'] = 'Is active must be a boolean value';
+        }
+
+        if (isset($data['is_urgent_hiring']) && !$this->validator->isBoolean($data['is_urgent_hiring'])) {
+            $errors['is_urgent_hiring'] = 'Is urgent hiring must be a boolean value';
+        }
+
+        if (isset($data['requirements']) && !is_array($data['requirements'])) {
+            $errors['requirements'] = 'Requirements must be an array';
+        }
+
+        if (isset($data['skills_required']) && !is_array($data['skills_required'])) {
+            $errors['skills_required'] = 'Skills required must be an array';
+        }
+
+        return $errors;
+    }
+}

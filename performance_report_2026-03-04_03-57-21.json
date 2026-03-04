@@ -1,0 +1,46 @@
+{
+    "timestamp": "2026-03-04 03:57:21",
+    "results": {
+        "GET \/api\/jobs": {
+            "average_time_ms": 35.29,
+            "min_time_ms": 15.06,
+            "max_time_ms": 55.65,
+            "std_deviation": 13.91,
+            "average_memory_kb": 4096,
+            "iterations": 10,
+            "success_rate": "100%"
+        },
+        "GET \/api\/jobs\/categories": {
+            "average_time_ms": 34.92,
+            "min_time_ms": 15.14,
+            "max_time_ms": 47.78,
+            "std_deviation": 10.59,
+            "average_memory_kb": 4096,
+            "iterations": 20,
+            "success_rate": "100%"
+        },
+        "GET \/api\/jobs\/locations": {
+            "average_time_ms": 33.28,
+            "min_time_ms": 15.12,
+            "max_time_ms": 48.43,
+            "std_deviation": 12.04,
+            "average_memory_kb": 4096,
+            "iterations": 20,
+            "success_rate": "100%"
+        },
+        "GET \/api\/jobs\/search": {
+            "average_time_ms": 36.67,
+            "min_time_ms": 15,
+            "max_time_ms": 63.29,
+            "std_deviation": 13.77,
+            "average_memory_kb": 4096,
+            "iterations": 15,
+            "success_rate": "100%"
+        }
+    },
+    "system_info": {
+        "php_version": "8.2.12",
+        "opcache_enabled": false,
+        "memory_limit": "512M"
+    }
+}
