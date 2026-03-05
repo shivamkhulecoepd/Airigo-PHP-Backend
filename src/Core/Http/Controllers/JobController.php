@@ -7,17 +7,20 @@ use App\Core\Utils\ResponseBuilder;
 use App\Core\Utils\Validator;
 use App\Repositories\JobRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\WishlistRepository;
 
 class JobController extends BaseController
 {
     private JobRepository $jobRepository;
     private UserRepository $userRepository;
+    private WishlistRepository $wishlistRepository;
 
     public function __construct()
     {
         parent::__construct();
         $this->jobRepository = new JobRepository();
         $this->userRepository = new UserRepository();
+        $this->wishlistRepository = new WishlistRepository();
     }
 
     public function create(ServerRequestInterface $request)
@@ -107,6 +110,23 @@ class JobController extends BaseController
             $jobs = $this->jobRepository->findApprovedJobs($filters, $limit, ($page - 1) * $limit);
             $totalCount = $this->jobRepository->count(['approval_status' => 'approved', 'is_active' => true]);
 
+            // Add wishlist status for authenticated users
+            $user = $this->getUser($request);
+            if ($user) {
+                $userId = $user['id'];
+                $wishlistJobIds = $this->wishlistRepository->getWishlistJobIds($userId);
+                
+                // Enhance jobs with wishlist status
+                foreach ($jobs as &$job) {
+                    $job['is_in_wishlist'] = in_array($job['id'], $wishlistJobIds);
+                }
+            } else {
+                // Add wishlist status as false for unauthenticated users
+                foreach ($jobs as &$job) {
+                    $job['is_in_wishlist'] = false;
+                }
+            }
+
             return ResponseBuilder::ok([
                 'jobs' => $jobs,
                 'pagination' => [
@@ -145,6 +165,14 @@ class JobController extends BaseController
             
             if (!$canView && (!$user || $user['id'] != $job['recruiter_user_id'])) {
                 return ResponseBuilder::forbidden(['message' => 'Job is not available']);
+            }
+
+            // Add wishlist status
+            if ($user) {
+                $isInWishlist = $this->wishlistRepository->isInWishlist($user['id'], $jobId);
+                $job['is_in_wishlist'] = $isInWishlist;
+            } else {
+                $job['is_in_wishlist'] = false;
             }
 
             return ResponseBuilder::ok(['job' => $job]);
@@ -229,6 +257,14 @@ class JobController extends BaseController
             // Fetch updated job
             $updatedJob = $this->jobRepository->findById($jobId);
 
+            // Add wishlist status
+            if ($user) {
+                $isInWishlist = $this->wishlistRepository->isInWishlist($user['id'], $jobId);
+                $updatedJob['is_in_wishlist'] = $isInWishlist;
+            } else {
+                $updatedJob['is_in_wishlist'] = false;
+            }
+
             $message = 'Job updated successfully';
             if ($updateData['approval_status'] ?? null === 'pending') {
                 $message .= '. Changes are awaiting admin approval.';
@@ -269,6 +305,9 @@ class JobController extends BaseController
             if ($user['id'] != $job['recruiter_user_id']) {
                 return ResponseBuilder::forbidden(['message' => 'You can only delete your own jobs']);
             }
+
+            // Remove from wishlist when job is deleted
+            $this->wishlistRepository->removeByJobId($jobId);
 
             $result = $this->jobRepository->delete($jobId);
 
@@ -317,6 +356,23 @@ class JobController extends BaseController
         try {
             $jobs = $this->jobRepository->searchJobs($searchParams, $limit, ($page - 1) * $limit);
             $totalCount = $this->jobRepository->count(['is_active' => 1, 'approval_status' => 'approved']);
+
+            // Add wishlist status for authenticated users
+            $user = $this->getUser($request);
+            if ($user) {
+                $userId = $user['id'];
+                $wishlistJobIds = $this->wishlistRepository->getWishlistJobIds($userId);
+                
+                // Enhance jobs with wishlist status
+                foreach ($jobs as &$job) {
+                    $job['is_in_wishlist'] = in_array($job['id'], $wishlistJobIds);
+                }
+            } else {
+                // Add wishlist status as false for unauthenticated users
+                foreach ($jobs as &$job) {
+                    $job['is_in_wishlist'] = false;
+                }
+            }
 
             return ResponseBuilder::ok([
                 'jobs' => $jobs,

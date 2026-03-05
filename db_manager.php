@@ -87,7 +87,7 @@ class DatabaseManager
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 email VARCHAR(255) UNIQUE NOT NULL,
                 password_hash VARCHAR(255) NOT NULL,
-                user_type ENUM('jobseeker', 'recruiter') NOT NULL,
+                user_type ENUM('jobseeker', 'recruiter', 'admin') NOT NULL,
                 phone VARCHAR(20),
                 status ENUM('active', 'inactive', 'suspended') DEFAULT 'active',
                 email_verified BOOLEAN DEFAULT FALSE,
@@ -188,7 +188,7 @@ class DatabaseManager
             'issues_reports' => "CREATE TABLE IF NOT EXISTS issues_reports (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 user_id BIGINT UNSIGNED NOT NULL,
-                user_type ENUM('jobseeker', 'recruiter') NOT NULL,
+                user_type ENUM('jobseeker', 'recruiter', 'admin') NOT NULL,
                 type ENUM('issue', 'report') NOT NULL,
                 title VARCHAR(255) NOT NULL,
                 description TEXT NOT NULL,
@@ -202,6 +202,19 @@ class DatabaseManager
                 INDEX idx_status (status),
                 INDEX idx_created_at (created_at DESC),
                 INDEX idx_title (title)
+            ) ENGINE=InnoDB",
+
+            'wishlist_items' => "CREATE TABLE IF NOT EXISTS wishlist_items (
+                id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT UNSIGNED NOT NULL,
+                job_id BIGINT UNSIGNED NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+                UNIQUE KEY unique_user_job (user_id, job_id),
+                INDEX idx_user_id (user_id),
+                INDEX idx_job_id (job_id),
+                INDEX idx_created_at (created_at DESC)
             ) ENGINE=InnoDB"
         ];
     }

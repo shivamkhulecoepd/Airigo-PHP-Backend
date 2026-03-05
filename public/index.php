@@ -11,11 +11,14 @@ use App\Core\Http\Controllers\JobController;
 use App\Core\Http\Controllers\ApplicationController;
 use App\Core\Http\Controllers\AdminController;
 use App\Core\Http\Controllers\IssueReportController;
+use App\Core\Http\Controllers\WishlistController;
 use App\Core\Utils\ResponseBuilder;
 use GuzzleHttp\Psr7\ServerRequest;
 
 // Bootstrap the application
 require_once __DIR__ . '/../src/bootstrap.php';
+
+echo "Running main entry point public index.php file.\n";
 
 // Create router instance
 $router = new Router();
@@ -28,7 +31,8 @@ $router->get('/', function ($request) {
         'endpoints' => [
             'auth' => '/api/auth/login, /api/auth/register',
             'jobs' => '/api/jobs',
-            'users' => '/api/users/profile'
+            'users' => '/api/users/profile',
+            'wishlist' => '/api/wishlist'
         ]
     ];
     return new \GuzzleHttp\Psr7\Response(200, ['Content-Type' => 'application/json'], json_encode($data, JSON_PRETTY_PRINT));
@@ -70,6 +74,14 @@ $router->get('/api/applications/my', [ApplicationController::class, 'getMyApplic
 $router->get('/api/applications/job/{jobId}', [ApplicationController::class, 'getApplicationsForJob'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 $router->put('/api/applications/{id}/status', [ApplicationController::class, 'updateStatus'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 $router->delete('/api/applications/{id}', [ApplicationController::class, 'delete'])->addMiddleware(new AuthMiddleware());
+
+// Wishlist routes
+$router->post('/api/wishlist', [WishlistController::class, 'addToWishlist'])->addMiddleware(new AuthMiddleware());
+$router->delete('/api/wishlist', [WishlistController::class, 'removeFromWishlist'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/wishlist', [WishlistController::class, 'getUserWishlist'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/wishlist/check/{jobId}', [WishlistController::class, 'isJobInWishlist'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/wishlist/ids', [WishlistController::class, 'getUserWishlistIds'])->addMiddleware(new AuthMiddleware());
+$router->post('/api/wishlist/toggle', [WishlistController::class, 'toggleWishlist'])->addMiddleware(new AuthMiddleware());
 
 // Admin panel routes
 $router->get('/api/admin/dashboard/stats', [AdminController::class, 'getStats'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));

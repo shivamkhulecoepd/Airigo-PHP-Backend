@@ -8,6 +8,7 @@ use App\Core\Utils\Validator;
 use App\Repositories\UserRepository;
 use App\Repositories\JobseekerRepository;
 use App\Repositories\RecruiterRepository;
+use App\Repositories\WishlistRepository;
 use Firebase\FirebaseStorageService;
 
 class UserController extends BaseController
@@ -15,6 +16,7 @@ class UserController extends BaseController
     private UserRepository $userRepository;
     private JobseekerRepository $jobseekerRepository;
     private RecruiterRepository $recruiterRepository;
+    private WishlistRepository $wishlistRepository;
     private FirebaseStorageService $firebaseStorage;
 
     public function __construct()
@@ -23,6 +25,7 @@ class UserController extends BaseController
         $this->userRepository = new UserRepository();
         $this->jobseekerRepository = new JobseekerRepository();
         $this->recruiterRepository = new RecruiterRepository();
+        $this->wishlistRepository = new WishlistRepository();
         $this->firebaseStorage = new FirebaseStorageService();
     }
 
@@ -40,9 +43,15 @@ class UserController extends BaseController
             $profile = $this->recruiterRepository->findByUserId($user['id']);
         }
 
+        // Get wishlist count
+        $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
+
         return ResponseBuilder::ok([
             'user' => $user,
-            'profile' => $profile
+            'profile' => $profile,
+            'wishlist_info' => [
+                'count' => $wishlistCount
+            ]
         ]);
     }
 
@@ -93,10 +102,16 @@ class UserController extends BaseController
                 $this->jobseekerRepository->findByUserId($user['id']) : 
                 $this->recruiterRepository->findByUserId($user['id']);
 
+            // Get updated wishlist count
+            $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
+
             return ResponseBuilder::ok([
                 'message' => 'Profile updated successfully',
                 'user' => $updatedUser,
-                'profile' => $updatedProfile
+                'profile' => $updatedProfile,
+                'wishlist_info' => [
+                    'count' => $wishlistCount
+                ]
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
@@ -114,6 +129,9 @@ class UserController extends BaseController
         }
 
         try {
+            // Remove user's wishlist items
+            $this->wishlistRepository->removeByUserId($user['id']);
+
             // Delete profile first based on user type
             if ($user['user_type'] === 'jobseeker') {
                 $this->jobseekerRepository->delete($user['id']);
@@ -192,10 +210,16 @@ class UserController extends BaseController
             // Clean up temp file
             unlink($tempPath);
 
+            // Get updated wishlist count
+            $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
+
             return ResponseBuilder::ok([
                 'message' => 'Resume uploaded successfully',
                 'resume_url' => $fileUrl,
-                'filename' => $resumeFile->getClientFilename()
+                'filename' => $resumeFile->getClientFilename(),
+                'wishlist_info' => [
+                    'count' => $wishlistCount
+                ]
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
@@ -263,10 +287,16 @@ class UserController extends BaseController
             // Clean up temp file
             unlink($tempPath);
 
+            // Get updated wishlist count
+            $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
+
             return ResponseBuilder::ok([
                 'message' => 'Profile image uploaded successfully',
                 'image_url' => $fileUrl,
-                'filename' => $imageFile->getClientFilename()
+                'filename' => $imageFile->getClientFilename(),
+                'wishlist_info' => [
+                    'count' => $wishlistCount
+                ]
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
@@ -332,10 +362,16 @@ class UserController extends BaseController
             // Clean up temp file
             unlink($tempPath);
 
+            // Get updated wishlist count
+            $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
+
             return ResponseBuilder::ok([
                 'message' => 'ID card uploaded successfully',
                 'id_card_url' => $fileUrl,
-                'filename' => $idCardFile->getClientFilename()
+                'filename' => $idCardFile->getClientFilename(),
+                'wishlist_info' => [
+                    'count' => $wishlistCount
+                ]
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([

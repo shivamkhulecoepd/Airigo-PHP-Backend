@@ -1174,6 +1174,157 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Wishlist Management",
+      "item": [
+        {
+          "name": "Add Job to Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": {{job_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/wishlist",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist"]
+            },
+            "description": "Add a job to user's wishlist"
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Job from Wishlist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist?jobId={{job_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist"],
+              "query": [
+                {
+                  "key": "jobId",
+                  "value": "{{job_id}}"
+                }
+              ]
+            },
+            "description": "Remove a job from user's wishlist"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get user's wishlist with pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Job in Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist/check/{{job_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist", "check", "{{job_id}}"]
+            },
+            "description": "Check if a job is in user's wishlist"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Wishlist IDs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist/ids",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist", "ids"]
+            },
+            "description": "Get all job IDs in user's wishlist"
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Job in Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": {{job_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/wishlist/toggle",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist", "toggle"]
+            },
+            "description": "Toggle a job in user's wishlist (add if not exists, remove if exists)"
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
