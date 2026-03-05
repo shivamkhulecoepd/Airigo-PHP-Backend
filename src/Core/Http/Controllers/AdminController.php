@@ -210,6 +210,57 @@ class AdminController extends BaseController
         }
     }
 
+    public function rejectJob(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        if ($user['user_type'] !== 'admin') {
+            return ResponseBuilder::forbidden(['message' => 'Access denied. Admin privileges required.']);
+        }
+
+        $jobId = (int) $request->getAttribute('id');
+
+        if ($jobId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid job ID']);
+        }
+
+        try {
+            $job = $this->jobRepository->findById($jobId);
+
+            if (!$job) {
+                return ResponseBuilder::notFound(['message' => 'Job not found']);
+            }
+
+            if ($job['approval_status'] === 'rejected') {
+                return ResponseBuilder::badRequest(['message' => 'Job is already rejected']);
+            }
+
+            $result = $this->jobRepository->update($jobId, [
+                'approval_status' => 'rejected'
+            ]);
+
+            if (!$result) {
+                return ResponseBuilder::serverError(['message' => 'Failed to reject job']);
+            }
+
+            // Fetch updated job
+            $updatedJob = $this->jobRepository->findById($jobId);
+
+            return ResponseBuilder::ok([
+                'message' => 'Job rejected successfully',
+                'job' => $updatedJob
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to reject job',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function updateUserStatus(ServerRequestInterface $request)
     {
         $user = $this->getUser($request);

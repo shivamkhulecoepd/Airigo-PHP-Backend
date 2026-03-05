@@ -84,6 +84,7 @@ $router->get('/api/admin/issues-reports', [AdminController::class, 'getIssueRepo
 
 // Admin update routes
 $router->put('/api/admin/jobs/{id}/approve', [AdminController::class, 'approveJob'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->put('/api/admin/jobs/{id}/reject', [AdminController::class, 'rejectJob'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->put('/api/admin/jobs/{id}/status', [AdminController::class, 'updateJobStatus'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->delete('/api/admin/jobs/{id}', [AdminController::class, 'deleteJob'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->put('/api/admin/users/{id}/status', [AdminController::class, 'updateUserStatus'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));

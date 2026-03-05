@@ -422,6 +422,39 @@
           "response": []
         },
         {
+          "name": "Reject Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approved_by\": {{admin_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "{{job_id}}", "reject"]
+            },
+            "description": "Reject a pending job",
+            "variable": [
+              {
+                "key": "job_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
           "name": "Update Job Status",
           "request": {
             "method": "PUT",
@@ -1141,192 +1174,17 @@
           "response": []
         }
       ]
-    },
-    {
-      "name": "Admin Panel",
-      "item": [
-        {
-          "name": "Get Dashboard Stats",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/admin/dashboard/stats",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "dashboard", "stats"]
-            },
-            "description": "Get admin dashboard statistics"
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Users",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/admin/users",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "users"]
-            },
-            "description": "Get all users"
-          },
-          "response": []
-        },
-        {
-          "name": "Get Pending Jobs",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/admin/jobs/pending",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobs", "pending"]
-            },
-            "description": "Get pending jobs for approval"
-          },
-          "response": []
-        },
-        {
-          "name": "Approve Job",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"approved_by\": 1\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/admin/jobs/:id/approve",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobs", ":id", "approve"]
-            },
-            "description": "Approve a pending job",
-            "variable": [
-              {
-                "key": "id",
-                "value": "1"
-              }
-            ]
-          },
-          "response": []
-        },
-        {
-          "name": "Update User Status",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"active\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/admin/users/:id/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "users", ":id", "status"]
-            },
-            "description": "Update user status",
-            "variable": [
-              {
-                "key": "id",
-                "value": "1"
-              }
-            ]
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Issues/Reports",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/admin/issues-reports",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "issues-reports"]
-            },
-            "description": "Get all reported issues"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Issue/Report Status",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"resolved\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/admin/issues-reports/:id/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "issues-reports", ":id", "status"]
-            },
-            "description": "Update issue/report status",
-            "variable": [
-              {
-                "key": "id",
-                "value": "1"
-              }
-            ]
-          },
-          "response": []
-        }
-      ]
     }
   ],
   "variable": [
     {
       "key": "base_url",
       "value": "http://localhost:8000",
+      "enabled": true
+    },
+    {
+      "key": "api_url",
+      "value": "https://app.airigojobs.com/public",
       "enabled": true
     },
     {

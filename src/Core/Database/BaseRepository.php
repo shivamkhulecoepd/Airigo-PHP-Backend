@@ -35,7 +35,7 @@ abstract class BaseRepository implements RepositoryInterface
         return self::$instances[$class];
     }
 
-    public function findById(int $id, bool $useCache = true)
+    public function findById(int $id, bool $useCache = false)
     {
         if ($useCache) {
             $cacheKey = "{$this->table}:{$this->primaryKey}:{$id}";

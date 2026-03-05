@@ -11,7 +11,7 @@ class Connection
     private static ?PDO $instance = null;
     private static array $preparedStatements = [];
     private static array $connectionPool = [];
-    private static int $maxPoolSize = 10;
+    private static int $maxPoolSize = 100;
     private static int $currentPoolIndex = 0;
 
     /**
@@ -22,7 +22,7 @@ class Connection
         if (self::$instance === null) {
             self::connect();
         }
-        
+
         return self::$instance;
     }
 
@@ -32,18 +32,18 @@ class Connection
     public static function getPooledConnection(): PDO
     {
         $poolSize = count(self::$connectionPool);
-        
+
         if ($poolSize < self::$maxPoolSize) {
             // Create new connection in pool
             $connection = self::createPooledConnection();
             self::$connectionPool[] = $connection;
             return $connection;
         }
-        
+
         // Round-robin connection selection
         $connection = self::$connectionPool[self::$currentPoolIndex];
         self::$currentPoolIndex = (self::$currentPoolIndex + 1) % self::$maxPoolSize;
-        
+
         return $connection;
     }
 
@@ -87,7 +87,7 @@ class Connection
             $connection = self::getInstance();
             self::$preparedStatements[$query] = $connection->prepare($query);
         }
-        
+
         return self::$preparedStatements[$query];
     }
 
@@ -133,9 +133,7 @@ class Connection
     /**
      * Prevent cloning of connection
      */
-    private function __clone()
-    {
-    }
+    private function __clone() {}
 
     /**
      * Prevent wakeup of connection
