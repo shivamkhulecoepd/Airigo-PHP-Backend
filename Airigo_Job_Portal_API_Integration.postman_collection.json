@@ -21,7 +21,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"shivam@gmail.com\",\n  \"password\": \"shivam123\",\n  \"user_type\": \"jobseeker\",\n  \"name\": \"Shivam Khule\",\n  \"phone\": \"+91 9045893012\",\n  \"location\": \"Pune, India\"\n}"
+              "raw": "{\n  \"email\": \"shivam@gmail.com\",\n  \"password\": \"shivam123\",\n  \"user_type\": \"jobseeker\",\n  \"name\": \"Shivam Khule\",\n  \"phone\": \"+91 9045893012\",\n  \"location\": \"Pune, India\",\n  \"qualification\": \"B.E. Computer Science\",\n  \"experience\": 2,\n  \"skills\": [\"PHP\", \"JavaScript\", \"MySQL\"]\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
@@ -1209,7 +1209,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"Updated Location\"\n}"
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"Updated Location\",\n  \"qualification\": \"B.E. Computer Science\",\n  \"experience\": 3,\n  \"skills\": [\"PHP\", \"JavaScript\", \"MySQL\"],\n  \"bio\": \"Experienced developer with expertise in web technologies\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/users/profile",
@@ -1403,7 +1403,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Software Engineer\",\n  \"description\": \"We are looking for a skilled software engineer to join our backend team.\",\n  \"requirements\": \"Bachelor's degree in Computer Science, Strong problem-solving skills, Good communication\",\n  \"location\": \"Bangalore, India\",\n  \"salary_min\": 1200000,\n  \"salary_max\": 1200000,\n  \"job_type\": \"Full-time\",\n  \"category\": \"IT\",\n  \"experience_level\": \"mid-level\",\n  \"remote_work\": false,\n  \"benefits\": \"Health insurance, Paid leave, Flexible working hours\"\n}"
+              "raw": "{\n  \"company_name\": \"TechNova Solutions\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer to join our backend team.\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"Strong problem-solving skills\", \"Good communication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs",
@@ -1591,7 +1591,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Senior Software Engineer\",\n  \"description\": \"We are looking for a senior software engineer...\",\n  \"requirements\": \"Bachelor's degree in Computer Science, 5+ years experience...\",\n  \"location\": \"San Francisco, CA\",\n  \"salary_min\": 100000,\n  \"salary_max\": 150000,\n  \"job_type\": \"full-time\",\n  \"category\": \"Technology\",\n  \"experience_level\": \"senior\",\n  \"remote_work\": true,\n  \"benefits\": \"Health insurance, PTO, Stock options, Bonus\"\n}"
+              "raw": "{\n  \"company_name\": \"Global FinTech Ltd\",\n  \"designation\": \"Senior Frontend Developer\",\n  \"ctc\": \"15-20 LPA\",\n  \"location\": \"Remote\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior frontend engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"React\", \"JavaScript\", \"CSS\", \"HTML\", \"Team Management\"],\n  \"experience_required\": \"5\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
@@ -1761,7 +1761,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"job_id\": 1,\n  \"cover_letter\": \"I am excited to apply for this position...\",\n  \"expected_salary\": 90000\n}"
+              "raw": "{\n  \"job_id\": 1,\n  \"cover_letter\": \"I am excited to apply for this position...\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/applications",
