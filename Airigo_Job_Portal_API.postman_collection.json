@@ -182,7 +182,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"reset_token\": \"reset_token_here\",\n  \"new_password\": \"NewPassword@123\"\n}"
+              "raw": "{\n  \"reset_token\": \"{{reset_token}}\",\n  \"new_password\": \"NewPassword@123\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/reset-password",
@@ -1410,6 +1410,11 @@
     {
       "key": "admin_id",
       "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "reset_token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImp0aSI6IjEyMzQ1Njc4OTAiLCJpYXQiOjE3MDkxMjIxNDAsImV4cCI6MTcwOTIwODU0MH0.example_token_for_testing",
       "enabled": true
     },
     {

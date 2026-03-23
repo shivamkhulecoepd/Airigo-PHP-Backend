@@ -1,0 +1,2262 @@
+{
+  "info": {
+    "_postman_id": "airigo-job-portal-api-collection",
+    "name": "Airigo Job Portal API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Complete API collection for Airigo Job Portal Backend"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"shivam@gmail.com\",\n  \"password\": \"shivam123\",\n  \"user_type\": \"jobseeker\",\n  \"name\": \"Shivam Khule\",\n  \"phone\": \"+91 9045893012\",\n  \"location\": \"Pune, India\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Register a new user (jobseeker or recruiter)"
+          },
+          "response": [
+            {
+              "message": "Registration successful",
+              "user": {
+                "id": 1,
+                "email": "shivam@gmail.com",
+                "user_type": "jobseeker",
+                "status": "active"
+              },
+              "tokens": {
+                "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzQyNDU1MTQsImV4cCI6MTc3NDMzMTkxNCwiZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJzaGl2YW1AZ21haWwuY29tIiwidXNlcl90eXBlIjoiam9ic2Vla2VyIn19.YC0mZd0W6SvqmJ15tDgwvZQqw7CoxmP8TvqQQr_5eQU",
+                "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzQyNDU1MTQsImV4cCI6MTc3NDg1MDMxNCwiZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJzaGl2YW1AZ21haWwuY29tIiwidXNlcl90eXBlIjoiam9ic2Vla2VyIn19.1RrgadZT8nfAh5UwEGsFxkSkN1Vgydv-67chIcdUGIY",
+                "token_type": "Bearer",
+                "expires_in": 86400
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login User (with Email)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"shivam@gmail.com\",\n  \"password\": \"shivam123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login with email and password"
+          },
+          "response": [
+            {
+              "message": "Login successful",
+              "user": {
+                "id": 1,
+                "email": "shivam@gmail.com",
+                "user_type": "jobseeker",
+                "status": "active"
+              },
+              "tokens": {
+                "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzQyNDYwODMsImV4cCI6MTc3NDMzMjQ4MywiZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJzaGl2YW1AZ21haWwuY29tIiwidXNlcl90eXBlIjoiam9ic2Vla2VyIn19.NebEVNj_PAxzREVFszSkYdOPCj_DzrnKA2D8YHJIISk",
+                "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzQyNDYwODMsImV4cCI6MTc3NDg1MDg4MywiZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJzaGl2YW1AZ21haWwuY29tIiwidXNlcl90eXBlIjoiam9ic2Vla2VyIn19.A71Ww2Ma3VSw9YhsIa-E6dzStpfpXg6JFVNKRctpOC8",
+                "token_type": "Bearer",
+                "expires_in": 86400
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login User (with Phone)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+91 9045893012\",\n  \"password\": \"shivam123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Login with phone number and password"
+          },
+          "response": [
+            {
+              "message": "Login successful",
+              "user": {
+                "id": 1,
+                "email": "shivam@gmail.com",
+                "user_type": "jobseeker",
+                "status": "active"
+              },
+              "tokens": {
+                "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzQyNDYxMTUsImV4cCI6MTc3NDMzMjUxNSwiZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJzaGl2YW1AZ21haWwuY29tIiwidXNlcl90eXBlIjoiam9ic2Vla2VyIn19.pk0NSJeBcVtIcayujRBEgNs4khrmZOACHFePK2_patk",
+                "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzQyNDYxMTUsImV4cCI6MTc3NDg1MDkxNSwiZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJzaGl2YW1AZ21haWwuY29tIiwidXNlcl90eXBlIjoiam9ic2Vla2VyIn19.nsZWG_LSw3l53GEl6xq3iCsWxMoq3V6YgKFKoLlOgCg",
+                "token_type": "Bearer",
+                "expires_in": 86400
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Logout user and invalidate session"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzQyNDYwODMsImV4cCI6MTc3NDg1MDg4MywiZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJzaGl2YW1AZ21haWwuY29tIiwidXNlcl90eXBlIjoiam9ic2Vla2VyIn19.A71Ww2Ma3VSw9YhsIa-E6dzStpfpXg6JFVNKRctpOC8}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/refresh-token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "refresh-token"]
+            },
+            "description": "Refresh access token using refresh token"
+          },
+          "response": [
+            {
+              "message": "Token refreshed successfully",
+              "tokens": {
+                "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NzQyNDYyMDMsImV4cCI6MTc3NDMzMjYwMywiZGF0YSI6eyJpZCI6MSwiZW1haWwiOiJzaGl2YW1AZ21haWwuY29tIiwidXNlcl90eXBlIjoiam9ic2Vla2VyIn19.6zRg8Q6-9_L0sAgC-sT97Zw1WCESUUBCOh3A1ljIusg",
+                "token_type": "Bearer",
+                "expires_in": 86400
+              }
+            }
+          ]
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "forgot-password"]
+            },
+            "description": "Request password reset"
+          },
+          "response": [
+            {
+              "message": "Password reset instructions sent successfully"
+            }
+          ]
+        },
+        {
+          "name": "Forgot Password (with Phone)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "forgot-password"]
+            },
+            "description": "Request password reset with phone number"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reset_token\": \"reset_token_here\",\n  \"new_password\": \"NewPassword@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "reset-password"]
+            },
+            "description": "Reset password with reset token"
+          },
+          "response": [
+            {
+              "message": "Password reset successfully"
+            }
+          ]
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "profile"]
+            },
+            "description": "Get authenticated user profile"
+          },
+          "response": [
+            {
+              "user": {
+                "id": 2,
+                "email": "shivam.coepd@gmail.com",
+                "user_type": "jobseeker",
+                "phone": "+91 9045893010",
+                "status": "active",
+                "email_verified": 0,
+                "created_at": "2026-03-23 06:24:42",
+                "updated_at": "2026-03-23 06:24:42"
+              },
+              "profile": {
+                "user_id": 2,
+                "name": "Shivam COEPD",
+                "qualification": "Bacholer's of Engineering",
+                "experience": 2,
+                "location": "Kothrund, Pune",
+                "date_of_birth": "1995-06-15",
+                "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                "resume_filename": "contact_us.pdf",
+                "profile_image_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media",
+                "skills": "[\"JavaScript\",\"Node.js\",\"React\",\"MySQL\"]",
+                "bio": "Full-stack developer with 5 years of experience building web applications.",
+                "created_at": "2026-03-23 06:24:42",
+                "updated_at": "2026-03-23 07:34:50"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin Panel",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/dashboard/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "dashboard", "stats"]
+            },
+            "description": "Get admin dashboard statistics"
+          },
+          "response": [
+            {
+              "stats": {
+                "users": {
+                  "total_users": 3,
+                  "total_jobseekers": 1,
+                  "total_recruiters": 1,
+                  "active_users": 3,
+                  "inactive_users": 0,
+                  "suspended_users": 0
+                },
+                "jobs": {
+                  "total_jobs": 3,
+                  "active_jobs": 3,
+                  "approved_jobs": 0,
+                  "pending_jobs": 3,
+                  "rejected_jobs": 0,
+                  "urgent_jobs": 3
+                },
+                "recruiters": {
+                  "total_recruiters": 1,
+                  "approved_recruiters": 0,
+                  "pending_recruiters": 1,
+                  "rejected_recruiters": 0,
+                  "unique_companies": 1,
+                  "unique_locations": 1
+                },
+                "applications": {
+                  "total_applications": 0,
+                  "pending": 0,
+                  "shortlisted": 0,
+                  "rejected": 0,
+                  "accepted": 0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Full Admin Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/dashboard/full-stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "dashboard", "full-stats"]
+            },
+            "description": "Get comprehensive admin statistics"
+          },
+          "response": [
+            {
+              "stats": {
+                "users": {
+                  "total": 3,
+                  "active": 3,
+                  "inactive": 0,
+                  "suspended": 0,
+                  "jobseekers": 1,
+                  "recruiters": 1
+                },
+                "jobs": {
+                  "total": 3,
+                  "active": 3,
+                  "inactive": 0,
+                  "pending_approval": 3,
+                  "approved": 0,
+                  "rejected": 0
+                },
+                "applications": {
+                  "total": 0,
+                  "pending": 0,
+                  "shortlisted": 0,
+                  "accepted": 0,
+                  "rejected": 0
+                },
+                "recruiters": {
+                  "total": 1,
+                  "pending_approval": 1,
+                  "approved": 0,
+                  "rejected": 0
+                },
+                "issues_reports": {
+                  "total": 0,
+                  "pending": 0,
+                  "in_progress": 0,
+                  "resolved": 0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users"]
+            },
+            "description": "Get all users with filtering and pagination"
+          },
+          "response": [
+            {
+              "data": [
+                {
+                  "id": 4,
+                  "email": "priya@gmail.com",
+                  "password_hash": "$2y$10$BrotO36bkp/UN2GI4Ce4xeQiKpgQL1taC9466JlDw.wDBvtoxp4k2",
+                  "user_type": "recruiter",
+                  "phone": "+91 9415894012",
+                  "status": "active",
+                  "email_verified": 0,
+                  "created_at": "2026-03-23 08:28:23",
+                  "updated_at": "2026-03-23 08:28:23",
+                  "fcm_token": null
+                },
+                {
+                  "id": 3,
+                  "email": "admin@gmail.com",
+                  "password_hash": "$2y$10$8Gb7KQ6onMj1sLGTLw8GZOI4AWpjKrjxwXwaASsE5wRqpu4BznguK",
+                  "user_type": "admin",
+                  "phone": "+91 9045899010",
+                  "status": "active",
+                  "email_verified": 0,
+                  "created_at": "2026-03-23 08:20:33",
+                  "updated_at": "2026-03-23 08:20:33",
+                  "fcm_token": null
+                },
+                {
+                  "id": 2,
+                  "email": "shivam.coepd@gmail.com",
+                  "password_hash": "$2y$10$6teeRnq/x2N.DjGznb4ebOe7uv/EsRiOP7R8U76gUhsjA12YZccVm",
+                  "user_type": "jobseeker",
+                  "phone": "+91 9045893010",
+                  "status": "active",
+                  "email_verified": 0,
+                  "created_at": "2026-03-23 06:24:42",
+                  "updated_at": "2026-03-23 07:43:56",
+                  "fcm_token": null
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 3,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Jobseekers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobseekers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobseekers"]
+            },
+            "description": "Get all jobseekers with filtering and pagination"
+          },
+          "response": [
+            {
+              "data": [
+                {
+                  "user_id": 2,
+                  "name": "Shivam COEPD",
+                  "qualification": "Bacholer's of Engineering",
+                  "experience": 2,
+                  "location": "Kothrund, Pune",
+                  "date_of_birth": "1995-06-15",
+                  "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                  "resume_filename": "contact_us.pdf",
+                  "profile_image_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media",
+                  "skills": "[\"JavaScript\",\"Node.js\",\"React\",\"MySQL\"]",
+                  "bio": "Full-stack developer with 5 years of experience building web applications.",
+                  "created_at": "2026-03-23 06:24:42",
+                  "updated_at": "2026-03-23 07:34:50"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 1,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Recruiters",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/recruiters",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "recruiters"]
+            },
+            "description": "Get all recruiters with filtering and pagination"
+          },
+          "response": [
+            {
+              "data": [
+                {
+                  "user_id": 4,
+                  "company_name": "",
+                  "designation": null,
+                  "location": "Pune, India",
+                  "photo_url": null,
+                  "id_card_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fid_card_4_1774254522.jpg?alt=media",
+                  "approval_status": "pending",
+                  "approved_by": null,
+                  "approved_at": null,
+                  "rejection_reason": null,
+                  "created_at": "2026-03-23 08:28:23",
+                  "updated_at": "2026-03-23 08:28:46"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 1,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs"]
+            },
+            "description": "Get all jobs with filtering and pagination"
+          },
+          "response": [
+            {
+              "data": [
+                {
+                  "id": 3,
+                  "recruiter_user_id": 4,
+                  "company_name": "InnoSoft Pvt Ltd",
+                  "designation": "Flutter Engineer",
+                  "ctc": "2-6 LPA",
+                  "location": "Delhi, India",
+                  "category": "IT",
+                  "description": "Hiring flutter developers with strong app development experience.",
+                  "requirements": "[\"Experience with Node.js\",\"Express, and MySQL\",\"Knowledge of APIs and authentication\"]",
+                  "skills_required": "[\"Flutter\",\"Dart\",\"MySQL\",\"REST APIs\"]",
+                  "experience_required": "5",
+                  "is_active": 1,
+                  "approval_status": "pending",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Full-time",
+                  "created_at": "2026-03-23 10:03:37",
+                  "updated_at": "2026-03-23 10:03:37"
+                },
+                {
+                  "id": 2,
+                  "recruiter_user_id": 4,
+                  "company_name": "Global FinTech Ltd",
+                  "designation": "Frontend Developer",
+                  "ctc": "8-12 LPA",
+                  "location": "Remote",
+                  "category": "IT",
+                  "description": "Looking for a React developer to build modern UI applications.",
+                  "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
+                  "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
+                  "experience_required": "2",
+                  "is_active": 1,
+                  "approval_status": "pending",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Contract",
+                  "created_at": "2026-03-23 09:57:45",
+                  "updated_at": "2026-03-23 09:57:45"
+                },
+                {
+                  "id": 1,
+                  "recruiter_user_id": 4,
+                  "company_name": "TechNova Solutions",
+                  "designation": "Software Engineer",
+                  "ctc": "12-16 LPA",
+                  "location": "Bangalore, India",
+                  "category": "IT",
+                  "description": "We are looking for a skilled software engineer to join our backend team.",
+                  "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
+                  "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                  "experience_required": "3",
+                  "is_active": 1,
+                  "approval_status": "pending",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Full-time",
+                  "created_at": "2026-03-23 08:35:05",
+                  "updated_at": "2026-03-23 08:35:05"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 3,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Pending Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/pending",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "pending"]
+            },
+            "description": "Get pending jobs for approval"
+          },
+          "response": [
+            {
+              "jobs": [
+                {
+                  "id": 3,
+                  "recruiter_user_id": 4,
+                  "company_name": "InnoSoft Pvt Ltd",
+                  "designation": "Flutter Engineer",
+                  "ctc": "2-6 LPA",
+                  "location": "Delhi, India",
+                  "category": "IT",
+                  "description": "Hiring flutter developers with strong app development experience.",
+                  "requirements": "[\"Experience with Node.js\",\"Express, and MySQL\",\"Knowledge of APIs and authentication\"]",
+                  "skills_required": "[\"Flutter\",\"Dart\",\"MySQL\",\"REST APIs\"]",
+                  "experience_required": "5",
+                  "is_active": 1,
+                  "approval_status": "pending",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Full-time",
+                  "created_at": "2026-03-23 10:03:37",
+                  "updated_at": "2026-03-23 10:03:37"
+                },
+                {
+                  "id": 2,
+                  "recruiter_user_id": 4,
+                  "company_name": "Global FinTech Ltd",
+                  "designation": "Frontend Developer",
+                  "ctc": "8-12 LPA",
+                  "location": "Remote",
+                  "category": "IT",
+                  "description": "Looking for a React developer to build modern UI applications.",
+                  "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
+                  "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
+                  "experience_required": "2",
+                  "is_active": 1,
+                  "approval_status": "pending",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Contract",
+                  "created_at": "2026-03-23 09:57:45",
+                  "updated_at": "2026-03-23 09:57:45"
+                },
+                {
+                  "id": 1,
+                  "recruiter_user_id": 4,
+                  "company_name": "TechNova Solutions",
+                  "designation": "Software Engineer",
+                  "ctc": "12-16 LPA",
+                  "location": "Bangalore, India",
+                  "category": "IT",
+                  "description": "We are looking for a skilled software engineer to join our backend team.",
+                  "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
+                  "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                  "experience_required": "3",
+                  "is_active": 1,
+                  "approval_status": "pending",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Full-time",
+                  "created_at": "2026-03-23 08:35:05",
+                  "updated_at": "2026-03-23 08:35:05"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 3,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Applications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/applications",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "applications"]
+            },
+            "description": "Get all applications with filtering and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Issue Reports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/issues-reports",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "issues-reports"]
+            },
+            "description": "Get all reported issues with filtering and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approved_by\": {{admin_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "{{job_id}}", "approve"]
+            },
+            "description": "Approve a pending job",
+            "variable": [
+              {
+                "key": "job_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": [
+            {
+              "message": "Job approved successfully",
+              "job": {
+                "id": 1,
+                "recruiter_user_id": 4,
+                "company_name": "TechNova Solutions",
+                "designation": "Software Engineer",
+                "ctc": "12-16 LPA",
+                "location": "Bangalore, India",
+                "category": "IT",
+                "description": "We are looking for a skilled software engineer to join our backend team.",
+                "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
+                "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                "experience_required": "3",
+                "is_active": 1,
+                "approval_status": "approved",
+                "is_urgent_hiring": 1,
+                "job_type": "Full-time",
+                "created_at": "2026-03-23 08:35:05",
+                "updated_at": "2026-03-23 10:11:25"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reject Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approved_by\": {{admin_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "{{job_id}}", "reject"]
+            },
+            "description": "Reject a pending job",
+            "variable": [
+              {
+                "key": "job_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update Job Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "{{job_id}}", "status"]
+            },
+            "description": "Update job active status",
+            "variable": [
+              {
+                "key": "job_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/jobs/{{job_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "jobs", "{{job_id}}"]
+            },
+            "description": "Delete a job",
+            "variable": [
+              {
+                "key": "job_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"active\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}", "status"]
+            },
+            "description": "Update user status",
+            "variable": [
+              {
+                "key": "user_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Recruiter",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/recruiters/{{user_id}}/approve",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "recruiters", "{{user_id}}", "approve"]
+            },
+            "description": "Approve a recruiter",
+            "variable": [
+              {
+                "key": "user_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Recruiter",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rejection_reason\": \"Not verified\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/recruiters/{{user_id}}/reject",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "recruiters", "{{user_id}}", "reject"]
+            },
+            "description": "Reject a recruiter",
+            "variable": [
+              {
+                "key": "user_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update Application Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"shortlisted\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/applications/{{application_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "admin",
+                "applications",
+                "{{application_id}}",
+                "status"
+              ]
+            },
+            "description": "Update application status",
+            "variable": [
+              {
+                "key": "application_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Update Issue Report Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"in_progress\",\n  \"admin_response\": \"We are looking into this issue\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/issues-reports/{{issue_report_id}}/status",
+              "host": ["{{base_url}}"],
+              "path": [
+                "api",
+                "admin",
+                "issues-reports",
+                "{{issue_report_id}}",
+                "status"
+              ]
+            },
+            "description": "Update issue report status",
+            "variable": [
+              {
+                "key": "issue_report_id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Search All",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/admin/search?q=developer&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "developer"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Search across all entities"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            },
+            "description": "Get current user profile"
+          },
+          "response": [
+            {
+              "user": {
+                "id": 2,
+                "email": "shivam.coepd@gmail.com",
+                "password_hash": "$2y$10$6teeRnq/x2N.DjGznb4ebOe7uv/EsRiOP7R8U76gUhsjA12YZccVm",
+                "user_type": "jobseeker",
+                "phone": "+91 9045893010",
+                "status": "active",
+                "email_verified": 0,
+                "created_at": "2026-03-23 06:24:42",
+                "updated_at": "2026-03-23 07:43:56",
+                "fcm_token": null
+              },
+              "profile": {
+                "user_id": 2,
+                "name": "Shivam COEPD",
+                "qualification": "Bacholer's of Engineering",
+                "experience": 2,
+                "location": "Kothrund, Pune",
+                "date_of_birth": "1995-06-15",
+                "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                "resume_filename": "contact_us.pdf",
+                "profile_image_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media",
+                "skills": "[\"JavaScript\",\"Node.js\",\"React\",\"MySQL\"]",
+                "bio": "Full-stack developer with 5 years of experience building web applications.",
+                "created_at": "2026-03-23 06:24:42",
+                "updated_at": "2026-03-23 07:34:50"
+              },
+              "wishlist_info": {
+                "count": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"Updated Location\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/profile",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile"]
+            },
+            "description": "Update current user profile"
+          },
+          "response": [
+            {
+              "message": "Profile updated successfully",
+              "user": {
+                "id": 2,
+                "email": "shivam.coepd@gmail.com",
+                "password_hash": "$2y$10$dMCLD71UckQe6JnYzA58xuRk0.viHhUq1clUkfrDHlYfA.Y8agdrm",
+                "user_type": "jobseeker",
+                "phone": "+91 9045893010",
+                "status": "active",
+                "email_verified": 0,
+                "created_at": "2026-03-23 06:24:42",
+                "updated_at": "2026-03-23 06:24:42",
+                "fcm_token": null
+              },
+              "profile": {
+                "user_id": 2,
+                "name": "Shivam COEPD",
+                "qualification": "Bacholer's of Engineering",
+                "experience": 2,
+                "location": "Kothrund, Pune",
+                "date_of_birth": "1995-06-15",
+                "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                "resume_filename": "contact_us.pdf",
+                "profile_image_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media",
+                "skills": "[\"JavaScript\",\"Node.js\",\"React\",\"MySQL\"]",
+                "bio": "Full-stack developer with 5 years of experience building web applications.",
+                "created_at": "2026-03-23 06:24:42",
+                "updated_at": "2026-03-23 07:34:50"
+              },
+              "wishlist_info": {
+                "count": 0
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Account",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/account",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "account"]
+            },
+            "description": "Delete current user account"
+          },
+          "response": [
+            {
+              "message": "Account deleted successfully"
+            }
+          ]
+        },
+        {
+          "name": "Upload Resume",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/upload-resume",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "upload-resume"]
+            },
+            "description": "Upload user resume file"
+          },
+          "response": [
+            {
+              "message": "Resume uploaded successfully",
+              "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+              "filename": "contact_us.pdf"
+            }
+          ]
+        },
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/upload-profile-image",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "upload-profile-image"]
+            },
+            "description": "Upload user profile image"
+          },
+          "response": [
+            {
+              "message": "Profile image uploaded successfully",
+              "image_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media",
+              "filename": "Jobseeker.png"
+            }
+          ]
+        },
+        {
+          "name": "Upload ID Card (For recruiter only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "id_card",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/upload-id-card",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "upload-id-card"]
+            },
+            "description": "Upload recruiter ID card (for recruiters only)"
+          },
+          "response": [
+            {
+              "message": "ID card uploaded successfully",
+              "id_card_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fid_card_4_1774254522.jpg?alt=media",
+              "filename": "39d16472a5d0e427f3c32ffc3bb4f412.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Job Management",
+      "item": [
+        {
+          "name": "Create Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Software Engineer\",\n  \"description\": \"We are looking for a skilled software engineer to join our backend team.\",\n  \"requirements\": \"Bachelor's degree in Computer Science, Strong problem-solving skills, Good communication\",\n  \"location\": \"Bangalore, India\",\n  \"salary_min\": 1200000,\n  \"salary_max\": 1200000,\n  \"job_type\": \"Full-time\",\n  \"category\": \"IT\",\n  \"experience_level\": \"mid-level\",\n  \"remote_work\": false,\n  \"benefits\": \"Health insurance, Paid leave, Flexible working hours\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs"]
+            },
+            "description": "Create a new job posting"
+          },
+          "response": [
+            {
+              "message": "Job created successfully. Awaiting admin approval.",
+              "job": {
+                "id": 1,
+                "recruiter_user_id": 4,
+                "company_name": "TechNova Solutions",
+                "designation": "Software Engineer",
+                "ctc": "12-16 LPA",
+                "location": "Bangalore, India",
+                "category": "IT",
+                "description": "We are looking for a skilled software engineer to join our backend team.",
+                "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
+                "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                "experience_required": "3",
+                "is_active": 1,
+                "approval_status": "pending",
+                "is_urgent_hiring": 1,
+                "job_type": "Full-time",
+                "created_at": "2026-03-23 08:35:05",
+                "updated_at": "2026-03-23 08:35:05"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs"]
+            },
+            "description": "Get all available jobs"
+          },
+          "response": [
+            {
+              "jobs": [
+                {
+                  "id": 3,
+                  "recruiter_user_id": 4,
+                  "company_name": "InnoSoft Pvt Ltd",
+                  "designation": "Flutter Engineer",
+                  "ctc": "2-6 LPA",
+                  "location": "Delhi, India",
+                  "category": "IT",
+                  "description": "Hiring flutter developers with strong app development experience.",
+                  "requirements": "[\"Experience with Node.js\",\"Express, and MySQL\",\"Knowledge of APIs and authentication\"]",
+                  "skills_required": "[\"Flutter\",\"Dart\",\"MySQL\",\"REST APIs\"]",
+                  "experience_required": "5",
+                  "is_active": 1,
+                  "approval_status": "approved",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Full-time",
+                  "created_at": "2026-03-23 10:03:37",
+                  "updated_at": "2026-03-23 10:12:20",
+                  "is_in_wishlist": false
+                },
+                {
+                  "id": 2,
+                  "recruiter_user_id": 4,
+                  "company_name": "Global FinTech Ltd",
+                  "designation": "Frontend Developer",
+                  "ctc": "8-12 LPA",
+                  "location": "Remote",
+                  "category": "IT",
+                  "description": "Looking for a React developer to build modern UI applications.",
+                  "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
+                  "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
+                  "experience_required": "2",
+                  "is_active": 1,
+                  "approval_status": "approved",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Contract",
+                  "created_at": "2026-03-23 09:57:45",
+                  "updated_at": "2026-03-23 10:12:14",
+                  "is_in_wishlist": false
+                },
+                {
+                  "id": 1,
+                  "recruiter_user_id": 4,
+                  "company_name": "TechNova Solutions",
+                  "designation": "Software Engineer",
+                  "ctc": "12-16 LPA",
+                  "location": "Bangalore, India",
+                  "category": "IT",
+                  "description": "We are looking for a skilled software engineer to join our backend team.",
+                  "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
+                  "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                  "experience_required": "3",
+                  "is_active": 1,
+                  "approval_status": "approved",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Full-time",
+                  "created_at": "2026-03-23 08:35:05",
+                  "updated_at": "2026-03-23 10:11:25",
+                  "is_in_wishlist": false
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 3,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Job By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", ":id"]
+            },
+            "description": "Get job by ID",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": [
+            {
+              "job": {
+                "id": 2,
+                "recruiter_user_id": 4,
+                "company_name": "Global FinTech Ltd",
+                "designation": "Frontend Developer",
+                "ctc": "8-12 LPA",
+                "location": "Remote",
+                "category": "IT",
+                "description": "Looking for a React developer to build modern UI applications.",
+                "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
+                "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
+                "experience_required": "2",
+                "is_active": 1,
+                "approval_status": "approved",
+                "is_urgent_hiring": 1,
+                "job_type": "Contract",
+                "created_at": "2026-03-23 09:57:45",
+                "updated_at": "2026-03-23 10:12:14",
+                "is_in_wishlist": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Job",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Software Engineer\",\n  \"description\": \"We are looking for a senior software engineer...\",\n  \"requirements\": \"Bachelor's degree in Computer Science, 5+ years experience...\",\n  \"location\": \"San Francisco, CA\",\n  \"salary_min\": 100000,\n  \"salary_max\": 150000,\n  \"job_type\": \"full-time\",\n  \"category\": \"Technology\",\n  \"experience_level\": \"senior\",\n  \"remote_work\": true,\n  \"benefits\": \"Health insurance, PTO, Stock options, Bonus\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/jobs/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", ":id"]
+            },
+            "description": "Update job posting",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": [
+            {
+              "message": "Job updated successfully",
+              "job": {
+                "id": 2,
+                "recruiter_user_id": 4,
+                "company_name": "Global FinTech Ltd",
+                "designation": "Frontend Developer",
+                "ctc": "8-12 LPA",
+                "location": "Remote",
+                "category": "IT",
+                "description": "Looking for a React developer to build modern UI applications.",
+                "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
+                "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
+                "experience_required": "2",
+                "is_active": 1,
+                "approval_status": "approved",
+                "is_urgent_hiring": 1,
+                "job_type": "Full-time",
+                "created_at": "2026-03-23 09:57:45",
+                "updated_at": "2026-03-23 10:16:37",
+                "is_in_wishlist": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", ":id"]
+            },
+            "description": "Delete job posting",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": [
+            {
+              "message": "Job deleted successfully"
+            }
+          ]
+        },
+        {
+          "name": "Search Jobs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/search?query=engineer&location=San+Francisco&category=Technology&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "search"],
+              "query": [
+                {
+                  "key": "query",
+                  "value": "engineer"
+                },
+                {
+                  "key": "location",
+                  "value": "San+Francisco"
+                },
+                {
+                  "key": "category",
+                  "value": "Technology"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Search jobs with filters"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "categories"]
+            },
+            "description": "Get all job categories"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Locations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/jobs/locations",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jobs", "locations"]
+            },
+            "description": "Get all job locations"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Application Management",
+      "item": [
+        {
+          "name": "Apply for Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": 1,\n  \"cover_letter\": \"I am excited to apply for this position...\",\n  \"expected_salary\": 90000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/applications",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications"]
+            },
+            "description": "Apply for a job"
+          },
+          "response": [
+            {
+              "message": "Application submitted successfully",
+              "application": {
+                "id": 1,
+                "job_id": 1,
+                "jobseeker_user_id": 2,
+                "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                "cover_letter": "I am excited to apply for this position...",
+                "status": "pending",
+                "applied_at": "2026-03-23 10:34:39",
+                "updated_at": "2026-03-23 10:34:39"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get My Applications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/applications/my",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", "my"]
+            },
+            "description": "Get current user's applications"
+          },
+          "response": [
+            {
+              "applications": [
+                {
+                  "id": 1,
+                  "job_id": 1,
+                  "jobseeker_user_id": 2,
+                  "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                  "cover_letter": "I am excited to apply for this position...",
+                  "status": "pending",
+                  "applied_at": "2026-03-23 10:34:39",
+                  "updated_at": "2026-03-23 10:34:39",
+                  "designation": "Software Engineer",
+                  "company_name": "TechNova Solutions",
+                  "location": "Bangalore, India",
+                  "category": "IT",
+                  "jobseeker_email": "shivam.coepd@gmail.com",
+                  "jobseeker_name": "Shivam COEPD"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 1,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Applications for Job",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/applications/job/:jobId",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", "job", ":jobId"]
+            },
+            "description": "Get applications for a specific job",
+            "variable": [
+              {
+                "key": "jobId",
+                "value": "1"
+              }
+            ]
+          },
+          "response": [
+            {
+              "applications": [
+                {
+                  "id": 1,
+                  "job_id": 1,
+                  "jobseeker_user_id": 2,
+                  "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                  "cover_letter": "I am excited to apply for this position...",
+                  "status": "pending",
+                  "applied_at": "2026-03-23 10:34:39",
+                  "updated_at": "2026-03-23 10:34:39",
+                  "designation": "Software Engineer",
+                  "company_name": "TechNova Solutions",
+                  "location": "Bangalore, India",
+                  "category": "IT",
+                  "jobseeker_email": "shivam.coepd@gmail.com",
+                  "jobseeker_name": "Shivam COEPD"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 1,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Application Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"accepted\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/applications/:id/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", ":id", "status"]
+            },
+            "description": "Update application status",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": [
+            {
+              "message": "Application status updated successfully",
+              "application": {
+                "id": 1,
+                "job_id": 1,
+                "jobseeker_user_id": 2,
+                "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                "cover_letter": "I am excited to apply for this position...",
+                "status": "accepted",
+                "applied_at": "2026-03-23 10:34:39",
+                "updated_at": "2026-03-23 10:39:00",
+                "designation": "Software Engineer",
+                "company_name": "TechNova Solutions",
+                "location": "Bangalore, India",
+                "category": "IT",
+                "jobseeker_email": "shivam.coepd@gmail.com"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Application",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/applications/:id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", ":id"]
+            },
+            "description": "Delete application",
+            "variable": [
+              {
+                "key": "id",
+                "value": "1"
+              }
+            ]
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Wishlist Management",
+      "item": [
+        {
+          "name": "Add Job to Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": {{job_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/wishlist",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist"]
+            },
+            "description": "Add a job to user's wishlist"
+          },
+          "response": [
+            {
+              "message": "Job added to wishlist successfully",
+              "job_id": 1
+            }
+          ]
+        },
+        {
+          "name": "Remove Job from Wishlist",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist?jobId={{job_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist"],
+              "query": [
+                {
+                  "key": "jobId",
+                  "value": "{{job_id}}"
+                }
+              ]
+            },
+            "description": "Remove a job from user's wishlist"
+          },
+          "response": [
+            {
+              "message": "Job removed from wishlist successfully",
+              "job_id": 1
+            },
+            {
+              "message": "Job is not in wishlist"
+            }
+          ]
+        },
+        {
+          "name": "Get User Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get user's wishlist with pagination"
+          },
+          "response": [
+            {
+              "wishlist": [
+                {
+                  "id": 1,
+                  "user_id": 2,
+                  "job_id": 1,
+                  "created_at": "2026-03-23 08:35:05",
+                  "recruiter_user_id": 4,
+                  "company_name": "",
+                  "designation": "Software Engineer",
+                  "ctc": "12-16 LPA",
+                  "location": "Bangalore, India",
+                  "category": "IT",
+                  "description": "We are looking for a skilled software engineer to join our backend team.",
+                  "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
+                  "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                  "experience_required": "3",
+                  "is_active": 1,
+                  "approval_status": "approved",
+                  "is_urgent_hiring": 1,
+                  "job_type": "Full-time",
+                  "updated_at": "2026-03-23 10:11:25"
+                }
+              ],
+              "pagination": {
+                "current_page": 1,
+                "per_page": 10,
+                "total": 1,
+                "total_pages": 1,
+                "has_next_page": false,
+                "has_prev_page": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "Check Job in Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist/check/{{job_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist", "check", "{{job_id}}"]
+            },
+            "description": "Check if a job is in user's wishlist"
+          },
+          "response": [
+            {
+              "is_in_wishlist": true,
+              "job_id": 1
+            }
+          ]
+        },
+        {
+          "name": "Get User Wishlist IDs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/wishlist/ids",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist", "ids"]
+            },
+            "description": "Get all job IDs in user's wishlist"
+          },
+          "response": [
+            {
+              "job_ids": [1, 3],
+              "count": 2
+            }
+          ]
+        },
+        {
+          "name": "Toggle Job in Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"job_id\": {{job_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/wishlist/toggle",
+              "host": ["{{base_url}}"],
+              "path": ["api", "wishlist", "toggle"]
+            },
+            "description": "Toggle a job in user's wishlist (add if not exists, remove if exists)"
+          },
+          "response": [
+            {
+              "message": "Job removed from wishlist",
+              "job_id": 3,
+              "action": "removed",
+              "is_in_wishlist": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "enabled": true
+    },
+    {
+      "key": "api_url",
+      "value": "https://app.airigojobs.com/public",
+      "enabled": true
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "jobseeker_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "recruiter_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "job_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "application_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "issue_report_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "admin_id",
+      "value": "1",
+      "enabled": true
+    },
+    {
+      "key": "test_email",
+      "value": "test@example.com",
+      "enabled": true
+    },
+    {
+      "key": "test_phone",
+      "value": "+1234567890",
+      "enabled": true
+    },
+    {
+      "key": "test_password",
+      "value": "Test@12345",
+      "enabled": true
+    },
+    {
+      "key": "test_user_type",
+      "value": "jobseeker",
+      "enabled": true
+    }
+  ],
+  "timestamp": 1709122140000,
+  "_postman_exported_at": "2026-02-28T09:09:00.000Z",
+  "_postman_exported_using": "Postman/10.0.0"
+}

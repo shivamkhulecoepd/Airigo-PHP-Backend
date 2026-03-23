@@ -19,8 +19,6 @@ use GuzzleHttp\Psr7\ServerRequest;
 // Bootstrap the application
 require_once __DIR__ . '/../src/bootstrap.php';
 
-echo "Running main entry point public index.php file.\n";
-
 // Create router instance
 $router = new Router();
 

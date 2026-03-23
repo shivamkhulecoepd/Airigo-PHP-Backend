@@ -11,6 +11,7 @@ use Firebase\JWT\Key;
 use App\Config\AppConfig;
 use Ramsey\Uuid\Uuid;
 use Firebase\FirebaseNotificationService;
+use App\Core\Utils\EmailService;
 
 class AuthService
 {
@@ -18,6 +19,7 @@ class AuthService
     private PasswordResetTokenRepository $passwordResetTokenRepository;
     private JWTManager $jwtManager;
     private FirebaseNotificationService $notificationService;
+    private EmailService $emailService;
     private \App\Repositories\JobseekerRepository $jobseekerRepository;
     private \App\Repositories\RecruiterRepository $recruiterRepository;
 
@@ -27,6 +29,7 @@ class AuthService
         $this->passwordResetTokenRepository = new PasswordResetTokenRepository();
         $this->jwtManager = new JWTManager();
         $this->notificationService = new FirebaseNotificationService();
+        $this->emailService = new EmailService();  // Add email service
         $this->jobseekerRepository = new \App\Repositories\JobseekerRepository();
         $this->recruiterRepository = new \App\Repositories\RecruiterRepository();
     }
@@ -316,22 +319,34 @@ class AuthService
                     ($this->jobseekerRepository->findByUserId($user['id'])['name'] ?? 'User') : 
                     ($this->recruiterRepository->findByUserId($user['id'])['company_name'] ?? 'User');
                 
+                // Try to send via Firebase notification first
                 $this->notificationService->sendPasswordResetNotification(
                     $user['id'], 
                     $userName, 
                     $resetToken, 
                     $identifier
                 );
+                
+                // Additionally, send email if it's an email address
+                if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+                    $this->emailService->sendPasswordResetEmail($identifier, $userName, $resetToken);
+                }
             } catch (\Exception $e) {
                 // Log error but don't fail the process
                 error_log("Failed to send password reset notification: " . $e->getMessage());
             }
 
-            return [
+            // Only return reset_token in debug mode for testing purposes
+            $response = [
                 'success' => true,
-                'message' => 'Password reset instructions sent successfully',
-                'reset_token' => $resetToken  // For testing purposes only
+                'message' => 'Password reset instructions sent successfully'
             ];
+            
+            if ($_ENV['APP_DEBUG'] ?? false) {
+                $response['reset_token'] = $resetToken;  // For testing purposes only in debug mode
+            }
+
+            return $response;
         } catch (\Exception $e) {
             return [
                 'success' => false,

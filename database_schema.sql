@@ -141,13 +141,16 @@ CREATE TABLE issues_reports (
   INDEX idx_title (title)
 ) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS `wishlist_items` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `job_id` int(11) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_user_job` (`user_id`, `job_id`),
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`job_id`) REFERENCES `jobs`(`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- Wishlist Items Table
+CREATE TABLE wishlist_items (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT UNSIGNED NOT NULL,
+  job_id BIGINT UNSIGNED NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+  UNIQUE KEY unique_user_job (user_id, job_id),
+  INDEX idx_user_id (user_id),
+  INDEX idx_job_id (job_id),
+  INDEX idx_created_at (created_at DESC)
+) ENGINE=InnoDB;
