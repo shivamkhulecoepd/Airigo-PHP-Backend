@@ -40,6 +40,9 @@ class AppConfig
                 'auth_uri' => $_ENV['FIREBASE_AUTH_URI'] ?? 'https://accounts.google.com/o/oauth2/auth',
                 'token_uri' => $_ENV['FIREBASE_TOKEN_URI'] ?? 'https://oauth2.googleapis.com/token',
                 'storage_bucket' => $_ENV['FIREBASE_STORAGE_BUCKET'] ?? 'airigo-jobs.firebasestorage.app',
+                'messaging_sender_id' => $_ENV['FIREBASE_MESSAGING_SENDER_ID'] ?? '273633366599',
+                'app_id' => $_ENV['FIREBASE_APP_ID'] ?? '1:273633366599:android:47dcbf7b76c169dbf4d762',
+                'measurement_id' => $_ENV['FIREBASE_MEASUREMENT_ID'] ?? 'G-ED4XXS4Z45',
             ],
             "redis" => [
                 "host" => $_ENV["REDIS_HOST"] ?? "redis-16020.crce281.ap-south-1-3.ec2.cloud.redislabs.com",

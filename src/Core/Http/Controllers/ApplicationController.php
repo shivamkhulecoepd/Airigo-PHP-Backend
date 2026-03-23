@@ -8,14 +8,18 @@ use App\Core\Utils\Validator;
 use App\Repositories\ApplicationRepository;
 use App\Repositories\JobRepository;
 use App\Repositories\JobseekerRepository;
+use App\Repositories\RecruiterRepository;
 use Firebase\FirebaseStorageService;
+use Firebase\FirebaseNotificationService;
 
 class ApplicationController extends BaseController
 {
     private ApplicationRepository $applicationRepository;
     private JobRepository $jobRepository;
     private JobseekerRepository $jobseekerRepository;
+    private RecruiterRepository $recruiterRepository;
     private FirebaseStorageService $firebaseStorage;
+    private FirebaseNotificationService $notificationService;
 
     public function __construct()
     {
@@ -23,7 +27,9 @@ class ApplicationController extends BaseController
         $this->applicationRepository = new ApplicationRepository();
         $this->jobRepository = new JobRepository();
         $this->jobseekerRepository = new JobseekerRepository();
+        $this->recruiterRepository = new RecruiterRepository();
         $this->firebaseStorage = new FirebaseStorageService();
+        $this->notificationService = new FirebaseNotificationService();
     }
 
     public function apply(ServerRequestInterface $request)
@@ -121,6 +127,27 @@ class ApplicationController extends BaseController
 
             // Fetch the created application
             $application = $this->applicationRepository->findById($applicationId);
+
+            // Send notification to recruiter about new application
+            try {
+                $jobseeker = $this->jobseekerRepository->findByUserId($user['id']);
+                $jobseekerName = $jobseeker['name'] ?? 'Jobseeker';
+                $recruiter = $this->recruiterRepository->findByUserId($job['recruiter_user_id']);
+                
+                if ($recruiter) {
+                    $recruiterName = $recruiter['company_name'] ?? 'Recruiter';
+                    
+                    $this->notificationService->sendNewApplicationNotification(
+                        $job['recruiter_user_id'],
+                        $recruiterName,
+                        $job['designation'],
+                        $jobseekerName,
+                        $applicationId
+                    );
+                }
+            } catch (\Exception $e) {
+                error_log("Failed to send new application notification: " . $e->getMessage());
+            }
 
             return ResponseBuilder::created([
                 'message' => 'Application submitted successfully',
@@ -273,6 +300,22 @@ class ApplicationController extends BaseController
 
             // Fetch updated application
             $updatedApplication = $this->applicationRepository->getApplicationWithDetails($applicationId);
+
+            // Send status update notification to jobseeker
+            try {
+                $jobseeker = $this->jobseekerRepository->findByUserId($application['jobseeker_user_id']);
+                $jobseekerName = $jobseeker['name'] ?? 'Jobseeker';
+                
+                $this->notificationService->sendApplicationStatusNotification(
+                    $application['jobseeker_user_id'],
+                    $jobseekerName,
+                    $job['designation'],
+                    $newStatus,
+                    $job['company_name']
+                );
+            } catch (\Exception $e) {
+                error_log("Failed to send application status notification: " . $e->getMessage());
+            }
 
             return ResponseBuilder::ok([
                 'message' => 'Application status updated successfully',

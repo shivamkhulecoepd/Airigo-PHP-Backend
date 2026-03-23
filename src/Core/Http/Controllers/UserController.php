@@ -211,15 +211,15 @@ class UserController extends BaseController
             unlink($tempPath);
 
             // Get updated wishlist count
-            $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
+            // $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
 
             return ResponseBuilder::ok([
                 'message' => 'Resume uploaded successfully',
                 'resume_url' => $fileUrl,
                 'filename' => $resumeFile->getClientFilename(),
-                'wishlist_info' => [
-                    'count' => $wishlistCount
-                ]
+                // 'wishlist_info' => [
+                //     'count' => $wishlistCount
+                // ]
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
@@ -288,15 +288,15 @@ class UserController extends BaseController
             unlink($tempPath);
 
             // Get updated wishlist count
-            $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
+            // $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
 
             return ResponseBuilder::ok([
                 'message' => 'Profile image uploaded successfully',
                 'image_url' => $fileUrl,
                 'filename' => $imageFile->getClientFilename(),
-                'wishlist_info' => [
-                    'count' => $wishlistCount
-                ]
+                // 'wishlist_info' => [
+                //     'count' => $wishlistCount
+                // ]
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
@@ -363,15 +363,15 @@ class UserController extends BaseController
             unlink($tempPath);
 
             // Get updated wishlist count
-            $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
+            // $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
 
             return ResponseBuilder::ok([
                 'message' => 'ID card uploaded successfully',
                 'id_card_url' => $fileUrl,
                 'filename' => $idCardFile->getClientFilename(),
-                'wishlist_info' => [
-                    'count' => $wishlistCount
-                ]
+                // 'wishlist_info' => [
+                //     'count' => $wishlistCount
+                // ]
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([

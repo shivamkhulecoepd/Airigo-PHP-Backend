@@ -825,6 +825,35 @@
             "description": "Upload user profile image"
           },
           "response": []
+        },
+        {
+          "name": "Upload ID Card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "id_card",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/upload-id-card",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "upload-id-card"]
+            },
+            "description": "Upload recruiter ID card (for recruiters only)"
+          },
+          "response": []
         }
       ]
     },

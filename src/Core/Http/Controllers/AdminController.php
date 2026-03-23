@@ -11,6 +11,7 @@ use App\Repositories\RecruiterRepository;
 use App\Repositories\JobseekerRepository;
 use App\Repositories\ApplicationRepository;
 use App\Repositories\IssueReportRepository;
+use Firebase\FirebaseNotificationService;
 
 class AdminController extends BaseController
 {
@@ -20,6 +21,7 @@ class AdminController extends BaseController
     private JobseekerRepository $jobseekerRepository;
     private ApplicationRepository $applicationRepository;
     private IssueReportRepository $issueReportRepository;
+    private FirebaseNotificationService $notificationService;
 
     public function __construct()
     {
@@ -30,6 +32,7 @@ class AdminController extends BaseController
         $this->jobseekerRepository = new JobseekerRepository();
         $this->applicationRepository = new ApplicationRepository();
         $this->issueReportRepository = new IssueReportRepository();
+        $this->notificationService = new FirebaseNotificationService();
     }
 
     public function getStats(ServerRequestInterface $request)
@@ -355,6 +358,18 @@ class AdminController extends BaseController
             // Fetch updated recruiter
             $updatedRecruiter = $this->recruiterRepository->findByUserId($userId);
 
+            // Send approval notification
+            try {
+                $userName = $targetUser['name'] ?? $updatedRecruiter['company_name'] ?? 'User';
+                $this->notificationService->sendRecruiterApprovalNotification(
+                    $userId, 
+                    $userName, 
+                    'approved'
+                );
+            } catch (\Exception $e) {
+                error_log("Failed to send recruiter approval notification: " . $e->getMessage());
+            }
+
             return ResponseBuilder::ok([
                 'message' => 'Recruiter approved successfully',
                 'recruiter' => $updatedRecruiter
@@ -405,6 +420,19 @@ class AdminController extends BaseController
 
             // Fetch updated recruiter
             $updatedRecruiter = $this->recruiterRepository->findByUserId($userId);
+
+            // Send rejection notification
+            try {
+                $userName = $targetUser['name'] ?? $updatedRecruiter['company_name'] ?? 'User';
+                $this->notificationService->sendRecruiterApprovalNotification(
+                    $userId, 
+                    $userName, 
+                    'rejected',
+                    $rejectionReason
+                );
+            } catch (\Exception $e) {
+                error_log("Failed to send recruiter rejection notification: " . $e->getMessage());
+            }
 
             return ResponseBuilder::ok([
                 'message' => 'Recruiter rejected successfully',
@@ -542,6 +570,23 @@ class AdminController extends BaseController
 
             // Fetch updated application
             $updatedApplication = $this->applicationRepository->findById($applicationId);
+
+            // Send status update notification to jobseeker
+            try {
+                $job = $this->jobRepository->findById($application['job_id']);
+                $jobseeker = (new \App\Repositories\JobseekerRepository())->findByUserId($application['jobseeker_user_id']);
+                $jobseekerName = $jobseeker['name'] ?? 'Jobseeker';
+                
+                $this->notificationService->sendApplicationStatusNotification(
+                    $application['jobseeker_user_id'],
+                    $jobseekerName,
+                    $job['designation'],
+                    $newStatus,
+                    $job['company_name']
+                );
+            } catch (\Exception $e) {
+                error_log("Failed to send admin application status notification: " . $e->getMessage());
+            }
 
             return ResponseBuilder::ok([
                 'message' => 'Application status updated successfully',

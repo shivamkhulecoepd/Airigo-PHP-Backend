@@ -12,6 +12,7 @@ use App\Core\Http\Controllers\ApplicationController;
 use App\Core\Http\Controllers\AdminController;
 use App\Core\Http\Controllers\IssueReportController;
 use App\Core\Http\Controllers\WishlistController;
+use App\Core\Http\Controllers\NotificationController;
 use App\Core\Utils\ResponseBuilder;
 use GuzzleHttp\Psr7\ServerRequest;
 
@@ -57,6 +58,15 @@ $router->delete('/api/users/account', [UserController::class, 'deleteAccount'])-
 $router->post('/api/users/upload-resume', [UserController::class, 'uploadResume'])->addMiddleware(new AuthMiddleware());
 $router->post('/api/users/upload-profile-image', [UserController::class, 'uploadProfileImage'])->addMiddleware(new AuthMiddleware());
 $router->post('/api/users/upload-id-card', [UserController::class, 'uploadIdCard'])->addMiddleware(new AuthMiddleware());
+
+// Notification routes
+$router->post('/api/notifications/fcm-token', [NotificationController::class, 'storeFcmToken'])->addMiddleware(new AuthMiddleware());
+$router->delete('/api/notifications/fcm-token', [NotificationController::class, 'removeFcmToken'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/notifications/tokens', [NotificationController::class, 'getUserTokens'])->addMiddleware(new AuthMiddleware());
+$router->post('/api/notifications/test', [NotificationController::class, 'sendTestNotification'])->addMiddleware(new AuthMiddleware());
+
+// Admin cleanup route
+$router->post('/api/notifications/cleanup-invalid-tokens', [NotificationController::class, 'cleanupInvalidTokens'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 
 // Job management routes
 $router->post('/api/jobs', [JobController::class, 'create'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));

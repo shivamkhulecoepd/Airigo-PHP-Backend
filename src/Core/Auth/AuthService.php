@@ -10,18 +10,25 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Config\AppConfig;
 use Ramsey\Uuid\Uuid;
+use Firebase\FirebaseNotificationService;
 
 class AuthService
 {
     private UserRepository $userRepository;
     private PasswordResetTokenRepository $passwordResetTokenRepository;
     private JWTManager $jwtManager;
+    private FirebaseNotificationService $notificationService;
+    private \App\Repositories\JobseekerRepository $jobseekerRepository;
+    private \App\Repositories\RecruiterRepository $recruiterRepository;
 
     public function __construct()
     {
         $this->userRepository = new UserRepository();
         $this->passwordResetTokenRepository = new PasswordResetTokenRepository();
         $this->jwtManager = new JWTManager();
+        $this->notificationService = new FirebaseNotificationService();
+        $this->jobseekerRepository = new \App\Repositories\JobseekerRepository();
+        $this->recruiterRepository = new \App\Repositories\RecruiterRepository();
     }
 
     /**
@@ -107,6 +114,15 @@ class AuthService
             'email' => $user['email'],
             'user_type' => $user['user_type']
         ]);
+
+        // Send welcome notification
+        try {
+            $userName = $userData['name'] ?? $userData['company_name'] ?? 'User';
+            $this->notificationService->sendWelcomeNotification($userId, $userName, $userData['user_type']);
+        } catch (\Exception $e) {
+            // Log error but don't fail registration
+            error_log("Failed to send welcome notification: " . $e->getMessage());
+        }
 
         return [
             'success' => true,
@@ -294,7 +310,23 @@ class AuthService
             }
 
             // In a real implementation, send email/SMS with reset link
-            // For now, we'll return success and the token for testing purposes
+            // Send notification with reset token
+            try {
+                $userName = $user['user_type'] === 'jobseeker' ? 
+                    ($this->jobseekerRepository->findByUserId($user['id'])['name'] ?? 'User') : 
+                    ($this->recruiterRepository->findByUserId($user['id'])['company_name'] ?? 'User');
+                
+                $this->notificationService->sendPasswordResetNotification(
+                    $user['id'], 
+                    $userName, 
+                    $resetToken, 
+                    $identifier
+                );
+            } catch (\Exception $e) {
+                // Log error but don't fail the process
+                error_log("Failed to send password reset notification: " . $e->getMessage());
+            }
+
             return [
                 'success' => true,
                 'message' => 'Password reset instructions sent successfully',

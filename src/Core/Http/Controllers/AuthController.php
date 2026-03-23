@@ -29,7 +29,7 @@ class AuthController extends BaseController
                 'errors' => $errors
             ]);
         }
-
+        
         $result = $this->authService->register($data);
 
         if ($result['success']) {
@@ -64,6 +64,7 @@ class AuthController extends BaseController
 
         // Use either email or phone as identifier
         $identifier = $data['email'] ?? $data['phone'];
+        
         $result = $this->authService->login($identifier, $data['password']);
 
         if ($result['success']) {
