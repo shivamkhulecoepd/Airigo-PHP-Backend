@@ -384,6 +384,18 @@ class JobRepository extends BaseRepository
         }
     }
 
+    public function findById(int $id, bool $useCache = false)
+    {
+        $result = parent::findById($id, $useCache);
+        
+        // Decode JSON fields
+        if ($result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $result;
+    }
+
     public function getTopCategories(int $limit = 10): array
     {
         $query = "

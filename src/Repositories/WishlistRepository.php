@@ -76,7 +76,21 @@ class WishlistRepository extends BaseRepository
             $stmt->execute([$userId]);
         }
         
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        $wishlistItems = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        
+        // Decode JSON fields in jobs
+        foreach ($wishlistItems as &$item) {
+            if (!empty($item['requirements'])) {
+                $decoded = json_decode($item['requirements'], true);
+                $item['requirements'] = $decoded ?? json_decode($item['requirements'], false) ?? $item['requirements'];
+            }
+            if (!empty($item['skills_required'])) {
+                $decoded = json_decode($item['skills_required'], true);
+                $item['skills_required'] = $decoded ?? json_decode($item['skills_required'], false) ?? $item['skills_required'];
+            }
+        }
+        
+        return $wishlistItems;
     }
 
     /**

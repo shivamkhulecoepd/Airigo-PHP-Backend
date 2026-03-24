@@ -520,7 +520,7 @@
                   "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
                   "resume_filename": "contact_us.pdf",
                   "profile_image_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media",
-                  "skills": "[\"JavaScript\",\"Node.js\",\"React\",\"MySQL\"]",
+                  "skills": ["JavaScript", "Node.js", "React", "MySQL"],
                   "bio": "Full-stack developer with 5 years of experience building web applications.",
                   "created_at": "2026-03-23 06:24:42",
                   "updated_at": "2026-03-23 07:34:50"
@@ -557,17 +557,17 @@
               "data": [
                 {
                   "user_id": 4,
-                  "company_name": "",
-                  "designation": null,
+                  "company_name": "TechNova Solutions",
+                  "designation": "HR Manager",
                   "location": "Pune, India",
-                  "photo_url": null,
+                  "photo_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_4_1774327542.jpg?alt=media",
                   "id_card_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fid_card_4_1774254522.jpg?alt=media",
-                  "approval_status": "pending",
-                  "approved_by": null,
-                  "approved_at": null,
+                  "approval_status": "approved",
+                  "approved_by": 3,
+                  "approved_at": "2026-03-24 04:55:03",
                   "rejection_reason": null,
                   "created_at": "2026-03-23 08:28:23",
-                  "updated_at": "2026-03-23 08:28:46"
+                  "updated_at": "2026-03-24 04:55:03"
                 }
               ],
               "pagination": {
@@ -695,34 +695,19 @@
                   "location": "Delhi, India",
                   "category": "IT",
                   "description": "Hiring flutter developers with strong app development experience.",
-                  "requirements": "[\"Experience with Node.js\",\"Express, and MySQL\",\"Knowledge of APIs and authentication\"]",
-                  "skills_required": "[\"Flutter\",\"Dart\",\"MySQL\",\"REST APIs\"]",
+                  "requirements": [
+                    "Experience with Node.js",
+                    "Express, and MySQL",
+                    "Knowledge of APIs and authentication"
+                  ],
+                  "skills_required": ["Flutter", "Dart", "MySQL", "REST APIs"],
                   "experience_required": "5",
                   "is_active": 1,
                   "approval_status": "pending",
                   "is_urgent_hiring": 1,
                   "job_type": "Full-time",
                   "created_at": "2026-03-23 10:03:37",
-                  "updated_at": "2026-03-23 10:03:37"
-                },
-                {
-                  "id": 2,
-                  "recruiter_user_id": 4,
-                  "company_name": "Global FinTech Ltd",
-                  "designation": "Frontend Developer",
-                  "ctc": "8-12 LPA",
-                  "location": "Remote",
-                  "category": "IT",
-                  "description": "Looking for a React developer to build modern UI applications.",
-                  "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
-                  "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
-                  "experience_required": "2",
-                  "is_active": 1,
-                  "approval_status": "pending",
-                  "is_urgent_hiring": 1,
-                  "job_type": "Contract",
-                  "created_at": "2026-03-23 09:57:45",
-                  "updated_at": "2026-03-23 09:57:45"
+                  "updated_at": "2026-03-24 04:58:09"
                 },
                 {
                   "id": 1,
@@ -733,21 +718,25 @@
                   "location": "Bangalore, India",
                   "category": "IT",
                   "description": "We are looking for a skilled software engineer to join our backend team.",
-                  "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
-                  "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                  "requirements": [
+                    "Bachelor's degree in Computer Science",
+                    "Strong problem-solving skills",
+                    "Good communication"
+                  ],
+                  "skills_required": ["PHP", "Laravel", "MySQL", "REST APIs"],
                   "experience_required": "3",
                   "is_active": 1,
                   "approval_status": "pending",
                   "is_urgent_hiring": 1,
                   "job_type": "Full-time",
                   "created_at": "2026-03-23 08:35:05",
-                  "updated_at": "2026-03-23 08:35:05"
+                  "updated_at": "2026-03-24 04:58:03"
                 }
               ],
               "pagination": {
                 "page": 1,
                 "limit": 10,
-                "total": 3,
+                "total": 2,
                 "pages": 1
               }
             }
@@ -770,7 +759,28 @@
             },
             "description": "Get all applications with filtering and pagination"
           },
-          "response": []
+          "response": [
+            {
+              "data": [
+                {
+                  "id": 1,
+                  "job_id": 1,
+                  "jobseeker_user_id": 2,
+                  "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                  "cover_letter": "I am excited to apply for this position...",
+                  "status": "accepted",
+                  "applied_at": "2026-03-23 10:34:39",
+                  "updated_at": "2026-03-23 10:39:00"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 1,
+                "pages": 1
+              }
+            }
+          ]
         },
         {
           "name": "Get Issue Reports",
@@ -1182,10 +1192,41 @@
                 "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
                 "resume_filename": "contact_us.pdf",
                 "profile_image_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media",
-                "skills": "[\"JavaScript\",\"Node.js\",\"React\",\"MySQL\"]",
+                "skills": ["JavaScript", "Node.js", "React", "MySQL"],
                 "bio": "Full-stack developer with 5 years of experience building web applications.",
                 "created_at": "2026-03-23 06:24:42",
                 "updated_at": "2026-03-23 07:34:50"
+              },
+              "wishlist_info": {
+                "count": 1
+              }
+            },
+            {
+              "user": {
+                "id": 4,
+                "email": "priya@gmail.com",
+                "password_hash": "$2y$10$BrotO36bkp/UN2GI4Ce4xeQiKpgQL1taC9466JlDw.wDBvtoxp4k2",
+                "user_type": "recruiter",
+                "phone": "+91 9415894012",
+                "status": "active",
+                "email_verified": 0,
+                "created_at": "2026-03-23 08:28:23",
+                "updated_at": "2026-03-23 08:28:23",
+                "fcm_token": null
+              },
+              "profile": {
+                "user_id": 4,
+                "company_name": "TechNova Solutions",
+                "designation": "HR Manager",
+                "location": "Pune, India",
+                "photo_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_4_1774327542.jpg?alt=media",
+                "id_card_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fid_card_4_1774254522.jpg?alt=media",
+                "approval_status": "approved",
+                "approved_by": 3,
+                "approved_at": "2026-03-24 04:55:03",
+                "rejection_reason": null,
+                "created_at": "2026-03-23 08:28:23",
+                "updated_at": "2026-03-24 04:55:03"
               },
               "wishlist_info": {
                 "count": 0
@@ -1224,13 +1265,13 @@
               "user": {
                 "id": 2,
                 "email": "shivam.coepd@gmail.com",
-                "password_hash": "$2y$10$dMCLD71UckQe6JnYzA58xuRk0.viHhUq1clUkfrDHlYfA.Y8agdrm",
+                "password_hash": "$2y$10$6teeRnq/x2N.DjGznb4ebOe7uv/EsRiOP7R8U76gUhsjA12YZccVm",
                 "user_type": "jobseeker",
                 "phone": "+91 9045893010",
                 "status": "active",
                 "email_verified": 0,
                 "created_at": "2026-03-23 06:24:42",
-                "updated_at": "2026-03-23 06:24:42",
+                "updated_at": "2026-03-23 07:43:56",
                 "fcm_token": null
               },
               "profile": {
@@ -1243,10 +1284,42 @@
                 "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
                 "resume_filename": "contact_us.pdf",
                 "profile_image_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media",
-                "skills": "[\"JavaScript\",\"Node.js\",\"React\",\"MySQL\"]",
+                "skills": ["JavaScript", "Node.js", "React", "MySQL"],
                 "bio": "Full-stack developer with 5 years of experience building web applications.",
                 "created_at": "2026-03-23 06:24:42",
                 "updated_at": "2026-03-23 07:34:50"
+              },
+              "wishlist_info": {
+                "count": 1
+              }
+            },
+            {
+              "message": "Profile updated successfully",
+              "user": {
+                "id": 4,
+                "email": "priya@gmail.com",
+                "password_hash": "$2y$10$BrotO36bkp/UN2GI4Ce4xeQiKpgQL1taC9466JlDw.wDBvtoxp4k2",
+                "user_type": "recruiter",
+                "phone": "+91 9415894012",
+                "status": "active",
+                "email_verified": 0,
+                "created_at": "2026-03-23 08:28:23",
+                "updated_at": "2026-03-23 08:28:23",
+                "fcm_token": null
+              },
+              "profile": {
+                "user_id": 4,
+                "company_name": "TechNova Solutions",
+                "designation": "HR Manager",
+                "location": "Pune, India",
+                "photo_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_4_1774327542.jpg?alt=media",
+                "id_card_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fid_card_4_1774254522.jpg?alt=media",
+                "approval_status": "approved",
+                "approved_by": 3,
+                "approved_at": "2026-03-24 04:55:03",
+                "rejection_reason": null,
+                "created_at": "2026-03-23 08:28:23",
+                "updated_at": "2026-03-24 04:55:03"
               },
               "wishlist_info": {
                 "count": 0
@@ -1416,23 +1489,27 @@
             {
               "message": "Job created successfully. Awaiting admin approval.",
               "job": {
-                "id": 1,
+                "id": 5,
                 "recruiter_user_id": 4,
-                "company_name": "TechNova Solutions",
-                "designation": "Software Engineer",
-                "ctc": "12-16 LPA",
-                "location": "Bangalore, India",
+                "company_name": "InnoSoft Pvt Ltd",
+                "designation": "Flutter Engineer",
+                "ctc": "2-6 LPA",
+                "location": "Delhi, India",
                 "category": "IT",
-                "description": "We are looking for a skilled software engineer to join our backend team.",
-                "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
-                "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
-                "experience_required": "3",
+                "description": "Hiring flutter developers with strong app development experience.",
+                "requirements": [
+                  "Experience with Node.js",
+                  "Express, and MySQL",
+                  "Knowledge of APIs and authentication"
+                ],
+                "skills_required": ["Flutter", "Dart", "MySQL", "REST APIs"],
+                "experience_required": "5",
                 "is_active": 1,
                 "approval_status": "pending",
                 "is_urgent_hiring": 1,
                 "job_type": "Full-time",
-                "created_at": "2026-03-23 08:35:05",
-                "updated_at": "2026-03-23 08:35:05"
+                "created_at": "2026-03-24 05:35:25",
+                "updated_at": "2026-03-24 05:35:25"
               }
             }
           ]
@@ -1466,35 +1543,19 @@
                   "location": "Delhi, India",
                   "category": "IT",
                   "description": "Hiring flutter developers with strong app development experience.",
-                  "requirements": "[\"Experience with Node.js\",\"Express, and MySQL\",\"Knowledge of APIs and authentication\"]",
-                  "skills_required": "[\"Flutter\",\"Dart\",\"MySQL\",\"REST APIs\"]",
+                  "requirements": [
+                    "Experience with Node.js",
+                    "Express, and MySQL",
+                    "Knowledge of APIs and authentication"
+                  ],
+                  "skills_required": ["Flutter", "Dart", "MySQL", "REST APIs"],
                   "experience_required": "5",
                   "is_active": 1,
                   "approval_status": "approved",
                   "is_urgent_hiring": 1,
                   "job_type": "Full-time",
                   "created_at": "2026-03-23 10:03:37",
-                  "updated_at": "2026-03-23 10:12:20",
-                  "is_in_wishlist": false
-                },
-                {
-                  "id": 2,
-                  "recruiter_user_id": 4,
-                  "company_name": "Global FinTech Ltd",
-                  "designation": "Frontend Developer",
-                  "ctc": "8-12 LPA",
-                  "location": "Remote",
-                  "category": "IT",
-                  "description": "Looking for a React developer to build modern UI applications.",
-                  "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
-                  "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
-                  "experience_required": "2",
-                  "is_active": 1,
-                  "approval_status": "approved",
-                  "is_urgent_hiring": 1,
-                  "job_type": "Contract",
-                  "created_at": "2026-03-23 09:57:45",
-                  "updated_at": "2026-03-23 10:12:14",
+                  "updated_at": "2026-03-24 05:33:19",
                   "is_in_wishlist": false
                 },
                 {
@@ -1506,22 +1567,26 @@
                   "location": "Bangalore, India",
                   "category": "IT",
                   "description": "We are looking for a skilled software engineer to join our backend team.",
-                  "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
-                  "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                  "requirements": [
+                    "Bachelor's degree in Computer Science",
+                    "Strong problem-solving skills",
+                    "Good communication"
+                  ],
+                  "skills_required": ["PHP", "Laravel", "MySQL", "REST APIs"],
                   "experience_required": "3",
                   "is_active": 1,
                   "approval_status": "approved",
                   "is_urgent_hiring": 1,
                   "job_type": "Full-time",
                   "created_at": "2026-03-23 08:35:05",
-                  "updated_at": "2026-03-23 10:11:25",
+                  "updated_at": "2026-03-24 05:33:13",
                   "is_in_wishlist": false
                 }
               ],
               "pagination": {
                 "page": 1,
                 "limit": 10,
-                "total": 3,
+                "total": 2,
                 "pages": 1
               }
             }
@@ -1553,23 +1618,27 @@
           "response": [
             {
               "job": {
-                "id": 2,
+                "id": 1,
                 "recruiter_user_id": 4,
-                "company_name": "Global FinTech Ltd",
-                "designation": "Frontend Developer",
-                "ctc": "8-12 LPA",
-                "location": "Remote",
+                "company_name": "TechNova Solutions",
+                "designation": "Software Engineer",
+                "ctc": "12-16 LPA",
+                "location": "Bangalore, India",
                 "category": "IT",
-                "description": "Looking for a React developer to build modern UI applications.",
-                "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
-                "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
-                "experience_required": "2",
+                "description": "We are looking for a skilled software engineer to join our backend team.",
+                "requirements": [
+                  "Bachelor's degree in Computer Science",
+                  "Strong problem-solving skills",
+                  "Good communication"
+                ],
+                "skills_required": ["PHP", "Laravel", "MySQL", "REST APIs"],
+                "experience_required": "3",
                 "is_active": 1,
                 "approval_status": "approved",
                 "is_urgent_hiring": 1,
-                "job_type": "Contract",
-                "created_at": "2026-03-23 09:57:45",
-                "updated_at": "2026-03-23 10:12:14",
+                "job_type": "Full-time",
+                "created_at": "2026-03-23 08:35:05",
+                "updated_at": "2026-03-24 05:33:13",
                 "is_in_wishlist": false
               }
             }
@@ -1610,23 +1679,27 @@
             {
               "message": "Job updated successfully",
               "job": {
-                "id": 2,
+                "id": 1,
                 "recruiter_user_id": 4,
-                "company_name": "Global FinTech Ltd",
-                "designation": "Frontend Developer",
-                "ctc": "8-12 LPA",
-                "location": "Remote",
+                "company_name": "TechNova Solutions",
+                "designation": "Software Engineer",
+                "ctc": "12-16 LPA",
+                "location": "Bangalore, India",
                 "category": "IT",
-                "description": "Looking for a React developer to build modern UI applications.",
-                "requirements": "[\"Experience with modern JavaScript\",\"Understanding of UI\\/UX principles\"]",
-                "skills_required": "[\"React\",\"JavaScript\",\"CSS\",\"HTML\"]",
-                "experience_required": "2",
+                "description": "We are looking for a skilled software engineer to join our backend team.",
+                "requirements": [
+                  "Bachelor's degree in Computer Science",
+                  "Strong problem-solving skills",
+                  "Good communication"
+                ],
+                "skills_required": ["PHP", "Laravel", "MySQL", "REST APIs"],
+                "experience_required": "3",
                 "is_active": 1,
                 "approval_status": "approved",
                 "is_urgent_hiring": 1,
-                "job_type": "Full-time",
-                "created_at": "2026-03-23 09:57:45",
-                "updated_at": "2026-03-23 10:16:37",
+                "job_type": "Part-time",
+                "created_at": "2026-03-23 08:35:05",
+                "updated_at": "2026-03-24 05:42:28",
                 "is_in_wishlist": false
               }
             }
@@ -2067,20 +2140,24 @@
                   "job_id": 1,
                   "created_at": "2026-03-23 08:35:05",
                   "recruiter_user_id": 4,
-                  "company_name": "",
+                  "company_name": "TechNova Solutions",
                   "designation": "Software Engineer",
                   "ctc": "12-16 LPA",
                   "location": "Bangalore, India",
                   "category": "IT",
                   "description": "We are looking for a skilled software engineer to join our backend team.",
-                  "requirements": "[\"Bachelor's degree in Computer Science\",\"Strong problem-solving skills\",\"Good communication\"]",
-                  "skills_required": "[\"PHP\",\"Laravel\",\"MySQL\",\"REST APIs\"]",
+                  "requirements": [
+                    "Bachelor's degree in Computer Science",
+                    "Strong problem-solving skills",
+                    "Good communication"
+                  ],
+                  "skills_required": ["PHP", "Laravel", "MySQL", "REST APIs"],
                   "experience_required": "3",
                   "is_active": 1,
                   "approval_status": "approved",
                   "is_urgent_hiring": 1,
-                  "job_type": "Full-time",
-                  "updated_at": "2026-03-23 10:11:25"
+                  "job_type": "Part-time",
+                  "updated_at": "2026-03-24 05:42:28"
                 }
               ],
               "pagination": {

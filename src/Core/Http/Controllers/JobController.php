@@ -74,12 +74,7 @@ class JobController extends BaseController
 
             // Fetch the created job
             $job = $this->jobRepository->findById($jobId);
-            
-            // Decode JSON fields
-            if ($job) {
-                $job['requirements'] = json_decode($job['requirements'], true) ?? json_decode($job['requirements'], false) ?? [];
-                $job['skills_required'] = json_decode($job['skills_required'], true) ?? json_decode($job['skills_required'], false) ?? [];
-            }
+            // JSON fields are already decoded in the repository
 
             return ResponseBuilder::created([
                 'message' => 'Job created successfully. Awaiting admin approval.',
@@ -180,10 +175,7 @@ class JobController extends BaseController
             } else {
                 $job['is_in_wishlist'] = false;
             }
-            
-            // Decode JSON fields
-            $job['requirements'] = json_decode($job['requirements'], true) ?? json_decode($job['requirements'], false) ?? [];
-            $job['skills_required'] = json_decode($job['skills_required'], true) ?? json_decode($job['skills_required'], false) ?? [];
+            // JSON fields are already decoded in the repository
 
             return ResponseBuilder::ok(['job' => $job]);
         } catch (\Exception $e) {
@@ -266,13 +258,8 @@ class JobController extends BaseController
 
             // Fetch updated job
             $updatedJob = $this->jobRepository->findById($jobId);
+            // JSON fields are already decoded in the repository
             
-            // Decode JSON fields
-            if ($updatedJob) {
-                $updatedJob['requirements'] = json_decode($updatedJob['requirements'], true) ?? json_decode($updatedJob['requirements'], false) ?? [];
-                $updatedJob['skills_required'] = json_decode($updatedJob['skills_required'], true) ?? json_decode($updatedJob['skills_required'], false) ?? [];
-            }
-
             // Add wishlist status
             if ($user) {
                 $isInWishlist = $this->wishlistRepository->isInWishlist($user['id'], $jobId);

@@ -406,4 +406,16 @@ class JobseekerRepository extends BaseRepository
             $result['skills'] = $decoded ?? json_decode($result['skills'], false) ?? $result['skills'];
         }
     }
+
+    public function findById(int $id, bool $useCache = false)
+    {
+        $result = parent::findById($id, $useCache);
+        
+        // Decode JSON fields
+        if ($result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $result;
+    }
 }
