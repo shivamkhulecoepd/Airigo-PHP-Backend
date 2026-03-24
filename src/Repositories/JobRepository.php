@@ -38,7 +38,14 @@ class JobRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $jobs = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($jobs as &$job) {
+            $this->decodeJsonFields($job);
+        }
+        
+        return $jobs;
     }
 
     public function findActiveJobs(array $filters = [], int $limit = null, int $offset = null): array
@@ -69,7 +76,14 @@ class JobRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $jobs = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($jobs as &$job) {
+            $this->decodeJsonFields($job);
+        }
+        
+        return $jobs;
     }
 
     public function findApprovedJobs(array $filters = [], int $limit = null, int $offset = null): array
@@ -100,7 +114,14 @@ class JobRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $jobs = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($jobs as &$job) {
+            $this->decodeJsonFields($job);
+        }
+        
+        return $jobs;
     }
 
     public function searchJobs(array $searchParams = [], int $limit = null, int $offset = null): array
@@ -175,7 +196,14 @@ class JobRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $jobs = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($jobs as &$job) {
+            $this->decodeJsonFields($job);
+        }
+        
+        return $jobs;
     }
 
     public function getJobsByCategory(string $category, array $filters = [], int $limit = null, int $offset = null): array
@@ -206,7 +234,14 @@ class JobRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $jobs = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($jobs as &$job) {
+            $this->decodeJsonFields($job);
+        }
+        
+        return $jobs;
     }
 
     public function getJobsByLocation(string $location, array $filters = [], int $limit = null, int $offset = null): array
@@ -237,7 +272,14 @@ class JobRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $jobs = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($jobs as &$job) {
+            $this->decodeJsonFields($job);
+        }
+        
+        return $jobs;
     }
 
     public function getPendingJobs(array $filters = [], int $limit = null, int $offset = null): array
@@ -268,7 +310,14 @@ class JobRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $jobs = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($jobs as &$job) {
+            $this->decodeJsonFields($job);
+        }
+        
+        return $jobs;
     }
 
     public function create(array $data): int
@@ -315,6 +364,24 @@ class JobRepository extends BaseRepository
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
         return $stmt->fetch();
+    }
+
+    /**
+     * Decode JSON fields to proper arrays/objects
+     */
+    private function decodeJsonFields(array &$job): void
+    {
+        // Decode requirements field
+        if (!empty($job['requirements'])) {
+            $decoded = json_decode($job['requirements'], true);
+            $job['requirements'] = $decoded ?? json_decode($job['requirements'], false) ?? $job['requirements'];
+        }
+        
+        // Decode skills_required field
+        if (!empty($job['skills_required'])) {
+            $decoded = json_decode($job['skills_required'], true);
+            $job['skills_required'] = $decoded ?? json_decode($job['skills_required'], false) ?? $job['skills_required'];
+        }
     }
 
     public function getTopCategories(int $limit = 10): array

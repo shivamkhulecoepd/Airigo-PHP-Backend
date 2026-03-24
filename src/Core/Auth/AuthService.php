@@ -85,7 +85,7 @@ class AuthService
                     'resume_url' => $userData['resume_url'] ?? null,
                     'resume_filename' => $userData['resume_filename'] ?? null,
                     'profile_image_url' => $userData['profile_image_url'] ?? null,
-                    'skills' => json_encode($userData['skills'] ?? []),
+                    'skills' => is_array($userData['skills'] ?? []) ? json_encode($userData['skills']) : json_encode([]),
                     'bio' => $userData['bio'] ?? null
                 ]);
             } else { // recruiter

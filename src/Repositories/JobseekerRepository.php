@@ -42,6 +42,11 @@ class JobseekerRepository extends BaseRepository
         $stmt = $this->connection->prepare("SELECT * FROM {$this->table} WHERE {$this->primaryKey} = ?");
         $stmt->execute([$userId]);
         $result = $stmt->fetch();
+        
+        // Decode JSON fields
+        if ($result) {
+            $this->decodeJsonFields($result);
+        }
 
         return $result ?: null;
     }
@@ -74,7 +79,14 @@ class JobseekerRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $results;
     }
 
     public function findByLocation(string $location, array $filters = [], int $limit = null, int $offset = null): array
@@ -105,7 +117,14 @@ class JobseekerRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $results;
     }
 
     public function findByExperience(int $minExperience, int $maxExperience = null, array $filters = [], int $limit = null, int $offset = null): array
@@ -141,7 +160,14 @@ class JobseekerRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $results;
     }
 
     public function findBySkills(array $skills, array $filters = [], int $limit = null, int $offset = null): array
@@ -180,7 +206,14 @@ class JobseekerRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $results;
     }
 
     public function getJobseekerWithUserDetails(int $userId): ?array
@@ -201,7 +234,14 @@ class JobseekerRepository extends BaseRepository
         
         $stmt = $this->connection->prepare($query);
         $stmt->execute([$userId]);
-        return $stmt->fetch() ?: null;
+        $result = $stmt->fetch();
+        
+        // Decode JSON fields
+        if ($result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $result ?: null;
     }
 
     public function getJobseekerStats(): array
@@ -272,7 +312,14 @@ class JobseekerRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $results;
     }
 
     public function getPaginated(int $page = 1, int $limit = 10, array $filters = []): array
@@ -299,6 +346,11 @@ class JobseekerRepository extends BaseRepository
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
         $results = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
 
         // Get total count for pagination metadata
         $countQuery = "SELECT COUNT(*) as total FROM {$this->table}";
@@ -333,6 +385,25 @@ class JobseekerRepository extends BaseRepository
         $query = "SELECT * FROM {$this->table} WHERE name LIKE ? ORDER BY {$this->primaryKey} DESC LIMIT ?";
         $stmt = $this->connection->prepare($query);
         $stmt->execute(["%{$name}%", $limit]);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+        
+        return $results;
+    }
+
+    /**
+     * Decode JSON fields to proper arrays/objects
+     */
+    private function decodeJsonFields(array &$result): void
+    {
+        // Decode skills field
+        if (!empty($result['skills'])) {
+            $decoded = json_decode($result['skills'], true);
+            $result['skills'] = $decoded ?? json_decode($result['skills'], false) ?? $result['skills'];
+        }
     }
 }

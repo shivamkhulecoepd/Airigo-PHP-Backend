@@ -39,6 +39,10 @@ class UserController extends BaseController
         // Get profile based on user type
         if ($user['user_type'] === 'jobseeker') {
             $profile = $this->jobseekerRepository->findByUserId($user['id']);
+            // Decode JSON fields in profile
+            if ($profile) {
+                $profile['skills'] = json_decode($profile['skills'], true) ?? json_decode($profile['skills'], false) ?? [];
+            }
         } else { // recruiter
             $profile = $this->recruiterRepository->findByUserId($user['id']);
         }
@@ -101,6 +105,11 @@ class UserController extends BaseController
             $updatedProfile = $user['user_type'] === 'jobseeker' ? 
                 $this->jobseekerRepository->findByUserId($user['id']) : 
                 $this->recruiterRepository->findByUserId($user['id']);
+            
+            // Decode JSON fields in jobseeker profile
+            if ($user['user_type'] === 'jobseeker' && $updatedProfile) {
+                $updatedProfile['skills'] = json_decode($updatedProfile['skills'], true) ?? json_decode($updatedProfile['skills'], false) ?? [];
+            }
 
             // Get updated wishlist count
             $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
