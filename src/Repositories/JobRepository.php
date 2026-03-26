@@ -324,7 +324,7 @@ class JobRepository extends BaseRepository
     {
         // Ensure we only insert allowed columns
         $allowedColumns = [
-            'recruiter_user_id', 'company_name', 'designation', 'ctc', 'location', 
+            'recruiter_user_id', 'company_name', 'company_logo_url', 'designation', 'ctc', 'location', 
             'category', 'description', 'requirements', 'skills_required', 
             'experience_required', 'is_active', 'approval_status', 'is_urgent_hiring', 'job_type'
         ];

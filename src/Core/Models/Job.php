@@ -7,6 +7,7 @@ class Job
     public int $id;
     public int $recruiter_user_id;
     public string $company_name;
+    public ?string $company_logo_url;
     public string $designation;
     public string $ctc;
     public string $location;
@@ -27,6 +28,7 @@ class Job
         $this->id = (int)$data['id'];
         $this->recruiter_user_id = (int)$data['recruiter_user_id'];
         $this->company_name = $data['company_name'];
+        $this->company_logo_url = $data['company_logo_url'] ?? null;
         $this->designation = $data['designation'];
         $this->ctc = $data['ctc'];
         $this->location = $data['location'];
@@ -49,6 +51,7 @@ class Job
             'id' => $this->id,
             'recruiter_user_id' => $this->recruiter_user_id,
             'company_name' => $this->company_name,
+            'company_logo_url' => $this->company_logo_url,
             'designation' => $this->designation,
             'ctc' => $this->ctc,
             'location' => $this->location,

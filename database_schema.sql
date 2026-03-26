@@ -64,6 +64,7 @@ CREATE TABLE jobs (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   recruiter_user_id BIGINT UNSIGNED NOT NULL,
   company_name VARCHAR(255) NOT NULL,
+  company_logo_url VARCHAR(500),
   designation VARCHAR(255) NOT NULL,
   ctc VARCHAR(50) NOT NULL,
   location VARCHAR(255) NOT NULL,

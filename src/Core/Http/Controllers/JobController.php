@@ -14,6 +14,7 @@ class JobController extends BaseController
     private JobRepository $jobRepository;
     private UserRepository $userRepository;
     private WishlistRepository $wishlistRepository;
+    private \Firebase\FirebaseStorageService $firebaseStorage;
 
     public function __construct()
     {
@@ -21,6 +22,7 @@ class JobController extends BaseController
         $this->jobRepository = new JobRepository();
         $this->userRepository = new UserRepository();
         $this->wishlistRepository = new WishlistRepository();
+        $this->firebaseStorage = new \Firebase\FirebaseStorageService();
     }
 
     public function create(ServerRequestInterface $request)
@@ -50,6 +52,7 @@ class JobController extends BaseController
             $jobData = [
                 'recruiter_user_id' => $user['id'],
                 'company_name' => $data['company_name'],
+                'company_logo_url' => $data['company_logo_url'] ?? null,
                 'designation' => $data['designation'],
                 'ctc' => $data['ctc'],
                 'location' => $data['location'],
@@ -223,7 +226,7 @@ class JobController extends BaseController
             // Prepare update data
             $updateData = [];
             $fields = [
-                'company_name', 'designation', 'ctc', 'location', 
+                'company_name', 'company_logo_url', 'designation', 'ctc', 'location', 
                 'category', 'description', 'experience_required', 
                 'is_active', 'is_urgent_hiring', 'job_type'
             ];
@@ -280,6 +283,94 @@ class JobController extends BaseController
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
                 'message' => 'Failed to update job',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function uploadCompanyLogo(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        if ($user['user_type'] !== 'recruiter') {
+            return ResponseBuilder::forbidden(['message' => 'Only recruiters can upload company logos']);
+        }
+
+        $jobId = (int) $request->getAttribute('id');
+        
+        if ($jobId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid job ID']);
+        }
+
+        try {
+            $job = $this->jobRepository->findById($jobId);
+
+            if (!$job) {
+                return ResponseBuilder::notFound(['message' => 'Job not found']);
+            }
+
+            if ($user['id'] != $job['recruiter_user_id']) {
+                return ResponseBuilder::forbidden(['message' => 'You can only update logos for your own jobs']);
+            }
+
+            // Check if files were uploaded
+            $uploadedFiles = $request->getUploadedFiles();
+            
+            if (!isset($uploadedFiles['logo']) || $uploadedFiles['logo']->getError() !== UPLOAD_ERR_OK) {
+                return ResponseBuilder::badRequest(['message' => 'Company logo is required']);
+            }
+
+            $logoFile = $uploadedFiles['logo'];
+            
+            // Validate file type and size
+            $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            $maxFileSize = 2 * 1024 * 1024; // 2MB
+
+            if (!in_array($logoFile->getClientMediaType(), $allowedTypes)) {
+                return ResponseBuilder::badRequest(['message' => 'Invalid image type. Only JPEG, PNG, GIF, and WebP images are allowed']);
+            }
+
+            if ($logoFile->getSize() > $maxFileSize) {
+                return ResponseBuilder::badRequest(['message' => 'Image size exceeds 2MB limit']);
+            }
+
+            // Move uploaded file to temporary location
+            $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_' . $logoFile->getClientFilename();
+            $logoFile->moveTo($tempPath);
+
+            // Generate unique filename
+            $extension = pathinfo($logoFile->getClientFilename(), PATHINFO_EXTENSION);
+            $uniqueFilename = 'company_logo_' . $jobId . '_' . time() . '.' . $extension;
+            
+            // Upload to Firebase Storage
+            $fileUrl = $this->firebaseStorage->uploadFile($tempPath, $uniqueFilename);
+
+            if (!$fileUrl) {
+                return ResponseBuilder::serverError(['message' => 'Failed to upload logo to storage']);
+            }
+
+            // Update job with logo URL
+            $result = $this->jobRepository->update($jobId, [
+                'company_logo_url' => $fileUrl
+            ]);
+
+            if (!$result) {
+                return ResponseBuilder::serverError(['message' => 'Failed to update job with logo URL']);
+            }
+
+            // Clean up temp file
+            unlink($tempPath);
+
+            return ResponseBuilder::ok([
+                'message' => 'Company logo uploaded successfully',
+                'logo_url' => $fileUrl
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to upload company logo',
                 'error' => $e->getMessage()
             ]);
         }
