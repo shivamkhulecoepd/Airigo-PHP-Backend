@@ -124,8 +124,25 @@ abstract class BaseRepository implements RepositoryInterface
 
     public function update(int $id, array $data): bool
     {
+        if (empty($data)) {
+            return false; // Nothing to update
+        }
+        
         $columns = array_keys($data);
-        $setClause = implode(' = ?, ', $columns) . ' = ?';
+        // Filter out any empty column names
+        $validColumns = array_filter($columns, function($col) {
+            return !empty($col);
+        });
+        
+        if (empty($validColumns)) {
+            return false; // No valid columns to update
+        }
+        
+        $setClauses = [];
+        foreach ($validColumns as $column) {
+            $setClauses[] = "{$column} = ?";
+        }
+        $setClause = implode(', ', $setClauses);
         
         $query = "UPDATE {$this->table} SET {$setClause} WHERE {$this->primaryKey} = ?";
         $values = array_merge(array_values($data), [$id]);
