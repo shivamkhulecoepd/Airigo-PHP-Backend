@@ -102,6 +102,7 @@ class JobController extends BaseController
         $minCtc = $this->getQueryParam($request, 'min_ctc');
         $maxCtc = $this->getQueryParam($request, 'max_ctc');
         $isUrgent = $this->getQueryParam($request, 'is_urgent_hiring');
+        $recruiterUserId = $this->getQueryParam($request, 'recruiter_user_id'); // Get recruiter user ID
 
         $filters = [];
         if ($location) $filters['location'] = $location;
@@ -112,11 +113,24 @@ class JobController extends BaseController
         if ($isUrgent !== null) $filters['is_urgent_hiring'] = filter_var($isUrgent, FILTER_VALIDATE_BOOLEAN);
 
         try {
-            $jobs = $this->jobRepository->findApprovedJobs($filters, $limit, ($page - 1) * $limit);
-            $totalCount = $this->jobRepository->count(['approval_status' => 'approved', 'is_active' => true]);
+            $user = $this->getUser($request);
+            $jobs = [];
+            $totalCount = 0;
+
+            // If recruiter_user_id is provided, fetch jobs for that specific recruiter
+            if ($recruiterUserId) {
+                if (!$user || ($user['user_type'] !== 'recruiter' && $user['id'] != $recruiterUserId)) {
+                    return ResponseBuilder::forbidden(['message' => 'You can only access your own jobs']);
+                }
+                $jobs = $this->jobRepository->findByRecruiter((int)$recruiterUserId, $filters, $limit, ($page - 1) * $limit);
+                $totalCount = $this->jobRepository->count(['recruiter_user_id' => $recruiterUserId]);
+            } else {
+                // Otherwise, fetch all approved jobs for general users
+                $jobs = $this->jobRepository->findApprovedJobs($filters, $limit, ($page - 1) * $limit);
+                $totalCount = $this->jobRepository->count(['approval_status' => 'approved', 'is_active' => true]);
+            }
 
             // Add wishlist status for authenticated users
-            $user = $this->getUser($request);
             if ($user) {
                 $userId = $user['id'];
                 $wishlistJobIds = $this->wishlistRepository->getWishlistJobIds($userId);
