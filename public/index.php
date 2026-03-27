@@ -81,6 +81,7 @@ $router->post('/api/jobs/{id}/upload-logo', [JobController::class, 'uploadCompan
 $router->post('/api/applications', [ApplicationController::class, 'apply'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['jobseeker']));
 $router->get('/api/applications/my', [ApplicationController::class, 'getMyApplications'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['jobseeker']));
 $router->get('/api/applications/job/{jobId}', [ApplicationController::class, 'getApplicationsForJob'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
+$router->get('/api/applications/recruiter', [ApplicationController::class, 'getApplicationsForRecruiter'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 $router->put('/api/applications/{id}/status', [ApplicationController::class, 'updateStatus'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 $router->delete('/api/applications/{id}', [ApplicationController::class, 'delete'])->addMiddleware(new AuthMiddleware());
 

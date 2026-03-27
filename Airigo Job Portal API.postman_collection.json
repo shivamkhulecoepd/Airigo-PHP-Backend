@@ -1,9 +1,11 @@
 {
   "info": {
-    "_postman_id": "airigo-job-portal-api-collection",
-    "name": "Airigo Job Portal API",
+    "_postman_id": "bf5d33a9-8700-4e7e-8de5-c72574592c85",
+    "name": "Airigo Job Portal API Copy 3",
+    "description": "Complete API collection for Airigo Job Portal Backend",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Complete API collection for Airigo Job Portal Backend"
+    "_exporter_id": "49167739",
+    "_collection_link": "https://go.postman.co/collection/49167739-bf5d33a9-8700-4e7e-8de5-c72574592c85?source=collection_link"
   },
   "item": [
     {
@@ -21,12 +23,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Test@12345\",\n  \"user_type\": \"jobseeker\",\n  \"name\": \"John Doe\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"New York, USA\",\n  \"qualification\": \"B.E. Computer Science\",\n  \"experience\": 2,\n  \"skills\": [\"PHP\", \"JavaScript\", \"MySQL\"]\n}"
+              "raw": "{\n  \"email\": \"priya@gmail.com\",\n  \"password\": \"priya123\",\n  \"user_type\": \"recruiter\",\n  \"name\": \"Priya Bhosale\",\n  \"phone\": \"+91 9415894012\",\n  \"location\": \"Pune, India\"\n}\n\n// {\n//   \"email\": \"shivam@gmail.com\",\n//   \"password\": \"shivam123\",\n//   \"user_type\": \"jobseeker\",\n//   \"name\": \"Shivam Khule\",\n//   \"phone\": \"+91 9045893012\",\n//   \"location\": \"Pune, India\"\n// }\n\n// {\n//   \"email\": \"admin@gmail.com\",\n//   \"password\": \"admin123\",\n//   \"user_type\": \"admin\",\n//   \"name\": \"Admin Airigo\",\n//   \"phone\": \"+91 9045899010\",\n//   \"location\": \"Kothrund, Pune\"\n// }"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             },
             "description": "Register a new user (jobseeker or recruiter)"
           },
@@ -44,12 +52,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Test@12345\"\n}"
+              "raw": "// {\n//     \"email\": \"admin@gmail.com\",\n//     \"password\": \"admin123\"\n// }\n\n{\n    \"email\": \"priya@gmail.com\",\n    \"password\": \"priya123\"\n}\n\n// {\n//     \"email\": \"shivam.coepd@gmail.com\",\n//     \"password\": \"shivam123\"\n// }"
             },
             "url": {
-              "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "raw": "{{api_url}}/api/auth/login",
+              "host": [
+                "{{api_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             },
             "description": "Login with email and password"
           },
@@ -67,12 +81,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"phone\": \"+1234567890\",\n  \"password\": \"Test@12345\"\n}"
+              "raw": "{\n  \"phone\": \"+91 9045893012\",\n  \"password\": \"shivam123\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
             },
             "description": "Login with phone number and password"
           },
@@ -94,8 +114,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/auth/logout",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "logout"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
             },
             "description": "Logout user and invalidate session"
           },
@@ -117,8 +143,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/refresh-token",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "refresh-token"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ]
             },
             "description": "Refresh access token using refresh token"
           },
@@ -136,12 +168,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"test@example.com\"\n}"
+              "raw": "{\n  \"email\": \"shivam.coepd@gmail.com\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/forgot-password",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "forgot-password"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
             },
             "description": "Request password reset"
           },
@@ -163,8 +201,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/auth/forgot-password",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "forgot-password"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
             },
             "description": "Request password reset with phone number"
           },
@@ -182,12 +226,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"reset_token\": \"{{reset_token}}\",\n  \"new_password\": \"NewPassword@123\"\n}"
+              "raw": "{\n  \"reset_token\": \"8b681df8-cc1f-4e2d-83bd-7f39f3b35585\",\n  \"new_password\": \"shivam123\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/reset-password",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "reset-password"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "reset-password"
+              ]
             },
             "description": "Reset password with reset token"
           },
@@ -205,12 +255,85 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/auth/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "auth", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
             },
             "description": "Get authenticated user profile"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Get Profile",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/auth/profile",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "profile"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Host",
+                  "value": "localhost:8000"
+                },
+                {
+                  "key": "Date",
+                  "value": "Mon, 23 Mar 2026 07:35:34 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                },
+                {
+                  "key": "X-Powered-By",
+                  "value": "PHP/8.2.12"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "X-Requested-With, Content-Type, Accept, Origin, Authorization"
+                },
+                {
+                  "key": "Access-Control-Max-Age",
+                  "value": "3600"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"user\": {\n        \"id\": 2,\n        \"email\": \"shivam.coepd@gmail.com\",\n        \"user_type\": \"jobseeker\",\n        \"phone\": \"+91 9045893010\",\n        \"status\": \"active\",\n        \"email_verified\": 0,\n        \"created_at\": \"2026-03-23 06:24:42\",\n        \"updated_at\": \"2026-03-23 06:24:42\"\n    },\n    \"profile\": {\n        \"user_id\": 2,\n        \"name\": \"Shivam COEPD\",\n        \"qualification\": \"Bacholer's of Engineering\",\n        \"experience\": 2,\n        \"location\": \"Kothrund, Pune\",\n        \"date_of_birth\": \"1995-06-15\",\n        \"resume_url\": \"https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media\",\n        \"resume_filename\": \"contact_us.pdf\",\n        \"profile_image_url\": \"https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_2_1774251022.png?alt=media\",\n        \"skills\": \"[\\\"JavaScript\\\",\\\"Node.js\\\",\\\"React\\\",\\\"MySQL\\\"]\",\n        \"bio\": \"Full-stack developer with 5 years of experience building web applications.\",\n        \"created_at\": \"2026-03-23 06:24:42\",\n        \"updated_at\": \"2026-03-23 07:34:50\"\n    }\n}"
+            }
+          ]
         }
       ]
     },
@@ -229,8 +352,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/dashboard/stats",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "dashboard", "stats"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "dashboard",
+                "stats"
+              ]
             },
             "description": "Get admin dashboard statistics"
           },
@@ -248,8 +378,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/dashboard/full-stats",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "dashboard", "full-stats"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "dashboard",
+                "full-stats"
+              ]
             },
             "description": "Get comprehensive admin statistics"
           },
@@ -267,8 +404,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/users",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "users"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users"
+              ]
             },
             "description": "Get all users with filtering and pagination"
           },
@@ -286,8 +429,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/jobseekers",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobseekers"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "jobseekers"
+              ]
             },
             "description": "Get all jobseekers with filtering and pagination"
           },
@@ -305,8 +454,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/recruiters",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "recruiters"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "recruiters"
+              ]
             },
             "description": "Get all recruiters with filtering and pagination"
           },
@@ -324,8 +479,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/jobs",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobs"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "jobs"
+              ]
             },
             "description": "Get all jobs with filtering and pagination"
           },
@@ -343,8 +504,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/jobs/pending",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobs", "pending"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "jobs",
+                "pending"
+              ]
             },
             "description": "Get pending jobs for approval"
           },
@@ -362,8 +530,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/applications",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "applications"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "applications"
+              ]
             },
             "description": "Get all applications with filtering and pagination"
           },
@@ -381,8 +555,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/issues-reports",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "issues-reports"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "issues-reports"
+              ]
             },
             "description": "Get all reported issues with filtering and pagination"
           },
@@ -408,16 +588,18 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/approve",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobs", "{{job_id}}", "approve"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "jobs",
+                "{{job_id}}",
+                "approve"
+              ]
             },
-            "description": "Approve a pending job",
-            "variable": [
-              {
-                "key": "job_id",
-                "value": "1"
-              }
-            ]
+            "description": "Approve a pending job"
           },
           "response": []
         },
@@ -441,16 +623,18 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/reject",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobs", "{{job_id}}", "reject"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "jobs",
+                "{{job_id}}",
+                "reject"
+              ]
             },
-            "description": "Reject a pending job",
-            "variable": [
-              {
-                "key": "job_id",
-                "value": "1"
-              }
-            ]
+            "description": "Reject a pending job"
           },
           "response": []
         },
@@ -474,16 +658,18 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/jobs/{{job_id}}/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobs", "{{job_id}}", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "jobs",
+                "{{job_id}}",
+                "status"
+              ]
             },
-            "description": "Update job active status",
-            "variable": [
-              {
-                "key": "job_id",
-                "value": "1"
-              }
-            ]
+            "description": "Update job active status"
           },
           "response": []
         },
@@ -499,16 +685,17 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/jobs/{{job_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "jobs", "{{job_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "jobs",
+                "{{job_id}}"
+              ]
             },
-            "description": "Delete a job",
-            "variable": [
-              {
-                "key": "job_id",
-                "value": "1"
-              }
-            ]
+            "description": "Delete a job"
           },
           "response": []
         },
@@ -532,16 +719,18 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/users/{{user_id}}/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "users", "{{user_id}}", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "users",
+                "{{user_id}}",
+                "status"
+              ]
             },
-            "description": "Update user status",
-            "variable": [
-              {
-                "key": "user_id",
-                "value": "1"
-              }
-            ]
+            "description": "Update user status"
           },
           "response": []
         },
@@ -557,16 +746,18 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/recruiters/{{user_id}}/approve",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "recruiters", "{{user_id}}", "approve"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "recruiters",
+                "{{user_id}}",
+                "approve"
+              ]
             },
-            "description": "Approve a recruiter",
-            "variable": [
-              {
-                "key": "user_id",
-                "value": "1"
-              }
-            ]
+            "description": "Approve a recruiter"
           },
           "response": []
         },
@@ -590,16 +781,18 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/recruiters/{{user_id}}/reject",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "recruiters", "{{user_id}}", "reject"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "recruiters",
+                "{{user_id}}",
+                "reject"
+              ]
             },
-            "description": "Reject a recruiter",
-            "variable": [
-              {
-                "key": "user_id",
-                "value": "1"
-              }
-            ]
+            "description": "Reject a recruiter"
           },
           "response": []
         },
@@ -623,16 +816,18 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/applications/{{application_id}}/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "applications", "{{application_id}}", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "applications",
+                "{{application_id}}",
+                "status"
+              ]
             },
-            "description": "Update application status",
-            "variable": [
-              {
-                "key": "application_id",
-                "value": "1"
-              }
-            ]
+            "description": "Update application status"
           },
           "response": []
         },
@@ -656,16 +851,18 @@
             },
             "url": {
               "raw": "{{base_url}}/api/admin/issues-reports/{{issue_report_id}}/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "issues-reports", "{{issue_report_id}}", "status"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "issues-reports",
+                "{{issue_report_id}}",
+                "status"
+              ]
             },
-            "description": "Update issue report status",
-            "variable": [
-              {
-                "key": "issue_report_id",
-                "value": "1"
-              }
-            ]
+            "description": "Update issue report status"
           },
           "response": []
         },
@@ -681,8 +878,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/admin/search?q=developer&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "search"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "admin",
+                "search"
+              ],
               "query": [
                 {
                   "key": "q",
@@ -715,8 +918,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/users/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "profile"
+              ]
             },
             "description": "Get current user profile"
           },
@@ -738,41 +947,20 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Updated\",\n  \"email\": \"john.updated@example.com\",\n  \"phone\": \"+1234567890\",\n  \"location\": \"Updated Location\",\n  \"qualification\": \"B.E. Computer Science\",\n  \"experience\": 3,\n  \"skills\": [\"PHP\", \"JavaScript\", \"MySQL\"],\n  \"bio\": \"Experienced developer with expertise in web technologies\"\n}"
+              "raw": "// {\n//   \"company_name\": \"TechNova Solutions\",\n//   \"designation\": \"HR Manager\",\n// //   \"location\": \"Pune\",\n// //   \"photo_url\": \"https://randomuser.me/api/portraits/men/1.jpg\",\n// //   \"id_card_url\": \"https://example.com/id_cards/id_201.png\",\n//   \"approval_status\": \"pending\",\n//   \"approved_by\": 3,\n//   \"approved_at\": \"2026-03-23 08:28:23\"\n// //   \"rejection_reason\": null\n// }\n\n\n\n{\n    //   \"name\": \"John Updated\",\n    //   \"email\": \"john.updated@example.com\",\n    //   \"phone\": \"+1234567890\",\n    //   \"location\": \"Updated Location\"\n    \"qualification\": \"Bacholer's of Engineering\",\n    \"experience\": 2,\n    \"location\": \"Kothrund, Pune\",\n    \"date_of_birth\": \"1995-06-15\",\n    \"skills\": [\"JavaScript\", \"Node.js\", \"React\", \"MySQL\"],\n    \"bio\": \"Full-stack developer with 5 years of experience building web applications.\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/users/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "profile"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "profile"
+              ]
             },
             "description": "Update current user profile"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Recruiter Profile",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"recruiter_name\": \"Jane Smith\",\n  \"company_website\": \"https://techsolutions.com\",\n  \"designation\": \"HR Manager\",\n  \"location\": \"San Francisco, CA\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/users/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "profile"]
-            },
-            "description": "Update current recruiter profile"
           },
           "response": []
         },
@@ -788,8 +976,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/users/account",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "account"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "account"
+              ]
             },
             "description": "Delete current user account"
           },
@@ -811,14 +1005,20 @@
                 {
                   "key": "resume",
                   "type": "file",
-                  "src": []
+                  "src": "/C:/Users/COEPD/Downloads/contact_us.pdf"
                 }
               ]
             },
             "url": {
               "raw": "{{base_url}}/api/users/upload-resume",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "upload-resume"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "upload-resume"
+              ]
             },
             "description": "Upload user resume file"
           },
@@ -840,14 +1040,20 @@
                 {
                   "key": "image",
                   "type": "file",
-                  "src": []
+                  "src": "/C:/Users/COEPD/Downloads/app intro img/1.jpg"
                 }
               ]
             },
             "url": {
               "raw": "{{base_url}}/api/users/upload-profile-image",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "upload-profile-image"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "upload-profile-image"
+              ]
             },
             "description": "Upload user profile image"
           },
@@ -869,14 +1075,20 @@
                 {
                   "key": "id_card",
                   "type": "file",
-                  "src": []
+                  "src": "/C:/Users/COEPD/Downloads/39d16472a5d0e427f3c32ffc3bb4f412.jpg"
                 }
               ]
             },
             "url": {
               "raw": "{{base_url}}/api/users/upload-id-card",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "upload-id-card"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "upload-id-card"
+              ]
             },
             "description": "Upload recruiter ID card (for recruiters only)"
           },
@@ -903,19 +1115,94 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"company_url\": \"https://techsolutions.com\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"8-12 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"3+ years experience\", \"Knowledge of APIs and authentication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
+              "raw": "{\n    \"company_name\": \"InnoSoft Pvt Ltd\",\n    \"company_url\": \"https://innosoft.com\",\n    \"designation\": \"Flutter Engineer\",\n    \"ctc\": \"2-6 LPA\",\n    \"location\": \"Delhi, India\",\n    \"category\": \"IT\",\n    \"description\": \"Hiring flutter developers with strong app development experience.\",\n    \"requirements\": [\n        \"Experience with Node.js\",\n        \"Express, and MySQL\",\n        \"Knowledge of APIs and authentication\"\n    ],\n    \"skills_required\": [\n        \"Flutter\",\n        \"Dart\",\n        \"MySQL\",\n        \"REST APIs\"\n    ],\n    \"experience_required\": 5,\n    \"is_active\": true,\n    \"is_urgent_hiring\": true,\n    \"job_type\": \"Full-time\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs",
-              "host": ["{{base_url}}"],
-              "path": ["api", "jobs"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jobs"
+              ]
             },
-            "description": "Create a new job posting"
+            "description": "Create a new job posting with company URL"
           },
           "response": []
         },
         {
           "name": "Get All Jobs",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var template = `\r",
+                  "<canvas id=\"myChart\" height=\"75\"></canvas>\r",
+                  "\r",
+                  "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js\"></script>\r",
+                  "\r",
+                  "<script>\r",
+                  "    var ctx = document.getElementById(\"myChart\");\r",
+                  "\r",
+                  "    var myChart = new Chart(ctx, {\r",
+                  "        type: \"bar\",\r",
+                  "        data: {\r",
+                  "            labels: [],\r",
+                  "            datasets: [{\r",
+                  "                label: 'Job Listings',\r",
+                  "                data: [],\r",
+                  "                backgroundColor: 'rgba(75, 192, 192, 0.5)',\r",
+                  "                borderColor: 'rgba(75, 192, 192, 1)',\r",
+                  "                borderWidth: 1\r",
+                  "            }]\r",
+                  "        },\r",
+                  "        options: {\r",
+                  "            title: {\r",
+                  "                display: true,\r",
+                  "                text: 'Job Listings Over Time'\r",
+                  "            },\r",
+                  "            scales: {\r",
+                  "                xAxes: [{\r",
+                  "                    display: true,\r",
+                  "                    scaleLabel: {\r",
+                  "                        display: true,\r",
+                  "                        labelString: 'Jobs'\r",
+                  "                    }\r",
+                  "                }],\r",
+                  "                yAxes: [{\r",
+                  "                    display: true,\r",
+                  "                    scaleLabel: {\r",
+                  "                        display: true,\r",
+                  "                        labelString: 'Count'\r",
+                  "                    }\r",
+                  "                }]\r",
+                  "            }\r",
+                  "        }\r",
+                  "    });\r",
+                  "\r",
+                  "    pm.getData(function (err, value) {\r",
+                  "        myChart.data.datasets[0].data = value.response.jobs.map(job => job.is_active);\r",
+                  "        myChart.data.labels = value.response.jobs.map((job, index) => 'Job ' + (index + 1));\r",
+                  "        myChart.update();\r",
+                  "    });\r",
+                  "</script>`;\r",
+                  "\r",
+                  "function constructVisualizerPayload() {\r",
+                  "    var res = pm.response.json();\r",
+                  "\r",
+                  "    return { response: res };\r",
+                  "}\r",
+                  "\r",
+                  "pm.visualizer.set(template, constructVisualizerPayload());"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "method": "GET",
             "header": [
@@ -926,12 +1213,83 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/jobs",
-              "host": ["{{base_url}}"],
-              "path": ["api", "jobs"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jobs"
+              ]
             },
             "description": "Get all available jobs"
           },
-          "response": []
+          "response": [
+            {
+              "name": "Get All Jobs",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/jobs",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "jobs"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Host",
+                  "value": "localhost:8000"
+                },
+                {
+                  "key": "Date",
+                  "value": "Tue, 24 Mar 2026 03:57:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                },
+                {
+                  "key": "X-Powered-By",
+                  "value": "PHP/8.2.12"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Access-Control-Allow-Origin",
+                  "value": "*"
+                },
+                {
+                  "key": "Access-Control-Allow-Methods",
+                  "value": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+                },
+                {
+                  "key": "Access-Control-Allow-Headers",
+                  "value": "X-Requested-With, Content-Type, Accept, Origin, Authorization"
+                },
+                {
+                  "key": "Access-Control-Max-Age",
+                  "value": "3600"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"jobs\": [\n        {\n            \"id\": 3,\n            \"recruiter_user_id\": 4,\n            \"company_name\": \"InnoSoft Pvt Ltd\",\n            \"company_url\": \"https://innosoft.com\",\n            \"designation\": \"Flutter Engineer\",\n            \"ctc\": \"2-6 LPA\",\n            \"location\": \"Delhi, India\",\n            \"category\": \"IT\",\n            \"description\": \"Hiring flutter developers with strong app development experience.\",\n            \"requirements\": \"[\\\"Experience with Node.js\\\",\\\"Express, and MySQL\\\",\\\"Knowledge of APIs and authentication\\\"]\",\n            \"skills_required\": \"[\\\"Flutter\\\",\\\"Dart\\\",\\\"MySQL\\\",\\\"REST APIs\\\"]\",\n            \"experience_required\": \"5\",\n            \"is_active\": 1,\n            \"approval_status\": \"approved\",\n            \"is_urgent_hiring\": 1,\n            \"job_type\": \"Full-time\",\n            \"created_at\": \"2026-03-23 10:03:37\",\n            \"updated_at\": \"2026-03-23 10:12:20\",\n            \"is_in_wishlist\": false\n        },\n        {\n            \"id\": 1,\n            \"recruiter_user_id\": 4,\n            \"company_name\": \"TechNova Solutions\",\n            \"company_url\": \"https://technova.com\",\n            \"designation\": \"Software Engineer\",\n            \"ctc\": \"12-16 LPA\",\n            \"location\": \"Bangalore, India\",\n            \"category\": \"IT\",\n            \"description\": \"We are looking for a skilled software engineer to join our backend team.\",\n            \"requirements\": \"[\\\"Bachelor's degree in Computer Science\\\",\\\"Strong problem-solving skills\\\",\\\"Good communication\\\"]\",\n            \"skills_required\": \"[\\\"PHP\\\",\\\"Laravel\\\",\\\"MySQL\\\",\\\"REST APIs\\\"]\",\n            \"experience_required\": \"3\",\n            \"is_active\": 1,\n            \"approval_status\": \"approved\",\n            \"is_urgent_hiring\": 1,\n            \"job_type\": \"Full-time\",\n            \"created_at\": \"2026-03-23 08:35:05\",\n            \"updated_at\": \"2026-03-23 10:11:25\",\n            \"is_in_wishlist\": false\n        }\n    ],\n    \"pagination\": {\n        \"page\": 1,\n        \"limit\": 10,\n        \"total\": 2,\n        \"pages\": 1\n    }\n}"
+            }
+          ]
         },
         {
           "name": "Get Job By ID",
@@ -945,16 +1303,22 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "jobs", ":id"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jobs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
             },
-            "description": "Get job by ID",
-            "variable": [
-              {
-                "key": "id",
-                "value": "1"
-              }
-            ]
+            "description": "Get job by ID"
           },
           "response": []
         },
@@ -974,20 +1338,26 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"company_url\": \"https://techsolutions.com\",\n  \"designation\": \"Senior Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\", \"Team Management\"],\n  \"experience_required\": \"5\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
+              "raw": "{\n    \"company_name\": \"InnoSoft Pvt Ltd\",\n    \"company_url\": \"https://innosoft.com\",\n    \"designation\": \"Senior Flutter Engineer\",\n    \"ctc\": \"6-10 LPA\",\n    \"location\": \"Delhi, India\",\n    \"category\": \"IT\",\n    \"description\": \"Hiring senior flutter developers with strong app development experience.\",\n    \"requirements\": [\n        \"Experience with Node.js\",\n        \"Express, and MySQL\",\n        \"Knowledge of APIs and authentication\"\n    ],\n    \"skills_required\": [\n        \"Flutter\",\n        \"Dart\",\n        \"MySQL\",\n        \"REST APIs\"\n    ],\n    \"experience_required\": 5,\n    \"is_active\": true,\n    \"is_urgent_hiring\": true,\n    \"job_type\": \"Full-time\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "jobs", ":id"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jobs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
             },
-            "description": "Update job posting",
-            "variable": [
-              {
-                "key": "id",
-                "value": "1"
-              }
-            ]
+            "description": "Update job posting with company URL"
           },
           "response": []
         },
@@ -1003,16 +1373,22 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "jobs", ":id"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jobs",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
             },
-            "description": "Delete job posting",
-            "variable": [
-              {
-                "key": "id",
-                "value": "1"
-              }
-            ]
+            "description": "Delete job posting"
           },
           "response": []
         },
@@ -1027,21 +1403,27 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/jobs/search?query=engineer&location=San+Francisco&category=Technology&page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "jobs", "search"],
+              "raw": "{{base_url}}/api/jobs/search?query=Flutter&location=&category=IT&page=1&limit=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jobs",
+                "search"
+              ],
               "query": [
                 {
                   "key": "query",
-                  "value": "engineer"
+                  "value": "Flutter"
                 },
                 {
                   "key": "location",
-                  "value": "San+Francisco"
+                  "value": ""
                 },
                 {
                   "key": "category",
-                  "value": "Technology"
+                  "value": "IT"
                 },
                 {
                   "key": "page",
@@ -1069,8 +1451,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/jobs/categories",
-              "host": ["{{base_url}}"],
-              "path": ["api", "jobs", "categories"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jobs",
+                "categories"
+              ]
             },
             "description": "Get all job categories"
           },
@@ -1088,8 +1476,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/jobs/locations",
-              "host": ["{{base_url}}"],
-              "path": ["api", "jobs", "locations"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "jobs",
+                "locations"
+              ]
             },
             "description": "Get all job locations"
           },
@@ -1116,12 +1510,17 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"job_id\": 1,\n  \"cover_letter\": \"I am excited to apply for this position...\"\n}"
+              "raw": "{\n  \"job_id\": 1,\n  \"cover_letter\": \"I am excited to apply for this position...\",\n  \"expected_salary\": 90000\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/applications",
-              "host": ["{{base_url}}"],
-              "path": ["api", "applications"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "applications"
+              ]
             },
             "description": "Apply for a job"
           },
@@ -1139,10 +1538,41 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/applications/my",
-              "host": ["{{base_url}}"],
-              "path": ["api", "applications", "my"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "my"
+              ]
             },
             "description": "Get current user's applications"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Applications for Recruiter",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/applications/recruiter",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "recruiter"
+              ]
+            },
+            "description": "Get all applications for a recruiter"
           },
           "response": []
         },
@@ -1157,17 +1587,18 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/applications/job/:jobId",
-              "host": ["{{base_url}}"],
-              "path": ["api", "applications", "job", ":jobId"]
+              "raw": "{{base_url}}/api/applications/job/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "job",
+                "1"
+              ]
             },
-            "description": "Get applications for a specific job",
-            "variable": [
-              {
-                "key": "jobId",
-                "value": "1"
-              }
-            ]
+            "description": "Get applications for a specific job"
           },
           "response": []
         },
@@ -1190,17 +1621,18 @@
               "raw": "{\n  \"status\": \"accepted\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/api/applications/:id/status",
-              "host": ["{{base_url}}"],
-              "path": ["api", "applications", ":id", "status"]
+              "raw": "{{base_url}}/api/applications/1/status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "1",
+                "status"
+              ]
             },
-            "description": "Update application status",
-            "variable": [
-              {
-                "key": "id",
-                "value": "1"
-              }
-            ]
+            "description": "Update application status"
           },
           "response": []
         },
@@ -1215,46 +1647,17 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/api/applications/:id",
-              "host": ["{{base_url}}"],
-              "path": ["api", "applications", ":id"]
-            },
-            "description": "Delete application",
-            "variable": [
-              {
-                "key": "id",
-                "value": "1"
-              }
-            ]
-          },
-          "response": []
-        },
-        {
-          "name": "Get Applications for Recruiter",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/applications/recruiter?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "applications", "recruiter"],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                }
+              "raw": "{{base_url}}/api/applications/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "applications",
+                "1"
               ]
             },
-            "description": "Get all applications for jobs posted by the current recruiter"
+            "description": "Delete application"
           },
           "response": []
         }
@@ -1283,8 +1686,13 @@
             },
             "url": {
               "raw": "{{base_url}}/api/wishlist",
-              "host": ["{{base_url}}"],
-              "path": ["api", "wishlist"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "wishlist"
+              ]
             },
             "description": "Add a job to user's wishlist"
           },
@@ -1302,8 +1710,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/wishlist?jobId={{job_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "wishlist"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "wishlist"
+              ],
               "query": [
                 {
                   "key": "jobId",
@@ -1327,8 +1740,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/wishlist?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "wishlist"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "wishlist"
+              ],
               "query": [
                 {
                   "key": "page",
@@ -1356,8 +1774,15 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/wishlist/check/{{job_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["api", "wishlist", "check", "{{job_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "wishlist",
+                "check",
+                "{{job_id}}"
+              ]
             },
             "description": "Check if a job is in user's wishlist"
           },
@@ -1375,8 +1800,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/api/wishlist/ids",
-              "host": ["{{base_url}}"],
-              "path": ["api", "wishlist", "ids"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "wishlist",
+                "ids"
+              ]
             },
             "description": "Get all job IDs in user's wishlist"
           },
@@ -1402,8 +1833,14 @@
             },
             "url": {
               "raw": "{{base_url}}/api/wishlist/toggle",
-              "host": ["{{base_url}}"],
-              "path": ["api", "wishlist", "toggle"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "wishlist",
+                "toggle"
+              ]
             },
             "description": "Toggle a job in user's wishlist (add if not exists, remove if exists)"
           },
@@ -1415,86 +1852,63 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:8000",
-      "enabled": true
+      "value": "http://localhost:8000"
     },
     {
       "key": "api_url",
-      "value": "https://app.airigojobs.com/public",
-      "enabled": true
+      "value": "https://app.airigojobs.com/public"
     },
     {
       "key": "access_token",
-      "value": "",
-      "enabled": true
+      "value": ""
     },
     {
       "key": "refresh_token",
-      "value": "",
-      "enabled": true
+      "value": ""
     },
     {
       "key": "user_id",
-      "value": "1",
-      "enabled": true
+      "value": "1"
     },
     {
       "key": "jobseeker_id",
-      "value": "1",
-      "enabled": true
+      "value": "1"
     },
     {
       "key": "recruiter_id",
-      "value": "1",
-      "enabled": true
+      "value": "1"
     },
     {
       "key": "job_id",
-      "value": "1",
-      "enabled": true
+      "value": "1"
     },
     {
       "key": "application_id",
-      "value": "1",
-      "enabled": true
+      "value": "1"
     },
     {
       "key": "issue_report_id",
-      "value": "1",
-      "enabled": true
+      "value": "1"
     },
     {
       "key": "admin_id",
-      "value": "1",
-      "enabled": true
-    },
-    {
-      "key": "reset_token",
-      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImp0aSI6IjEyMzQ1Njc4OTAiLCJpYXQiOjE3MDkxMjIxNDAsImV4cCI6MTcwOTIwODU0MH0.example_token_for_testing",
-      "enabled": true
+      "value": "1"
     },
     {
       "key": "test_email",
-      "value": "test@example.com",
-      "enabled": true
+      "value": "test@example.com"
     },
     {
       "key": "test_phone",
-      "value": "+1234567890",
-      "enabled": true
+      "value": "+1234567890"
     },
     {
       "key": "test_password",
-      "value": "Test@12345",
-      "enabled": true
+      "value": "Test@12345"
     },
     {
       "key": "test_user_type",
-      "value": "jobseeker",
-      "enabled": true
+      "value": "jobseeker"
     }
-  ],
-  "timestamp": 1743122140000,
-  "_postman_exported_at": "2026-03-27T09:09:00.000Z",
-  "_postman_exported_using": "Postman/10.0.0"
+  ]
 }

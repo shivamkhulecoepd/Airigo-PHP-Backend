@@ -69,6 +69,7 @@ class ApplicationController extends BaseController
             // Prepare application data
             $applicationData = [
                 'job_id' => $jobId,
+                'recruiter_user_id' => $job['recruiter_user_id'],
                 'jobseeker_user_id' => $user['id'],
                 'cover_letter' => $data['cover_letter'] ?? null,
                 'status' => 'pending'
@@ -184,6 +185,47 @@ class ApplicationController extends BaseController
         try {
             $applications = $this->applicationRepository->getApplicationsWithJobDetails($filters, $limit, ($page - 1) * $limit);
             $totalCount = $this->applicationRepository->count(['jobseeker_user_id' => $user['id']] + ($status ? ['status' => $status] : []));
+
+            return ResponseBuilder::ok([
+                'applications' => $applications,
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => $totalCount,
+                    'pages' => ceil($totalCount / $limit)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch applications',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function getApplicationsForRecruiter(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        if ($user['user_type'] !== 'recruiter') {
+            return ResponseBuilder::forbidden(['message' => 'Only recruiters can view their applications']);
+        }
+
+        $page = (int) $this->getQueryParam($request, 'page', 1);
+        $limit = (int) $this->getQueryParam($request, 'limit', 10);
+        $status = $this->getQueryParam($request, 'status');
+
+        $filters = [];
+        if ($status) {
+            $filters['status'] = $status;
+        }
+
+        try {
+            $applications = $this->applicationRepository->getApplicationsForRecruiter($user['id'], $filters, $limit, ($page - 1) * $limit);
+            $totalCount = $this->applicationRepository->countForRecruiter($user['id'], $filters);
 
             return ResponseBuilder::ok([
                 'applications' => $applications,

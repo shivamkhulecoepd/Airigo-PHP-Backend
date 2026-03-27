@@ -557,7 +557,9 @@
               "data": [
                 {
                   "user_id": 4,
+                  "recruiter_name": "Priya Bhosale",
                   "company_name": "TechNova Solutions",
+                  "company_website": "https://technovasolutions.com",
                   "designation": "HR Manager",
                   "location": "Pune, India",
                   "photo_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_4_1774327542.jpg?alt=media",
@@ -603,6 +605,7 @@
                   "id": 3,
                   "recruiter_user_id": 4,
                   "company_name": "InnoSoft Pvt Ltd",
+                  "company_url": "https://innosoft.com",
                   "designation": "Flutter Engineer",
                   "ctc": "2-6 LPA",
                   "location": "Delhi, India",
@@ -622,6 +625,7 @@
                   "id": 2,
                   "recruiter_user_id": 4,
                   "company_name": "Global FinTech Ltd",
+                  "company_url": "https://globalfintech.com",
                   "designation": "Frontend Developer",
                   "ctc": "8-12 LPA",
                   "location": "Remote",
@@ -641,6 +645,7 @@
                   "id": 1,
                   "recruiter_user_id": 4,
                   "company_name": "TechNova Solutions",
+                  "company_url": "https://technova.com",
                   "designation": "Software Engineer",
                   "ctc": "12-16 LPA",
                   "location": "Bangalore, India",
@@ -690,6 +695,7 @@
                   "id": 3,
                   "recruiter_user_id": 4,
                   "company_name": "InnoSoft Pvt Ltd",
+                  "company_url": "https://innosoft.com",
                   "designation": "Flutter Engineer",
                   "ctc": "2-6 LPA",
                   "location": "Delhi, India",
@@ -713,6 +719,7 @@
                   "id": 1,
                   "recruiter_user_id": 4,
                   "company_name": "TechNova Solutions",
+                  "company_url": "https://technova.com",
                   "designation": "Software Engineer",
                   "ctc": "12-16 LPA",
                   "location": "Bangalore, India",
@@ -839,6 +846,7 @@
                 "id": 1,
                 "recruiter_user_id": 4,
                 "company_name": "TechNova Solutions",
+                "company_url": "https://technova.com",
                 "designation": "Software Engineer",
                 "ctc": "12-16 LPA",
                 "location": "Bangalore, India",
@@ -1309,7 +1317,9 @@
               },
               "profile": {
                 "user_id": 4,
+                "recruiter_name": "Priya Bhosale",
                 "company_name": "TechNova Solutions",
+                "company_website": "https://technovasolutions.com",
                 "designation": "HR Manager",
                 "location": "Pune, India",
                 "photo_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fprofile_4_1774327542.jpg?alt=media",
@@ -1476,7 +1486,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"TechNova Solutions\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer to join our backend team.\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"Strong problem-solving skills\", \"Good communication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
+              "raw": "{\n  \"company_name\": \"TechNova Solutions\",\n  \"company_url\": \"https://technova.com\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer to join our backend team.\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"Strong problem-solving skills\", \"Good communication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs",
@@ -1492,6 +1502,7 @@
                 "id": 5,
                 "recruiter_user_id": 4,
                 "company_name": "InnoSoft Pvt Ltd",
+                "company_url": "https://innosoft.com",
                 "designation": "Flutter Engineer",
                 "ctc": "2-6 LPA",
                 "location": "Delhi, India",
@@ -1538,6 +1549,7 @@
                   "id": 3,
                   "recruiter_user_id": 4,
                   "company_name": "InnoSoft Pvt Ltd",
+                  "company_url": "https://innosoft.com",
                   "designation": "Flutter Engineer",
                   "ctc": "2-6 LPA",
                   "location": "Delhi, India",
@@ -1562,6 +1574,7 @@
                   "id": 1,
                   "recruiter_user_id": 4,
                   "company_name": "TechNova Solutions",
+                  "company_url": "https://technova.com",
                   "designation": "Software Engineer",
                   "ctc": "12-16 LPA",
                   "location": "Bangalore, India",
@@ -1621,6 +1634,7 @@
                 "id": 1,
                 "recruiter_user_id": 4,
                 "company_name": "TechNova Solutions",
+                "company_url": "https://technova.com",
                 "designation": "Software Engineer",
                 "ctc": "12-16 LPA",
                 "location": "Bangalore, India",
@@ -1660,7 +1674,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Global FinTech Ltd\",\n  \"designation\": \"Senior Frontend Developer\",\n  \"ctc\": \"15-20 LPA\",\n  \"location\": \"Remote\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior frontend engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"React\", \"JavaScript\", \"CSS\", \"HTML\", \"Team Management\"],\n  \"experience_required\": \"5\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
+              "raw": "{\n  \"company_name\": \"Global FinTech Ltd\",\n  \"company_url\": \"https://globalfintech.com\",\n  \"designation\": \"Senior Frontend Developer\",\n  \"ctc\": \"15-20 LPA\",\n  \"location\": \"Remote\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior frontend engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"React\", \"JavaScript\", \"CSS\", \"HTML\", \"Team Management\"],\n  \"experience_required\": \"5\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
@@ -1682,6 +1696,7 @@
                 "id": 1,
                 "recruiter_user_id": 4,
                 "company_name": "TechNova Solutions",
+                "company_url": "https://technova.com",
                 "designation": "Software Engineer",
                 "ctc": "12-16 LPA",
                 "location": "Bangalore, India",
@@ -1849,6 +1864,7 @@
               "application": {
                 "id": 1,
                 "job_id": 1,
+                "recruiter_user_id": 4,
                 "jobseeker_user_id": 2,
                 "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
                 "cover_letter": "I am excited to apply for this position...",
@@ -1882,6 +1898,7 @@
                 {
                   "id": 1,
                   "job_id": 1,
+                  "recruiter_user_id": 4,
                   "jobseeker_user_id": 2,
                   "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
                   "cover_letter": "I am excited to apply for this position...",
@@ -1890,8 +1907,59 @@
                   "updated_at": "2026-03-23 10:34:39",
                   "designation": "Software Engineer",
                   "company_name": "TechNova Solutions",
+                  "company_url": "https://technova.com",
                   "location": "Bangalore, India",
                   "category": "IT",
+                  "jobseeker_email": "shivam.coepd@gmail.com",
+                  "jobseeker_name": "Shivam COEPD"
+                }
+              ],
+              "pagination": {
+                "page": 1,
+                "limit": 10,
+                "total": 1,
+                "pages": 1
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Applications for Recruiter",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/applications/recruiter",
+              "host": ["{{base_url}}"],
+              "path": ["api", "applications", "recruiter"]
+            },
+            "description": "Get all applications for a recruiter"
+          },
+          "response": [
+            {
+              "applications": [
+                {
+                  "id": 1,
+                  "job_id": 1,
+                  "recruiter_user_id": 4,
+                  "jobseeker_user_id": 2,
+                  "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
+                  "cover_letter": "I am excited to apply for this position...",
+                  "status": "pending",
+                  "applied_at": "2026-03-23 10:34:39",
+                  "updated_at": "2026-03-23 10:34:39",
+                  "designation": "Software Engineer",
+                  "company_name": "TechNova Solutions",
+                  "company_url": "https://technova.com",
+                  "location": "Bangalore, India",
+                  "category": "IT",
+                  "company_website": "https://technovasolutions.com",
+                  "recruiter_name": "Priya Bhosale",
                   "jobseeker_email": "shivam.coepd@gmail.com",
                   "jobseeker_name": "Shivam COEPD"
                 }
@@ -1934,6 +2002,7 @@
                 {
                   "id": 1,
                   "job_id": 1,
+                  "recruiter_user_id": 4,
                   "jobseeker_user_id": 2,
                   "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
                   "cover_letter": "I am excited to apply for this position...",
@@ -1942,6 +2011,7 @@
                   "updated_at": "2026-03-23 10:34:39",
                   "designation": "Software Engineer",
                   "company_name": "TechNova Solutions",
+                  "company_url": "https://technova.com",
                   "location": "Bangalore, India",
                   "category": "IT",
                   "jobseeker_email": "shivam.coepd@gmail.com",
@@ -1994,6 +2064,7 @@
               "application": {
                 "id": 1,
                 "job_id": 1,
+                "recruiter_user_id": 4,
                 "jobseeker_user_id": 2,
                 "resume_url": "https://firebasestorage.googleapis.com/v0/b/airigo-jobs/o/uploads%2Fuploads%2Fresume_2_1774250983.pdf?alt=media",
                 "cover_letter": "I am excited to apply for this position...",
@@ -2002,6 +2073,7 @@
                 "updated_at": "2026-03-23 10:39:00",
                 "designation": "Software Engineer",
                 "company_name": "TechNova Solutions",
+                "company_url": "https://technova.com",
                 "location": "Bangalore, India",
                 "category": "IT",
                 "jobseeker_email": "shivam.coepd@gmail.com"
@@ -2141,6 +2213,7 @@
                   "created_at": "2026-03-23 08:35:05",
                   "recruiter_user_id": 4,
                   "company_name": "TechNova Solutions",
+                  "company_url": "https://technova.com",
                   "designation": "Software Engineer",
                   "ctc": "12-16 LPA",
                   "location": "Bangalore, India",

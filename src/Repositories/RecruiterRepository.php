@@ -13,7 +13,7 @@ class RecruiterRepository extends BaseRepository
     {
         // Ensure we only insert allowed columns
         $allowedColumns = [
-            'user_id', 'company_name', 'designation', 'location', 
+            'user_id', 'email', 'recruiter_name', 'company_name', 'company_website', 'designation', 'location', 
             'photo_url', 'id_card_url', 'approval_status', 'approved_by', 
             'approved_at', 'rejection_reason'
         ];
@@ -27,7 +27,7 @@ class RecruiterRepository extends BaseRepository
     {
         // Ensure we only update allowed columns
         $allowedColumns = [
-            'company_name', 'designation', 'location', 
+            'email', 'recruiter_name', 'company_name', 'company_website', 'designation', 'location', 
             'photo_url', 'id_card_url', 'approval_status', 'approved_by', 
             'approved_at', 'rejection_reason'
         ];
@@ -143,8 +143,22 @@ class RecruiterRepository extends BaseRepository
     {
         $query = "
             SELECT 
-                r.*,
-                u.email,
+                r.user_id,
+                r.email,
+                r.recruiter_name,
+                r.company_name,
+                r.company_website,
+                r.designation,
+                r.location,
+                r.photo_url,
+                r.id_card_url,
+                r.approval_status,
+                r.approved_by,
+                r.approved_at,
+                r.rejection_reason,
+                r.created_at,
+                r.updated_at,
+                u.email as user_email,
                 u.phone,
                 u.status,
                 u.email_verified,

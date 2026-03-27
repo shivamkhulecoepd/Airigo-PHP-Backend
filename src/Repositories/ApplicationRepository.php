@@ -169,7 +169,7 @@ class ApplicationRepository extends BaseRepository
     {
         // Ensure we only insert allowed columns
         $allowedColumns = [
-            'job_id', 'jobseeker_user_id', 'resume_url', 'cover_letter', 'status'
+            'job_id', 'recruiter_user_id', 'jobseeker_user_id', 'resume_url', 'cover_letter', 'status'
         ];
 
         $filteredData = array_intersect_key($data, array_flip($allowedColumns));
@@ -181,7 +181,7 @@ class ApplicationRepository extends BaseRepository
     {
         // Ensure we only update allowed columns
         $allowedColumns = [
-            'job_id', 'jobseeker_user_id', 'resume_url', 'cover_letter', 'status'
+            'job_id', 'recruiter_user_id', 'jobseeker_user_id', 'resume_url', 'cover_letter', 'status'
         ];
 
         $filteredData = array_intersect_key($data, array_flip($allowedColumns));
@@ -194,13 +194,18 @@ class ApplicationRepository extends BaseRepository
         $query = "
             SELECT 
                 a.*,
+                a.recruiter_user_id,
                 j.designation,
                 j.company_name,
+                j.company_url,
                 j.location,
                 j.category,
+                jr.recruiter_name,
+                jr.company_website,
                 u.email as jobseeker_email
             FROM {$this->table} a
             JOIN jobs j ON a.job_id = j.id
+            LEFT JOIN recruiters jr ON a.recruiter_user_id = jr.user_id
             JOIN users u ON a.jobseeker_user_id = u.id
             WHERE a.id = ?
         ";
@@ -210,19 +215,84 @@ class ApplicationRepository extends BaseRepository
         return $stmt->fetch() ?: null;
     }
 
+    public function getApplicationsForRecruiter(int $recruiterUserId, array $filters = [], int $limit = null, int $offset = null): array
+    {
+        $query = "
+            SELECT 
+                a.*, 
+                j.designation, 
+                j.company_name, 
+                j.location, 
+                j.category, 
+                jr.recruiter_name, 
+                jr.company_website, 
+                u.email as jobseeker_email, 
+                js.name as jobseeker_name 
+            FROM {$this->table} a 
+            JOIN jobs j ON a.job_id = j.id 
+            JOIN users u ON a.jobseeker_user_id = u.id 
+            LEFT JOIN jobseekers js ON a.jobseeker_user_id = js.user_id 
+            LEFT JOIN recruiters jr ON a.recruiter_user_id = jr.user_id 
+        ";
+        
+        $params = [];
+        $conditions = [];
+
+        // Add recruiter filter
+        $conditions[] = "j.recruiter_user_id = ?";
+        $params[] = $recruiterUserId;
+
+        if (!empty($filters)) {
+            foreach ($filters as $column => $value) {
+                if ($column === 'status') {
+                    $conditions[] = "a.status = ?";
+                    $params[] = $value;
+                } elseif ($column === 'job_id') {
+                    $conditions[] = "a.job_id = ?";
+                    $params[] = $value;
+                }
+            }
+        }
+
+        if (!empty($conditions)) {
+            $query .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query .= " ORDER BY a.{$this->primaryKey} DESC";
+
+        if ($limit !== null) {
+            $query .= " LIMIT ?";
+            $params[] = $limit;
+
+            if ($offset !== null) {
+                $query .= " OFFSET ?";
+                $params[] = $offset;
+            }
+        }
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
     public function getApplicationsWithJobDetails(array $filters = [], int $limit = null, int $offset = null): array
     {
         $query = "
             SELECT 
                 a.*,
+                a.recruiter_user_id,
                 j.designation,
                 j.company_name,
+                j.company_url,
                 j.location,
                 j.category,
+                jr.recruiter_name,
+                jr.company_website,
                 u.email as jobseeker_email,
                 js.name as jobseeker_name
             FROM {$this->table} a
             JOIN jobs j ON a.job_id = j.id
+            LEFT JOIN recruiters jr ON a.recruiter_user_id = jr.user_id
             JOIN users u ON a.jobseeker_user_id = u.id
             LEFT JOIN jobseekers js ON a.jobseeker_user_id = js.user_id
         ";
@@ -328,5 +398,40 @@ class ApplicationRepository extends BaseRepository
                 'pages' => ceil($total / $limit)
             ]
         ];
+    }
+
+    public function countForRecruiter(int $recruiterUserId, array $filters = []): int
+    {
+        $query = "
+            SELECT COUNT(*) as count 
+            FROM {$this->table} a 
+            JOIN jobs j ON a.job_id = j.id 
+            WHERE j.recruiter_user_id = ?
+        ";
+        
+        $params = [$recruiterUserId];
+        $conditions = [];
+
+        if (!empty($filters)) {
+            foreach ($filters as $column => $value) {
+                if ($column === 'status') {
+                    $conditions[] = "a.status = ?";
+                    $params[] = $value;
+                } elseif ($column === 'job_id') {
+                    $conditions[] = "a.job_id = ?";
+                    $params[] = $value;
+                }
+            }
+        }
+
+        if (!empty($conditions)) {
+            $query .= " AND " . implode(' AND ', $conditions);
+        }
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute($params);
+        $result = $stmt->fetch();
+        
+        return (int)$result['count'];
     }
 }

@@ -52,6 +52,7 @@ class JobController extends BaseController
             $jobData = [
                 'recruiter_user_id' => $user['id'],
                 'company_name' => $data['company_name'],
+                'company_url' => $data['company_url'] ?? null,
                 'company_logo_url' => $data['company_logo_url'] ?? null,
                 'designation' => $data['designation'],
                 'ctc' => $data['ctc'],
@@ -226,7 +227,7 @@ class JobController extends BaseController
             // Prepare update data
             $updateData = [];
             $fields = [
-                'company_name', 'company_logo_url', 'designation', 'ctc', 'location', 
+                'company_name', 'company_url', 'company_logo_url', 'designation', 'ctc', 'location', 
                 'category', 'description', 'experience_required', 
                 'is_active', 'is_urgent_hiring', 'job_type'
             ];
@@ -572,6 +573,10 @@ class JobController extends BaseController
         // Validate optional fields if present
         if (isset($data['experience_required']) && !$this->validator->isValidLength($data['experience_required'], 1, 50)) {
             $errors['experience_required'] = 'Experience required must be between 1 and 50 characters';
+        }
+
+        if (isset($data['company_url']) && !$this->validator->isValidUrl($data['company_url'])) {
+            $errors['company_url'] = 'Company URL must be a valid URL';
         }
 
         if (isset($data['job_type']) && !$this->validator->isIn($data['job_type'], ['Full-time', 'Part-time', 'Contract', 'Internship'])) {

@@ -750,33 +750,6 @@
           "response": []
         },
         {
-          "name": "Update Recruiter Profile",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"recruiter_name\": \"Jane Smith\",\n  \"company_website\": \"https://techsolutions.com\",\n  \"designation\": \"HR Manager\",\n  \"location\": \"San Francisco, CA\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/api/users/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "users", "profile"]
-            },
-            "description": "Update current recruiter profile"
-          },
-          "response": []
-        },
-        {
           "name": "Delete Account",
           "request": {
             "method": "DELETE",
@@ -903,7 +876,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"company_url\": \"https://techsolutions.com\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"8-12 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"3+ years experience\", \"Knowledge of APIs and authentication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
+              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"8-12 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"3+ years experience\", \"Knowledge of APIs and authentication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs",
@@ -974,7 +947,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"company_url\": \"https://techsolutions.com\",\n  \"designation\": \"Senior Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\", \"Team Management\"],\n  \"experience_required\": \"5\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
+              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"designation\": \"Senior Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\", \"Team Management\"],\n  \"experience_required\": \"5\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
@@ -1228,35 +1201,6 @@
             ]
           },
           "response": []
-        },
-        {
-          "name": "Get Applications for Recruiter",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/applications/recruiter?page=1&limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["api", "applications", "recruiter"],
-              "query": [
-                {
-                  "key": "page",
-                  "value": "1"
-                },
-                {
-                  "key": "limit",
-                  "value": "10"
-                }
-              ]
-            },
-            "description": "Get all applications for jobs posted by the current recruiter"
-          },
-          "response": []
         }
       ]
     },
@@ -1494,7 +1438,7 @@
       "enabled": true
     }
   ],
-  "timestamp": 1743122140000,
-  "_postman_exported_at": "2026-03-27T09:09:00.000Z",
+  "timestamp": 1709122140000,
+  "_postman_exported_at": "2026-02-28T09:09:00.000Z",
   "_postman_exported_using": "Postman/10.0.0"
 }

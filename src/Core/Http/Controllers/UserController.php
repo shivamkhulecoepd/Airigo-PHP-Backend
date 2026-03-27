@@ -411,6 +411,14 @@ class UserController extends BaseController
                 $errors['company_name'] = 'Company name must be between 1 and 255 characters';
             }
 
+            if (isset($data['recruiter_name']) && !$this->validator->isValidLength($data['recruiter_name'], 1, 255)) {
+                $errors['recruiter_name'] = 'Recruiter name must be between 1 and 255 characters';
+            }
+
+            if (isset($data['company_website']) && !$this->validator->isValidUrl($data['company_website'])) {
+                $errors['company_website'] = 'Company website must be a valid URL';
+            }
+
             if (isset($data['designation']) && !$this->validator->isValidLength($data['designation'], 1, 255)) {
                 $errors['designation'] = 'Designation must be between 1 and 255 characters';
             }
@@ -456,7 +464,7 @@ class UserController extends BaseController
     private function filterRecruiterProfileData(array $data): array
     {
         $allowedFields = [
-            'company_name', 'designation', 'location'
+            'company_name', 'recruiter_name', 'company_website', 'designation', 'location'
         ];
 
         $filteredData = [];

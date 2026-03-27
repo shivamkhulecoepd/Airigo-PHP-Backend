@@ -121,10 +121,13 @@ class DatabaseManager
 
             'recruiters' => "CREATE TABLE IF NOT EXISTS recruiters (
                 user_id BIGINT UNSIGNED PRIMARY KEY,
+                email VARCHAR(255) NULL,
+                recruiter_name VARCHAR(255) NULL,
                 company_name VARCHAR(255) NOT NULL,
                 designation VARCHAR(255),
                 location VARCHAR(255),
                 photo_url VARCHAR(500),
+                company_website VARCHAR(255) NULL,
                 id_card_url VARCHAR(500),
                 approval_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
                 approved_by BIGINT UNSIGNED,
@@ -134,6 +137,7 @@ class DatabaseManager
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (approved_by) REFERENCES users(id) ON DELETE SET NULL,
+                INDEX idx_email (email),
                 INDEX idx_approval_status (approval_status),
                 INDEX idx_company_name (company_name),
                 INDEX idx_location (location)
@@ -144,6 +148,7 @@ class DatabaseManager
                 recruiter_user_id BIGINT UNSIGNED NOT NULL,
                 company_name VARCHAR(255) NOT NULL,
                 company_logo_url VARCHAR(500),
+                company_url VARCHAR(500) NULL,
                 designation VARCHAR(255) NOT NULL,
                 ctc VARCHAR(50) NOT NULL,
                 location VARCHAR(255) NOT NULL,
@@ -166,12 +171,14 @@ class DatabaseManager
                 INDEX idx_created_at (created_at DESC),
                 INDEX idx_is_urgent_hiring (is_urgent_hiring),
                 INDEX idx_designation (designation),
-                INDEX idx_ctc (ctc)
+                INDEX idx_ctc (ctc),
+                INDEX idx_company_url (company_url)
             ) ENGINE=InnoDB",
 
             'applications' => "CREATE TABLE IF NOT EXISTS applications (
                 id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 job_id BIGINT UNSIGNED NOT NULL,
+                recruiter_user_id BIGINT UNSIGNED NULL,
                 jobseeker_user_id BIGINT UNSIGNED NOT NULL,
                 resume_url VARCHAR(500),
                 cover_letter TEXT,
@@ -179,8 +186,10 @@ class DatabaseManager
                 applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+                FOREIGN KEY (recruiter_user_id) REFERENCES users(id) ON DELETE CASCADE,
                 FOREIGN KEY (jobseeker_user_id) REFERENCES users(id) ON DELETE CASCADE,
                 INDEX idx_job_id (job_id),
+                INDEX idx_recruiter_user_id (recruiter_user_id),
                 INDEX idx_jobseeker_user_id (jobseeker_user_id),
                 INDEX idx_status (status),
                 INDEX idx_applied_at (applied_at DESC)
