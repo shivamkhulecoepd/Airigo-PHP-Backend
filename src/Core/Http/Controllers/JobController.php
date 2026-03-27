@@ -119,11 +119,23 @@ class JobController extends BaseController
 
             // If recruiter_user_id is provided, fetch jobs for that specific recruiter
             if ($recruiterUserId) {
-                if (!$user || ($user['user_type'] !== 'recruiter' && $user['id'] != $recruiterUserId)) {
+                // Allow authenticated recruiters to access their own jobs
+                // If user is authenticated and is a recruiter, allow access to their own jobs
+                if ($user && $user['user_type'] === 'recruiter' && $user['id'] == $recruiterUserId) {
+                    // User is accessing their own jobs
+                    $jobs = $this->jobRepository->findByRecruiter((int)$recruiterUserId, $filters, $limit, ($page - 1) * $limit);
+                    $totalCount = $this->jobRepository->count(['recruiter_user_id' => $recruiterUserId]);
+                } else if ($user && $user['user_type'] === 'admin') {
+                    // Admin can access any recruiter's jobs
+                    $jobs = $this->jobRepository->findByRecruiter((int)$recruiterUserId, $filters, $limit, ($page - 1) * $limit);
+                    $totalCount = $this->jobRepository->count(['recruiter_user_id' => $recruiterUserId]);
+                } else if (!$user) {
+                    // Unauthenticated user cannot access specific recruiter jobs
+                    return ResponseBuilder::forbidden(['message' => 'Authentication required to access specific recruiter jobs']);
+                } else {
+                    // User is trying to access another recruiter's jobs
                     return ResponseBuilder::forbidden(['message' => 'You can only access your own jobs']);
                 }
-                $jobs = $this->jobRepository->findByRecruiter((int)$recruiterUserId, $filters, $limit, ($page - 1) * $limit);
-                $totalCount = $this->jobRepository->count(['recruiter_user_id' => $recruiterUserId]);
             } else {
                 // Otherwise, fetch all approved jobs for general users
                 $jobs = $this->jobRepository->findApprovedJobs($filters, $limit, ($page - 1) * $limit);
