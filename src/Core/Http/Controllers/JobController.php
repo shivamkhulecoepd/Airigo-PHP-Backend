@@ -114,6 +114,8 @@ class JobController extends BaseController
 
         try {
             $user = $this->getUser($request);
+            $userId = $this->getUserId($request); // Get user ID from request attributes
+            $userType = $this->getUserType($request); // Get user type from request attributes
             $jobs = [];
             $totalCount = 0;
 
@@ -121,11 +123,11 @@ class JobController extends BaseController
             if ($recruiterUserId) {
                 // Allow authenticated recruiters to access their own jobs
                 // If user is authenticated and is a recruiter, allow access to their own jobs
-                if ($user && $user['user_type'] === 'recruiter' && $user['id'] == $recruiterUserId) {
+                if ($user && $userType === 'recruiter' && $userId == $recruiterUserId) {
                     // User is accessing their own jobs
                     $jobs = $this->jobRepository->findByRecruiter((int)$recruiterUserId, $filters, $limit, ($page - 1) * $limit);
                     $totalCount = $this->jobRepository->count(['recruiter_user_id' => $recruiterUserId]);
-                } else if ($user && $user['user_type'] === 'admin') {
+                } else if ($user && $userType === 'admin') {
                     // Admin can access any recruiter's jobs
                     $jobs = $this->jobRepository->findByRecruiter((int)$recruiterUserId, $filters, $limit, ($page - 1) * $limit);
                     $totalCount = $this->jobRepository->count(['recruiter_user_id' => $recruiterUserId]);
@@ -223,6 +225,7 @@ class JobController extends BaseController
             return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
         }
 
+        $userId = $this->getUserId($request); // Get user ID from request attributes
         $jobId = (int) $request->getAttribute('id');
         $data = $this->getRequestBody($request);
 
@@ -237,7 +240,7 @@ class JobController extends BaseController
                 return ResponseBuilder::notFound(['message' => 'Job not found']);
             }
 
-            if ($user['id'] != $job['recruiter_user_id']) {
+            if ($userId != $job['recruiter_user_id']) {
                 return ResponseBuilder::forbidden(['message' => 'You can only update your own jobs']);
             }
 
@@ -326,6 +329,7 @@ class JobController extends BaseController
             return ResponseBuilder::forbidden(['message' => 'Only recruiters can upload company logos']);
         }
 
+        $userId = $this->getUserId($request); // Get user ID from request attributes
         $jobId = (int) $request->getAttribute('id');
         
         if ($jobId <= 0) {
@@ -339,7 +343,7 @@ class JobController extends BaseController
                 return ResponseBuilder::notFound(['message' => 'Job not found']);
             }
 
-            if ($user['id'] != $job['recruiter_user_id']) {
+            if ($userId != $job['recruiter_user_id']) {
                 return ResponseBuilder::forbidden(['message' => 'You can only update logos for your own jobs']);
             }
 
@@ -410,6 +414,7 @@ class JobController extends BaseController
             return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
         }
 
+        $userId = $this->getUserId($request); // Get user ID from request attributes
         $jobId = (int) $request->getAttribute('id');
 
         if ($jobId <= 0) {
@@ -423,7 +428,7 @@ class JobController extends BaseController
                 return ResponseBuilder::notFound(['message' => 'Job not found']);
             }
 
-            if ($user['id'] != $job['recruiter_user_id']) {
+            if ($userId != $job['recruiter_user_id']) {
                 return ResponseBuilder::forbidden(['message' => 'You can only delete your own jobs']);
             }
 
