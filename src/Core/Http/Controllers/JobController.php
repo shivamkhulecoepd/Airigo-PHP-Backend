@@ -62,9 +62,9 @@ class JobController extends BaseController
                 'requirements' => isset($data['requirements']) ? json_encode($data['requirements']) : json_encode([]),
                 'skills_required' => isset($data['skills_required']) ? json_encode($data['skills_required']) : json_encode([]),
                 'experience_required' => $data['experience_required'] ?? null,
-                'is_active' => (int)($data['is_active'] ?? true),
+                'is_active' => isset($data['is_active']) ? (int)$data['is_active'] : 1,
                 'approval_status' => 'pending', // Jobs need admin approval
-                'is_urgent_hiring' => (int)($data['is_urgent_hiring'] ?? false),
+                'is_urgent_hiring' => isset($data['is_urgent_hiring']) ? (int)$data['is_urgent_hiring'] : 0,
                 'job_type' => $data['job_type'] ?? 'Full-time'
             ];
 
@@ -273,6 +273,14 @@ class JobController extends BaseController
             }
             if (isset($data['skills_required'])) {
                 $updateData['skills_required'] = json_encode($data['skills_required']);
+            }
+
+            // Fix boolean to integer conversion to prevent PDO empty string DB errors
+            if (isset($data['is_active'])) {
+                $updateData['is_active'] = (int)$data['is_active'];
+            }
+            if (isset($data['is_urgent_hiring'])) {
+                $updateData['is_urgent_hiring'] = (int)$data['is_urgent_hiring'];
             }
 
             // Reset approval status if significant changes were made
@@ -602,8 +610,12 @@ class JobController extends BaseController
         }
 
         // Validate optional fields if present
-        if (isset($data['experience_required']) && !$this->validator->isValidLength($data['experience_required'], 1, 50)) {
-            $errors['experience_required'] = 'Experience required must be between 1 and 50 characters';
+        if (isset($data['experience_required']) && !empty($data['experience_required'])) {
+            if (!$this->validator->isValidLength($data['experience_required'], 1, 50)) {
+                $errors['experience_required'] = 'Experience required must be between 1 and 50 characters';
+            } elseif (!preg_match('/^\d+-\d+\s*(year|years)$/i', $data['experience_required'])) {
+                $errors['experience_required'] = 'Experience required must be in format like "0-1 year", "2-5 years", etc.';
+            }
         }
 
         if (isset($data['company_url']) && !$this->validator->isValidUrl($data['company_url'])) {
@@ -612,6 +624,15 @@ class JobController extends BaseController
 
         if (isset($data['job_type']) && !$this->validator->isIn($data['job_type'], ['Full-time', 'Part-time', 'Contract', 'Internship'])) {
             $errors['job_type'] = 'Job type must be Full-time, Part-time, Contract, or Internship';
+        }
+
+        // Validate experience_required format if present
+        if (isset($data['experience_required']) && !empty($data['experience_required'])) {
+            if (!$this->validator->isValidLength($data['experience_required'], 1, 50)) {
+                $errors['experience_required'] = 'Experience required must be between 1 and 50 characters';
+            } elseif (!preg_match('/^\d+-\d+\s*(year|years)$/i', $data['experience_required'])) {
+                $errors['experience_required'] = 'Experience required must be in format like "0-1 year", "2-5 years", etc.';
+            }
         }
 
         if (isset($data['is_active']) && !$this->validator->isBoolean($data['is_active'])) {

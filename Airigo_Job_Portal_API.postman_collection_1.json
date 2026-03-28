@@ -876,7 +876,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"8-12 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"3+ years experience\", \"Knowledge of APIs and authentication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
+              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"8-12 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"3+ years experience\", \"Knowledge of APIs and authentication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3-5 years\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs",
@@ -947,7 +947,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"designation\": \"Senior Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\", \"Team Management\"],\n  \"experience_required\": \"5\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
+              "raw": "{\n  \"company_name\": \"Tech Solutions Inc.\",\n  \"designation\": \"Senior Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior software engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\", \"Team Management\"],\n  \"experience_required\": \"5-7 years\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
