@@ -613,8 +613,8 @@ class JobController extends BaseController
         if (isset($data['experience_required']) && !empty($data['experience_required'])) {
             if (!$this->validator->isValidLength($data['experience_required'], 1, 50)) {
                 $errors['experience_required'] = 'Experience required must be between 1 and 50 characters';
-            } elseif (!preg_match('/^\d+-\d+\s*(year|years)$/i', $data['experience_required'])) {
-                $errors['experience_required'] = 'Experience required must be in format like "0-1 year", "2-5 years", etc.';
+            } elseif (!preg_match('/^(\d+-\d+\s*(year|years)|\d+\+\s*(year|years))$/i', $data['experience_required'])) {
+                $errors['experience_required'] = 'Experience required must be in format like "0-1 year", "2-5 years", or "8+ years".';
             }
         }
 
@@ -630,8 +630,8 @@ class JobController extends BaseController
         if (isset($data['experience_required']) && !empty($data['experience_required'])) {
             if (!$this->validator->isValidLength($data['experience_required'], 1, 50)) {
                 $errors['experience_required'] = 'Experience required must be between 1 and 50 characters';
-            } elseif (!preg_match('/^\d+-\d+\s*(year|years)$/i', $data['experience_required'])) {
-                $errors['experience_required'] = 'Experience required must be in format like "0-1 year", "2-5 years", etc.';
+            } elseif (!preg_match('/^(\d+-\d+\s*(year|years)|\d+\+\s*(year|years))$/i', $data['experience_required'])) {
+                $errors['experience_required'] = 'Experience required must be in format like "0-1 year", "2-5 years", or "8+ years".';
             }
         }
 
