@@ -62,9 +62,9 @@ class JobController extends BaseController
                 'requirements' => isset($data['requirements']) ? json_encode($data['requirements']) : json_encode([]),
                 'skills_required' => isset($data['skills_required']) ? json_encode($data['skills_required']) : json_encode([]),
                 'experience_required' => $data['experience_required'] ?? null,
-                'is_active' => $data['is_active'] ?? true,
+                'is_active' => (int)($data['is_active'] ?? true),
                 'approval_status' => 'pending', // Jobs need admin approval
-                'is_urgent_hiring' => $data['is_urgent_hiring'] ?? false,
+                'is_urgent_hiring' => (int)($data['is_urgent_hiring'] ?? false),
                 'job_type' => $data['job_type'] ?? 'Full-time'
             ];
 
