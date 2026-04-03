@@ -4,6 +4,7 @@
 
 use App\Core\Http\Router\Router;
 use App\Core\Auth\Middleware\AuthMiddleware;
+use App\Core\Auth\Middleware\OptionalAuthMiddleware;
 use App\Core\Auth\Middleware\RoleMiddleware;
 use App\Core\Http\Controllers\AuthController;
 use App\Core\Http\Controllers\UserController;
@@ -68,7 +69,7 @@ $router->post('/api/notifications/cleanup-invalid-tokens', [NotificationControll
 
 // Job management routes
 $router->post('/api/jobs', [JobController::class, 'create'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
-$router->get('/api/jobs', [JobController::class, 'getAll']);
+$router->get('/api/jobs', [JobController::class, 'getAll'])->addMiddleware(new OptionalAuthMiddleware());
 $router->get('/api/jobs/{id}', [JobController::class, 'getById']);
 $router->put('/api/jobs/{id}', [JobController::class, 'update'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 $router->delete('/api/jobs/{id}', [JobController::class, 'delete'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
