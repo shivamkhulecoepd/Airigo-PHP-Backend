@@ -77,8 +77,6 @@ $router->get('/api/jobs/search', [JobController::class, 'search']);
 $router->get('/api/jobs/categories', [JobController::class, 'getCategories']);
 $router->get('/api/jobs/locations', [JobController::class, 'getLocations']);
 $router->post('/api/jobs/{id}/upload-logo', [JobController::class, 'uploadCompanyLogo'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
-// General file upload for company logo (before job creation)
-$router->post('/api/jobs/upload-image', [JobController::class, 'uploadImage'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 
 // Application management routes
 $router->post('/api/applications', [ApplicationController::class, 'apply'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['jobseeker']));
