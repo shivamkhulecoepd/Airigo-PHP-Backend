@@ -97,7 +97,27 @@ class Validator
      */
     public function isValidUrl(string $url): bool
     {
-        return filter_var($url, FILTER_VALIDATE_URL) !== false;
+        // Trim whitespace
+        $url = trim($url);
+        
+        // Check if empty
+        if (empty($url)) {
+            return false;
+        }
+        
+        // Check for valid URL characters
+        if (!preg_match('/^[a-zA-Z0-9:\/\-_\.%~\?#\+=&@!*\(\)\[\];,]+$/', $url)) {
+            return false;
+        }
+        
+        // Add protocol if missing for validation
+        $fullUrl = $url;
+        if (!preg_match('/^https?:\/\//', $url)) {
+            $fullUrl = 'http://' . $url;
+        }
+        
+        // Use filter_var to validate the full URL
+        return filter_var($fullUrl, FILTER_VALIDATE_URL) !== false;
     }
 
     /**
