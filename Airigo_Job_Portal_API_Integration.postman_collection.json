@@ -1478,22 +1478,89 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"company_name\": \"TechNova Solutions\",\n  \"company_url\": \"https://technova.com\",\n  \"designation\": \"Software Engineer\",\n  \"ctc\": \"12-16 LPA\",\n  \"location\": \"Bangalore, India\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a skilled software engineer to join our backend team.\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"Strong problem-solving skills\", \"Good communication\"],\n  \"skills_required\": [\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"],\n  \"experience_required\": \"3\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": false,\n  \"is_active\": true\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "company_name",
+                  "value": "TechNova Solutions",
+                  "type": "text"
+                },
+                {
+                  "key": "company_url",
+                  "value": "https://technova.com",
+                  "type": "text"
+                },
+                {
+                  "key": "designation",
+                  "value": "Software Engineer",
+                  "type": "text"
+                },
+                {
+                  "key": "ctc",
+                  "value": "12-16 LPA",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "Bangalore, India",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "IT",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "We are looking for a skilled software engineer to join our backend team.",
+                  "type": "text"
+                },
+                {
+                  "key": "requirements",
+                  "value": "[\"Bachelor's degree in Computer Science\", \"Strong problem-solving skills\", \"Good communication\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "skills_required",
+                  "value": "[\"PHP\", \"Laravel\", \"MySQL\", \"REST APIs\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "experience_required",
+                  "value": "3",
+                  "type": "text"
+                },
+                {
+                  "key": "job_type",
+                  "value": "Full-time",
+                  "type": "text"
+                },
+                {
+                  "key": "is_urgent_hiring",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "is_active",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "logo",
+                  "type": "file",
+                  "src": []
+                }
+              ]
             },
             "url": {
               "raw": "{{base_url}}/api/jobs",
               "host": ["{{base_url}}"],
               "path": ["api", "jobs"]
             },
-            "description": "Create a new job posting"
+            "description": "Create a new job posting with company logo"
           },
           "response": [
             {
@@ -1666,22 +1733,89 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n  \"company_name\": \"Global FinTech Ltd\",\n  \"company_url\": \"https://globalfintech.com\",\n  \"designation\": \"Senior Frontend Developer\",\n  \"ctc\": \"15-20 LPA\",\n  \"location\": \"Remote\",\n  \"category\": \"IT\",\n  \"description\": \"We are looking for a senior frontend engineer...\",\n  \"requirements\": [\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"],\n  \"skills_required\": [\"React\", \"JavaScript\", \"CSS\", \"HTML\", \"Team Management\"],\n  \"experience_required\": \"5-7 years\",\n  \"job_type\": \"Full-time\",\n  \"is_urgent_hiring\": true,\n  \"is_active\": true\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "company_name",
+                  "value": "Global FinTech Ltd",
+                  "type": "text"
+                },
+                {
+                  "key": "company_url",
+                  "value": "https://globalfintech.com",
+                  "type": "text"
+                },
+                {
+                  "key": "designation",
+                  "value": "Senior Frontend Developer",
+                  "type": "text"
+                },
+                {
+                  "key": "ctc",
+                  "value": "15-20 LPA",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "Remote",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "IT",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "We are looking for a senior frontend engineer...",
+                  "type": "text"
+                },
+                {
+                  "key": "requirements",
+                  "value": "[\"Bachelor's degree in Computer Science\", \"5+ years experience\", \"Leadership skills\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "skills_required",
+                  "value": "[\"React\", \"JavaScript\", \"CSS\", \"HTML\", \"Team Management\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "experience_required",
+                  "value": "5-7 years",
+                  "type": "text"
+                },
+                {
+                  "key": "job_type",
+                  "value": "Full-time",
+                  "type": "text"
+                },
+                {
+                  "key": "is_urgent_hiring",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "is_active",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "logo",
+                  "type": "file",
+                  "src": []
+                }
+              ]
             },
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
               "host": ["{{base_url}}"],
               "path": ["api", "jobs", ":id"]
             },
-            "description": "Update job posting",
+            "description": "Update job posting with company logo",
             "variable": [
               {
                 "key": "id",

@@ -1107,15 +1107,82 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n    \"company_name\": \"InnoSoft Pvt Ltd\",\n    \"company_url\": \"https://innosoft.com\",\n    \"designation\": \"Flutter Engineer\",\n    \"ctc\": \"2-6 LPA\",\n    \"location\": \"Delhi, India\",\n    \"category\": \"IT\",\n    \"description\": \"Hiring flutter developers with strong app development experience.\",\n    \"requirements\": [\n        \"Experience with Node.js\",\n        \"Express, and MySQL\",\n        \"Knowledge of APIs and authentication\"\n    ],\n    \"skills_required\": [\n        \"Flutter\",\n        \"Dart\",\n        \"MySQL\",\n        \"REST APIs\"\n    ],\n    \"experience_required\": 5,\n    \"is_active\": true,\n    \"is_urgent_hiring\": true,\n    \"job_type\": \"Full-time\"\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "company_name",
+                  "value": "InnoSoft Pvt Ltd",
+                  "type": "text"
+                },
+                {
+                  "key": "company_url",
+                  "value": "https://innosoft.com",
+                  "type": "text"
+                },
+                {
+                  "key": "designation",
+                  "value": "Flutter Engineer",
+                  "type": "text"
+                },
+                {
+                  "key": "ctc",
+                  "value": "2-6 LPA",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "Delhi, India",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "IT",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Hiring flutter developers with strong app development experience.",
+                  "type": "text"
+                },
+                {
+                  "key": "requirements",
+                  "value": "[\"Experience with Node.js\", \"Express, and MySQL\", \"Knowledge of APIs and authentication\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "skills_required",
+                  "value": "[\"Flutter\", \"Dart\", \"MySQL\", \"REST APIs\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "experience_required",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "is_active",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "is_urgent_hiring",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "job_type",
+                  "value": "Full-time",
+                  "type": "text"
+                },
+                {
+                  "key": "logo",
+                  "type": "file",
+                  "src": "/C:/Users/COEPD/Downloads/company_logo.png"
+                }
+              ]
             },
             "url": {
               "raw": "{{base_url}}/api/jobs",
@@ -1127,7 +1194,7 @@
                 "jobs"
               ]
             },
-            "description": "Create a new job posting with company URL"
+            "description": "Create a new job posting with company logo"
           },
           "response": []
         },
@@ -1330,15 +1397,82 @@
               {
                 "key": "Authorization",
                 "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
             "body": {
-              "mode": "raw",
-              "raw": "{\n    \"company_name\": \"InnoSoft Pvt Ltd\",\n    \"company_url\": \"https://innosoft.com\",\n    \"designation\": \"Senior Flutter Engineer\",\n    \"ctc\": \"6-10 LPA\",\n    \"location\": \"Delhi, India\",\n    \"category\": \"IT\",\n    \"description\": \"Hiring senior flutter developers with strong app development experience.\",\n    \"requirements\": [\n        \"Experience with Node.js\",\n        \"Express, and MySQL\",\n        \"Knowledge of APIs and authentication\"\n    ],\n    \"skills_required\": [\n        \"Flutter\",\n        \"Dart\",\n        \"MySQL\",\n        \"REST APIs\"\n    ],\n    \"experience_required\": 5,\n    \"is_active\": true,\n    \"is_urgent_hiring\": true,\n    \"job_type\": \"Full-time\"\n}"
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "company_name",
+                  "value": "InnoSoft Pvt Ltd",
+                  "type": "text"
+                },
+                {
+                  "key": "company_url",
+                  "value": "https://innosoft.com",
+                  "type": "text"
+                },
+                {
+                  "key": "designation",
+                  "value": "Senior Flutter Engineer",
+                  "type": "text"
+                },
+                {
+                  "key": "ctc",
+                  "value": "6-10 LPA",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "Delhi, India",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "IT",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Hiring senior flutter developers with strong app development experience.",
+                  "type": "text"
+                },
+                {
+                  "key": "requirements",
+                  "value": "[\"Experience with Node.js\", \"Express, and MySQL\", \"Knowledge of APIs and authentication\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "skills_required",
+                  "value": "[\"Flutter\", \"Dart\", \"MySQL\", \"REST APIs\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "experience_required",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "is_active",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "is_urgent_hiring",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "job_type",
+                  "value": "Full-time",
+                  "type": "text"
+                },
+                {
+                  "key": "logo",
+                  "type": "file",
+                  "src": "/C:/Users/COEPD/Downloads/company_logo_update.png"
+                }
+              ]
             },
             "url": {
               "raw": "{{base_url}}/api/jobs/:id",
@@ -1357,7 +1491,7 @@
                 }
               ]
             },
-            "description": "Update job posting with company URL"
+            "description": "Update job posting with company logo"
           },
           "response": []
         },

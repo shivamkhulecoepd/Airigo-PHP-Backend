@@ -76,8 +76,6 @@ $router->delete('/api/jobs/{id}', [JobController::class, 'delete'])->addMiddlewa
 $router->get('/api/jobs/search', [JobController::class, 'search']);
 $router->get('/api/jobs/categories', [JobController::class, 'getCategories']);
 $router->get('/api/jobs/locations', [JobController::class, 'getLocations']);
-$router->post('/api/jobs/{id}/upload-logo', [JobController::class, 'uploadCompanyLogo'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
-
 // Application management routes
 $router->post('/api/applications', [ApplicationController::class, 'apply'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['jobseeker']));
 $router->get('/api/applications/my', [ApplicationController::class, 'getMyApplications'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['jobseeker']));
