@@ -25,6 +25,41 @@ class JobController extends BaseController
         $this->firebaseStorage = new \Firebase\FirebaseStorageService();
     }
 
+    private function processFormData(array $data): array
+    {
+        $processed = $data;
+        
+        // Convert string representations of arrays to actual arrays
+        if (isset($processed['requirements']) && is_string($processed['requirements'])) {
+            $decoded = json_decode($processed['requirements'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $processed['requirements'] = $decoded;
+            }
+        }
+        
+        if (isset($processed['skills_required']) && is_string($processed['skills_required'])) {
+            $decoded = json_decode($processed['skills_required'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $processed['skills_required'] = $decoded;
+            }
+        }
+        
+        // Convert boolean-like values
+        if (isset($processed['is_active'])) {
+            if (is_string($processed['is_active'])) {
+                $processed['is_active'] = filter_var($processed['is_active'], FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+        
+        if (isset($processed['is_urgent_hiring'])) {
+            if (is_string($processed['is_urgent_hiring'])) {
+                $processed['is_urgent_hiring'] = filter_var($processed['is_urgent_hiring'], FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+        
+        return $processed;
+    }
+
     public function create(ServerRequestInterface $request)
     {
         $user = $this->getUser($request);
@@ -39,8 +74,19 @@ class JobController extends BaseController
         $data = $this->getRequestBody($request);
         $uploadedFiles = $request->getUploadedFiles();
         
+        // Extract form data if request body is empty (for formdata requests)
+        if (empty($data)) {
+            $parsedBody = $request->getParsedBody();
+            if (is_array($parsedBody)) {
+                $data = $parsedBody;
+            }
+        }
+        
+        // Convert formdata values to appropriate types
+        $processedData = $this->processFormData($data);
+        
         // Validate required fields
-        $errors = $this->validateJobData($data);
+        $errors = $this->validateJobData($processedData);
         if (!empty($errors)) {
             return ResponseBuilder::unprocessableEntity([
                 'message' => 'Validation failed',
@@ -52,18 +98,18 @@ class JobController extends BaseController
             // Prepare job data
             $jobData = [
                 'recruiter_user_id' => $user['id'],
-                'company_name' => $data['company_name'],
-                'company_url' => $data['company_url'] ?? null,
-                'company_logo_url' => $data['company_logo_url'] ?? null,
-                'designation' => $data['designation'],
-                'ctc' => $data['ctc'],
-                'location' => $data['location'],
-                'category' => $data['category'],
-                'description' => $data['description'] ?? null,
-                'requirements' => isset($data['requirements']) ? json_encode($data['requirements']) : json_encode([]),
-                'skills_required' => isset($data['skills_required']) ? json_encode($data['skills_required']) : json_encode([]),
-                'experience_required' => $data['experience_required'] ?? null,
-                'is_active' => isset($data['is_active']) ? (int)$data['is_active'] : 1,
+                'company_name' => $processedData['company_name'],
+                'company_url' => $processedData['company_url'] ?? null,
+                'company_logo_url' => $processedData['company_logo_url'] ?? null,
+                'designation' => $processedData['designation'],
+                'ctc' => $processedData['ctc'],
+                'location' => $processedData['location'],
+                'category' => $processedData['category'],
+                'description' => $processedData['description'] ?? null,
+                'requirements' => isset($processedData['requirements']) ? json_encode($processedData['requirements']) : json_encode([]),
+                'skills_required' => isset($processedData['skills_required']) ? json_encode($processedData['skills_required']) : json_encode([]),
+                'experience_required' => $processedData['experience_required'] ?? null,
+                'is_active' => isset($processedData['is_active']) ? (int)$processedData['is_active'] : 1,
                 'approval_status' => 'pending', // Jobs need admin approval
             ];
             
@@ -106,8 +152,8 @@ class JobController extends BaseController
             }
             
             // Add remaining fields to job data
-            $jobData['is_urgent_hiring'] = isset($data['is_urgent_hiring']) ? (int)$data['is_urgent_hiring'] : 0;
-            $jobData['job_type'] = $data['job_type'] ?? 'Full-time';
+            $jobData['is_urgent_hiring'] = isset($processedData['is_urgent_hiring']) ? (int)$processedData['is_urgent_hiring'] : 0;
+            $jobData['job_type'] = $processedData['job_type'] ?? 'Full-time';
 
             $jobId = $this->jobRepository->create($jobData);
 
@@ -270,6 +316,14 @@ class JobController extends BaseController
         $jobId = (int) $request->getAttribute('id');
         $data = $this->getRequestBody($request);
         $uploadedFiles = $request->getUploadedFiles();
+        
+        // Extract form data if request body is empty (for formdata requests)
+        if (empty($data)) {
+            $parsedBody = $request->getParsedBody();
+            if (is_array($parsedBody)) {
+                $data = $parsedBody;
+            }
+        }
 
         if ($jobId <= 0) {
             return ResponseBuilder::badRequest(['message' => 'Invalid job ID']);
@@ -286,8 +340,11 @@ class JobController extends BaseController
                 return ResponseBuilder::forbidden(['message' => 'You can only update your own jobs']);
             }
 
+            // Process form data to convert types appropriately
+            $processedData = $this->processFormData($data);
+            
             // Validate updated data
-            $errors = $this->validateJobData($data, false); // Not required for partial updates
+            $errors = $this->validateJobData($processedData, false); // Not required for partial updates
             if (!empty($errors)) {
                 return ResponseBuilder::unprocessableEntity([
                     'message' => 'Validation failed',
@@ -304,17 +361,17 @@ class JobController extends BaseController
             ];
 
             foreach ($fields as $field) {
-                if (isset($data[$field])) {
-                    $updateData[$field] = $data[$field];
+                if (isset($processedData[$field])) {
+                    $updateData[$field] = $processedData[$field];
                 }
             }
 
             // Handle JSON fields separately
-            if (isset($data['requirements'])) {
-                $updateData['requirements'] = json_encode($data['requirements']);
+            if (isset($processedData['requirements'])) {
+                $updateData['requirements'] = json_encode($processedData['requirements']);
             }
-            if (isset($data['skills_required'])) {
-                $updateData['skills_required'] = json_encode($data['skills_required']);
+            if (isset($processedData['skills_required'])) {
+                $updateData['skills_required'] = json_encode($processedData['skills_required']);
             }
 
             // Handle company logo upload if provided
@@ -356,11 +413,11 @@ class JobController extends BaseController
             }
 
             // Fix boolean to integer conversion to prevent PDO empty string DB errors
-            if (isset($data['is_active'])) {
-                $updateData['is_active'] = (int)$data['is_active'];
+            if (isset($processedData['is_active'])) {
+                $updateData['is_active'] = (int)$processedData['is_active'];
             }
-            if (isset($data['is_urgent_hiring'])) {
-                $updateData['is_urgent_hiring'] = (int)$data['is_urgent_hiring'];
+            if (isset($processedData['is_urgent_hiring'])) {
+                $updateData['is_urgent_hiring'] = (int)$processedData['is_urgent_hiring'];
             }
 
             // Reset approval status if significant changes were made
