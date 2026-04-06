@@ -325,11 +325,19 @@ class JobController extends BaseController
         $data = $this->getRequestBody($request);
         $uploadedFiles = $request->getUploadedFiles();
         
+        error_log('[JOB UPDATE] ========== START ==========');
+        error_log('[JOB UPDATE] Job ID: ' . $jobId);
+        error_log('[JOB UPDATE] User ID: ' . $userId);
+        error_log('[JOB UPDATE] Request body data: ' . print_r($data, true));
+        error_log('[JOB UPDATE] Uploaded files: ' . print_r(array_keys($uploadedFiles), true));
+        
         // Extract form data if request body is empty (for formdata requests)
         if (empty($data)) {
+            error_log('[JOB UPDATE] Empty request body, checking parsed body for FormData');
             $parsedBody = $request->getParsedBody();
             if (is_array($parsedBody)) {
                 $data = $parsedBody;
+                error_log('[JOB UPDATE] Parsed body data: ' . print_r($data, true));
             }
         }
 
@@ -387,6 +395,8 @@ class JobController extends BaseController
 
             // Handle company logo upload if provided
             if (isset($uploadedFiles['logo']) && $uploadedFiles['logo']->getError() === UPLOAD_ERR_OK) {
+                error_log('[JOB UPDATE] Logo file detected, starting upload process...');
+                
                 $logoFile = $uploadedFiles['logo'];
                 
                 // Validate file type and size
@@ -394,56 +404,81 @@ class JobController extends BaseController
                 $maxFileSize = 2 * 1024 * 1024; // 2MB
                 
                 if (!in_array($logoFile->getClientMediaType(), $allowedTypes)) {
+                    error_log('[JOB UPDATE] Invalid file type: ' . $logoFile->getClientMediaType());
                     return ResponseBuilder::badRequest(['message' => 'Invalid image type. Only JPEG, PNG, GIF, and WebP images are allowed']);
                 }
                 
                 if ($logoFile->getSize() > $maxFileSize) {
+                    error_log('[JOB UPDATE] File too large: ' . $logoFile->getSize() . ' bytes');
                     return ResponseBuilder::badRequest(['message' => 'Image size exceeds 2MB limit']);
                 }
+                
+                error_log('[JOB UPDATE] File validation passed. Size: ' . $logoFile->getSize() . ', Type: ' . $logoFile->getClientMediaType());
                 
                 // Move uploaded file to temporary location
                 $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_' . $logoFile->getClientFilename();
                 $logoFile->moveTo($tempPath);
+                
+                error_log('[JOB UPDATE] Temp file created: ' . $tempPath);
                 
                 // Generate unique filename
                 $extension = pathinfo($logoFile->getClientFilename(), PATHINFO_EXTENSION);
                 $uniqueFilename = 'company_logo_' . $jobId . '_' . time() . '.' . $extension;
                 
                 // Upload to Firebase Storage
+                error_log('[JOB UPDATE] Uploading to Firebase with filename: ' . $uniqueFilename);
                 $fileUrl = $this->firebaseStorage->uploadFile($tempPath, $uniqueFilename);
                 
                 if (!$fileUrl) {
+                    error_log('[JOB UPDATE] Firebase upload failed!');
                     return ResponseBuilder::serverError(['message' => 'Failed to upload logo to storage']);
                 }
+                
+                error_log('[JOB UPDATE] Firebase upload successful! URL: ' . $fileUrl);
                 
                 // Add logo URL to update data
                 $updateData['company_logo_url'] = $fileUrl;
                 
                 // Clean up temp file
                 unlink($tempPath);
+                error_log('[JOB UPDATE] Temp file cleaned up');
+            } else {
+                if (isset($uploadedFiles['logo'])) {
+                    error_log('[JOB UPDATE] Logo file has error code: ' . $uploadedFiles['logo']->getError());
+                } else {
+                    error_log('[JOB UPDATE] No logo file in request');
+                }
             }
 
             // Fix boolean to integer conversion to prevent PDO empty string DB errors
             if (isset($processedData['is_active'])) {
                 $updateData['is_active'] = (int)$processedData['is_active'];
+                error_log('[JOB UPDATE] is_active set to: ' . $updateData['is_active']);
             }
             if (isset($processedData['is_urgent_hiring'])) {
                 $updateData['is_urgent_hiring'] = (int)$processedData['is_urgent_hiring'];
+                error_log('[JOB UPDATE] is_urgent_hiring set to: ' . $updateData['is_urgent_hiring']);
             }
 
             // Reset approval status if significant changes were made
             if (isset($data['designation']) || isset($data['company_name']) || 
                 isset($data['ctc']) || isset($data['location']) || isset($data['category'])) {
                 $updateData['approval_status'] = 'pending';
+                error_log('[JOB UPDATE] Approval status reset to pending due to significant changes');
             }
+
+            error_log('[JOB UPDATE] Final update data: ' . print_r($updateData, true));
 
             $result = $this->jobRepository->update($jobId, $updateData);
 
             if (!$result) {
+                error_log('[JOB UPDATE] Repository update returned false!');
                 return ResponseBuilder::serverError([
                     'message' => 'Failed to update job'
                 ]);
             }
+
+            error_log('[JOB UPDATE] Repository update successful!');
 
             // Fetch updated job
             $updatedJob = $this->jobRepository->findById($jobId);
@@ -467,6 +502,8 @@ class JobController extends BaseController
                 'job' => $updatedJob
             ]);
         } catch (\Exception $e) {
+            error_log('[JOB UPDATE] EXCEPTION CAUGHT: ' . $e->getMessage());
+            error_log('[JOB UPDATE] Stack trace: ' . $e->getTraceAsString());
             return ResponseBuilder::serverError([
                 'message' => 'Failed to update job',
                 'error' => $e->getMessage()
