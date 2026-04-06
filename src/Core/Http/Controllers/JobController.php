@@ -44,6 +44,13 @@ class JobController extends BaseController
             }
         }
         
+        if (isset($processed['perks_and_benefits']) && is_string($processed['perks_and_benefits'])) {
+            $decoded = json_decode($processed['perks_and_benefits'], true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $processed['perks_and_benefits'] = $decoded;
+            }
+        }
+        
         // Convert boolean-like values
         if (isset($processed['is_active'])) {
             if (is_string($processed['is_active'])) {
@@ -108,6 +115,7 @@ class JobController extends BaseController
                 'description' => $processedData['description'] ?? null,
                 'requirements' => isset($processedData['requirements']) ? json_encode($processedData['requirements']) : json_encode([]),
                 'skills_required' => isset($processedData['skills_required']) ? json_encode($processedData['skills_required']) : json_encode([]),
+                'perks_and_benefits' => isset($processedData['perks_and_benefits']) ? json_encode($processedData['perks_and_benefits']) : json_encode([]),
                 'experience_required' => $processedData['experience_required'] ?? null,
                 'is_active' => isset($processedData['is_active']) ? (int)$processedData['is_active'] : 1,
                 'approval_status' => 'pending', // Jobs need admin approval
@@ -356,7 +364,7 @@ class JobController extends BaseController
             $updateData = [];
             $fields = [
                 'company_name', 'company_url', 'company_logo_url', 'designation', 'ctc', 'location', 
-                'category', 'description', 'experience_required', 
+                'category', 'description', 'experience_required', 'perks_and_benefits',
                 'is_active', 'is_urgent_hiring', 'job_type'
             ];
 
@@ -372,6 +380,9 @@ class JobController extends BaseController
             }
             if (isset($processedData['skills_required'])) {
                 $updateData['skills_required'] = json_encode($processedData['skills_required']);
+            }
+            if (isset($processedData['perks_and_benefits'])) {
+                $updateData['perks_and_benefits'] = json_encode($processedData['perks_and_benefits']);
             }
 
             // Handle company logo upload if provided
@@ -699,6 +710,10 @@ class JobController extends BaseController
 
         if (isset($data['skills_required']) && !is_array($data['skills_required'])) {
             $errors['skills_required'] = 'Skills required must be an array';
+        }
+
+        if (isset($data['perks_and_benefits']) && !is_array($data['perks_and_benefits'])) {
+            $errors['perks_and_benefits'] = 'Perks and benefits must be an array';
         }
 
         return $errors;

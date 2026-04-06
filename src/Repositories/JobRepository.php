@@ -325,7 +325,7 @@ class JobRepository extends BaseRepository
         // Ensure we only insert allowed columns
         $allowedColumns = [
             'recruiter_user_id', 'company_name', 'company_logo_url', 'company_url', 'designation', 'ctc', 'location', 
-            'category', 'description', 'requirements', 'skills_required', 
+            'category', 'description', 'requirements', 'skills_required', 'perks_and_benefits',
             'experience_required', 'is_active', 'approval_status', 'is_urgent_hiring', 'job_type'
         ];
 
@@ -339,7 +339,7 @@ class JobRepository extends BaseRepository
         // Ensure we only update allowed columns
         $allowedColumns = [
             'recruiter_user_id', 'company_name', 'company_logo_url', 'company_url', 'designation', 'ctc', 'location', 
-            'category', 'description', 'requirements', 'skills_required', 
+            'category', 'description', 'requirements', 'skills_required', 'perks_and_benefits',
             'experience_required', 'is_active', 'approval_status', 'is_urgent_hiring', 'job_type'
         ];
 
@@ -381,6 +381,12 @@ class JobRepository extends BaseRepository
         if (!empty($job['skills_required'])) {
             $decoded = json_decode($job['skills_required'], true);
             $job['skills_required'] = $decoded ?? json_decode($job['skills_required'], false) ?? $job['skills_required'];
+        }
+        
+        // Decode perks_and_benefits field
+        if (!empty($job['perks_and_benefits'])) {
+            $decoded = json_decode($job['perks_and_benefits'], true);
+            $job['perks_and_benefits'] = $decoded ?? json_decode($job['perks_and_benefits'], false) ?? $job['perks_and_benefits'];
         }
     }
 

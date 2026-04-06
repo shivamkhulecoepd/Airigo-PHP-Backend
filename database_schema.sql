@@ -77,6 +77,7 @@ CREATE TABLE jobs (
   description TEXT,
   requirements JSON,
   skills_required JSON,
+  perks_and_benefits JSON,
   experience_required VARCHAR(50),
   is_active BOOLEAN DEFAULT TRUE,
   approval_status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
