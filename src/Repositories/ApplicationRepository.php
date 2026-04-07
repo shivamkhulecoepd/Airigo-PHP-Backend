@@ -200,13 +200,22 @@ class ApplicationRepository extends BaseRepository
                 j.company_url,
                 j.location,
                 j.category,
+                j.job_type,
                 jr.recruiter_name,
                 jr.company_website,
-                u.email as jobseeker_email
+                u.email as jobseeker_email,
+                u.phone as jobseeker_phone,
+                js.name as jobseeker_name,
+                js.profile_image_url as jobseeker_photo_url,
+                js.skills as jobseeker_skills,
+                js.bio as jobseeker_bio,
+                js.qualification as jobseeker_qualification,
+                js.experience as jobseeker_experience
             FROM {$this->table} a
             JOIN jobs j ON a.job_id = j.id
             LEFT JOIN recruiters jr ON a.recruiter_user_id = jr.user_id
             JOIN users u ON a.jobseeker_user_id = u.id
+            LEFT JOIN jobseekers js ON a.jobseeker_user_id = js.user_id
             WHERE a.id = ?
         ";
         
@@ -222,12 +231,20 @@ class ApplicationRepository extends BaseRepository
                 a.*, 
                 j.designation, 
                 j.company_name, 
+                j.company_url,
                 j.location, 
-                j.category, 
+                j.category,
+                j.job_type,
                 jr.recruiter_name, 
                 jr.company_website, 
                 u.email as jobseeker_email, 
-                js.name as jobseeker_name 
+                u.phone as jobseeker_phone,
+                js.name as jobseeker_name,
+                js.profile_image_url as jobseeker_photo_url,
+                js.skills as jobseeker_skills,
+                js.bio as jobseeker_bio,
+                js.qualification as jobseeker_qualification,
+                js.experience as jobseeker_experience
             FROM {$this->table} a 
             JOIN jobs j ON a.job_id = j.id 
             JOIN users u ON a.jobseeker_user_id = u.id 
@@ -286,10 +303,17 @@ class ApplicationRepository extends BaseRepository
                 j.company_url,
                 j.location,
                 j.category,
+                j.job_type,
                 jr.recruiter_name,
                 jr.company_website,
                 u.email as jobseeker_email,
-                js.name as jobseeker_name
+                u.phone as jobseeker_phone,
+                js.name as jobseeker_name,
+                js.profile_image_url as jobseeker_photo_url,
+                js.skills as jobseeker_skills,
+                js.bio as jobseeker_bio,
+                js.qualification as jobseeker_qualification,
+                js.experience as jobseeker_experience
             FROM {$this->table} a
             JOIN jobs j ON a.job_id = j.id
             LEFT JOIN recruiters jr ON a.recruiter_user_id = jr.user_id
