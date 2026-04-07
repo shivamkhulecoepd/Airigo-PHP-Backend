@@ -8,6 +8,7 @@ use App\Core\Utils\Validator;
 use App\Repositories\JobRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\WishlistRepository;
+use App\Repositories\JobseekerRepository;
 
 class JobController extends BaseController
 {
@@ -15,6 +16,7 @@ class JobController extends BaseController
     private UserRepository $userRepository;
     private WishlistRepository $wishlistRepository;
     private \Firebase\FirebaseStorageService $firebaseStorage;
+    private JobseekerRepository $jobseekerRepository;
 
     public function __construct()
     {
@@ -23,6 +25,7 @@ class JobController extends BaseController
         $this->userRepository = new UserRepository();
         $this->wishlistRepository = new WishlistRepository();
         $this->firebaseStorage = new \Firebase\FirebaseStorageService();
+        $this->jobseekerRepository = new JobseekerRepository();
     }
 
     private function processFormData(array $data): array
@@ -754,5 +757,58 @@ class JobController extends BaseController
         }
 
         return $errors;
+    }
+
+    /**
+     * Get complete jobseeker profile with all details
+     * GET /api/jobs/jobseeker/:userId
+     */
+    public function getJobseekerProfile(ServerRequestInterface $request)
+    {
+        $jobseekerUserId = (int) $request->getAttribute('userId');
+
+        if ($jobseekerUserId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid jobseeker ID']);
+        }
+
+        try {
+            // Get jobseeker with user details
+            $jobseeker = $this->jobseekerRepository->getJobseekerWithUserDetails($jobseekerUserId);
+
+            if (!$jobseeker) {
+                return ResponseBuilder::notFound(['message' => 'Jobseeker not found']);
+            }
+
+            // Format the response with all jobseeker data
+            $profileData = [
+                'user_id' => $jobseeker['user_id'],
+                'name' => $jobseeker['name'],
+                'email' => $jobseeker['email'],
+                'phone' => $jobseeker['phone'],
+                'profile_image_url' => $jobseeker['profile_image_url'],
+                'bio' => $jobseeker['bio'],
+                'skills' => $jobseeker['skills'] ?? [],
+                'qualification' => $jobseeker['qualification'],
+                'experience' => $jobseeker['experience'],
+                'location' => $jobseeker['location'],
+                'date_of_birth' => $jobseeker['date_of_birth'],
+                'resume_url' => $jobseeker['resume_url'],
+                'resume_filename' => $jobseeker['resume_filename'],
+                'status' => $jobseeker['status'],
+                'email_verified' => $jobseeker['email_verified'],
+                'created_at' => $jobseeker['created_at'],
+                'updated_at' => $jobseeker['updated_at'],
+            ];
+
+            return ResponseBuilder::ok([
+                'message' => 'Jobseeker profile fetched successfully',
+                'jobseeker' => $profileData
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch jobseeker profile',
+                'error' => $e->getMessage()
+            ]);
+        }
     }
 }
