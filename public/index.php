@@ -99,7 +99,7 @@ $router->get('/api/admin/dashboard/stats', [AdminController::class, 'getStats'])
 $router->get('/api/admin/dashboard/full-stats', [AdminController::class, 'getAdminStats'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->get('/api/admin/users', [AdminController::class, 'getUsers'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->get('/api/admin/jobseekers', [AdminController::class, 'getJobseekers'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
-$router->get('/api/admin/recruiters', [AdminController::class, 'getRecruiters'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->get('/api/admin/recruiters', [AdminController::class, 'getRecruiters'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin', 'jobseeker']));
 $router->get('/api/admin/jobs', [AdminController::class, 'getJobs'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->get('/api/admin/jobs/pending', [AdminController::class, 'getPendingJobs'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->get('/api/admin/applications', [AdminController::class, 'getApplications'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
