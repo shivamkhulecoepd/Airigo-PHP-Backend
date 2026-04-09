@@ -82,6 +82,8 @@ $router->get('/api/jobs/jobseeker/{userId}', [JobController::class, 'getJobseeke
 
 // Recruiter profile route
 $router->get('/api/jobs/recruiter/{userId}', [JobController::class, 'getRecruiterProfile']);
+// Jobs by recruiter route
+$router->get('/api/jobs/by-recruiter/{recruiterId}', [JobController::class, 'getJobsByRecruiter']);
 
 // Application management routes
 $router->post('/api/applications', [ApplicationController::class, 'apply'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['jobseeker']));

@@ -869,4 +869,58 @@ class JobController extends BaseController
             ]);
         }
     }
+
+    /**
+     * Get jobs posted by a specific recruiter
+     * GET /api/jobs/by-recruiter/:recruiterId
+     */
+    public function getJobsByRecruiter(ServerRequestInterface $request)
+    {
+        $recruiterId = (int) $request->getAttribute('recruiterId');
+
+        if ($recruiterId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid recruiter ID']);
+        }
+
+        $page = (int) $this->getQueryParam($request, 'page', 1);
+        $limit = (int) $this->getQueryParam($request, 'limit', 10);
+
+        try {
+            // Get jobs posted by the specific recruiter
+            $jobs = $this->jobRepository->findByRecruiter($recruiterId, [], $limit, ($page - 1) * $limit);
+            $totalCount = $this->jobRepository->count(['recruiter_user_id' => $recruiterId]);
+
+            // Add wishlist status for authenticated users
+            $user = $this->getUser($request);
+            if ($user) {
+                $userId = $user['id'];
+                $wishlistJobIds = $this->wishlistRepository->getWishlistJobIds($userId);
+                
+                // Enhance jobs with wishlist status
+                foreach ($jobs as &$job) {
+                    $job['is_in_wishlist'] = in_array($job['id'], $wishlistJobIds);
+                }
+            } else {
+                // Add wishlist status as false for unauthenticated users
+                foreach ($jobs as &$job) {
+                    $job['is_in_wishlist'] = false;
+                }
+            }
+
+            return ResponseBuilder::ok([
+                'jobs' => $jobs,
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => $totalCount,
+                    'pages' => ceil($totalCount / $limit)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch jobs by recruiter',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }
