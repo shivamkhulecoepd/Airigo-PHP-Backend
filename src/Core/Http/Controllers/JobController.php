@@ -811,4 +811,62 @@ class JobController extends BaseController
             ]);
         }
     }
+
+    /**
+     * Get complete recruiter profile with all details
+     * GET /api/jobs/recruiter/:userId
+     */
+    public function getRecruiterProfile(ServerRequestInterface $request)
+    {
+        $recruiterUserId = (int) $request->getAttribute('userId');
+
+        if ($recruiterUserId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid recruiter ID']);
+        }
+
+        try {
+            // Get recruiter with user details
+            $recruiterRepository = new \App\Repositories\RecruiterRepository();
+            $recruiter = $recruiterRepository->getRecruiterWithUserDetails($recruiterUserId);
+
+            if (!$recruiter) {
+                return ResponseBuilder::notFound(['message' => 'Recruiter not found']);
+            }
+
+            // Format the response with all recruiter data
+            $profileData = [
+                'user_id' => $recruiter['user_id'],
+                'email' => $recruiter['email'],
+                'recruiter_name' => $recruiter['recruiter_name'],
+                'company_name' => $recruiter['company_name'],
+                'company_website' => $recruiter['company_website'],
+                'designation' => $recruiter['designation'],
+                'location' => $recruiter['location'],
+                'photo_url' => $recruiter['photo_url'],
+                'id_card_url' => $recruiter['id_card_url'],
+                'approval_status' => $recruiter['approval_status'],
+                'approved_by' => $recruiter['approved_by'],
+                'approved_at' => $recruiter['approved_at'],
+                'rejection_reason' => $recruiter['rejection_reason'],
+                'created_at' => $recruiter['created_at'],
+                'updated_at' => $recruiter['updated_at'],
+                'user_email' => $recruiter['user_email'],
+                'phone' => $recruiter['phone'],
+                'status' => $recruiter['status'],
+                'email_verified' => $recruiter['email_verified'],
+                'user_created_at' => $recruiter['user_created_at'],
+                'user_updated_at' => $recruiter['user_updated_at'],
+            ];
+
+            return ResponseBuilder::ok([
+                'message' => 'Recruiter profile fetched successfully',
+                'recruiter' => $profileData
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch recruiter profile',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }
