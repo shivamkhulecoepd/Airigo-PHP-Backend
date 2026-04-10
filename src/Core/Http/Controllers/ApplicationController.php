@@ -183,7 +183,8 @@ class ApplicationController extends BaseController
         }
 
         try {
-            $applications = $this->applicationRepository->getApplicationsWithJobDetails($filters, $limit, ($page - 1) * $limit);
+            // Use optimized query that only fetches job and recruiter details (not jobseeker's own details)
+            $applications = $this->applicationRepository->getApplicationsForJobseeker($filters, $limit, ($page - 1) * $limit);
             $totalCount = $this->applicationRepository->count(['jobseeker_user_id' => $user['id']] + ($status ? ['status' => $status] : []));
 
             return ResponseBuilder::ok([

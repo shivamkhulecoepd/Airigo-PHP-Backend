@@ -356,6 +356,72 @@ class ApplicationRepository extends BaseRepository
         return $stmt->fetchAll();
     }
 
+    /**
+     * Get applications for a jobseeker with job and recruiter details only
+     * Optimized to exclude jobseeker details since the user is viewing their own applications
+     */
+    public function getApplicationsForJobseeker(array $filters = [], int $limit = null, int $offset = null): array
+    {
+        $query = "
+            SELECT 
+                a.*,
+                j.designation,
+                j.company_name,
+                j.company_url,
+                j.company_logo_url,
+                j.location,
+                j.category,
+                j.job_type,
+                j.ctc,
+                j.requirements,
+                j.skills_required,
+                j.perks_and_benefits,
+                j.experience_required,
+                j.is_urgent_hiring,
+                jr.recruiter_user_id,
+                jr.recruiter_name,
+                jr.photo_url as recruiter_photo_url,
+                jr.company_website,
+                jr.designation as recruiter_designation,
+                jr.location as recruiter_location
+            FROM {$this->table} a
+            JOIN jobs j ON a.job_id = j.id
+            LEFT JOIN recruiters jr ON a.recruiter_user_id = jr.user_id
+        ";
+        
+        $params = [];
+        $conditions = [];
+
+        if (!empty($filters)) {
+            foreach ($filters as $column => $value) {
+                if ($column === 'jobseeker_user_id' || $column === 'status') {
+                    $conditions[] = "a.{$column} = ?";
+                    $params[] = $value;
+                }
+            }
+        }
+
+        if (!empty($conditions)) {
+            $query .= " WHERE " . implode(' AND ', $conditions);
+        }
+
+        $query .= " ORDER BY a.{$this->primaryKey} DESC";
+
+        if ($limit !== null) {
+            $query .= " LIMIT ?";
+            $params[] = $limit;
+
+            if ($offset !== null) {
+                $query .= " OFFSET ?";
+                $params[] = $offset;
+            }
+        }
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
     public function getStats(): array
     {
         $query = "
