@@ -48,6 +48,7 @@ $router->post('/api/auth/logout', [AuthController::class, 'logout'])->addMiddlew
 $router->post('/api/auth/refresh-token', [AuthController::class, 'refreshToken']);
 $router->post('/api/auth/forgot-password', [AuthController::class, 'forgotPassword']);
 $router->post('/api/auth/reset-password', [AuthController::class, 'resetPassword']);
+$router->post('/api/auth/change-password', [AuthController::class, 'changePassword'])->addMiddleware(new AuthMiddleware());
 $router->get('/api/auth/profile', [AuthController::class, 'getProfile'])->addMiddleware(new AuthMiddleware());
 
 // User management routes
