@@ -378,7 +378,7 @@ class ApplicationRepository extends BaseRepository
                 j.perks_and_benefits,
                 j.experience_required,
                 j.is_urgent_hiring,
-                jr.recruiter_user_id,
+                jr.user_id as recruiter_user_id,
                 jr.recruiter_name,
                 jr.photo_url as recruiter_photo_url,
                 jr.company_website,
