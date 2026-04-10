@@ -463,6 +463,11 @@ class UserController extends BaseController
 
             // Fetch updated profile
             $updatedProfile = $this->jobseekerRepository->findByUserId($user['id']);
+            
+            // Add email and phone from users table to profile response
+            $updatedUser = $this->userRepository->findById($user['id']);
+            $updatedProfile['email'] = $updatedUser['email'] ?? null;
+            $updatedProfile['phone'] = $updatedUser['phone'] ?? null;
 
             return ResponseBuilder::ok([
                 'message' => ucfirst($section) . ' section updated successfully',
