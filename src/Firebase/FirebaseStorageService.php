@@ -144,18 +144,40 @@ class FirebaseStorageService
     /**
      * Delete file from Firebase Storage
      */
-    public function deleteFile(string $remoteFileName): bool
+    public function deleteFile(string $fileIdentifier): bool
     {
         try {
-            // Prepare remote file path
-            $remotePath = "{$this->uploadDir}/{$remoteFileName}";
+            // Extract file path from URL if it's a full URL
+            $remotePath = $fileIdentifier;
+            
+            // If it's a URL, extract the file path
+            if (strpos($fileIdentifier, 'http') === 0) {
+                // Parse URL to get the file path
+                $parsedUrl = parse_url($fileIdentifier);
+                if (isset($parsedUrl['path'])) {
+                    // URL decode and extract path after '/o/'
+                    $decodedPath = urldecode($parsedUrl['path']);
+                    // Extract path after '/b/{bucket}/o/'
+                    if (preg_match('#/b/[^/]+/o/(.+)#', $decodedPath, $matches)) {
+                        $remotePath = $matches[1];
+                    }
+                }
+            }
+            
+            error_log("Firebase Storage: Deleting file: {$remotePath}");
 
             // Get access token for authentication
             $accessToken = $this->getAccessToken();
+            
+            if (!$accessToken) {
+                error_log("Firebase Storage: Failed to get access token for deletion");
+                return false;
+            }
 
             // Delete file from Firebase Storage
+            $encodedPath = urlencode($remotePath);
             $response = $this->httpClient->delete(
-                "https://firebasestorage.googleapis.com/v0/b/{$this->bucketName}/o?name={$remotePath}",
+                "https://firebasestorage.googleapis.com/v0/b/{$this->bucketName}/o?name={$encodedPath}",
                 [
                     'headers' => [
                         'Authorization' => "Bearer {$accessToken}"
@@ -163,7 +185,10 @@ class FirebaseStorageService
                 ]
             );
 
-            return $response->getStatusCode() === 200;
+            $statusCode = $response->getStatusCode();
+            error_log("Firebase Storage: Delete response status: {$statusCode}");
+            
+            return $statusCode === 200 || $statusCode === 204;
         } catch (\Exception $e) {
             error_log("Firebase Storage delete error: " . $e->getMessage());
             return false;

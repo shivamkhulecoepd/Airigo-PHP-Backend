@@ -53,6 +53,7 @@ $router->get('/api/auth/profile', [AuthController::class, 'getProfile'])->addMid
 // User management routes
 $router->get('/api/users/profile', [UserController::class, 'getProfile'])->addMiddleware(new AuthMiddleware());
 $router->put('/api/users/profile', [UserController::class, 'updateProfile'])->addMiddleware(new AuthMiddleware());
+$router->patch('/api/users/profile/section/{section}', [UserController::class, 'updateJobseekerSection'])->addMiddleware(new AuthMiddleware());
 $router->delete('/api/users/account', [UserController::class, 'deleteAccount'])->addMiddleware(new AuthMiddleware());
 $router->post('/api/users/upload-resume', [UserController::class, 'uploadResume'])->addMiddleware(new AuthMiddleware());
 $router->post('/api/users/upload-profile-image', [UserController::class, 'uploadProfileImage'])->addMiddleware(new AuthMiddleware());

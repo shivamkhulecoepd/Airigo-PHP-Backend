@@ -189,6 +189,10 @@ class UserController extends BaseController
         }
 
         try {
+            // Get current resume info to delete old file
+            $currentProfile = $this->jobseekerRepository->findByUserId($user['id']);
+            $oldResumeUrl = $currentProfile['resume_url'] ?? null;
+
             // Move uploaded file to temporary location
             $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_' . $resumeFile->getClientFilename();
             $resumeFile->moveTo($tempPath);
@@ -201,7 +205,19 @@ class UserController extends BaseController
             $fileUrl = $this->firebaseStorage->uploadFile($tempPath, $uniqueFilename);
 
             if (!$fileUrl) {
+                unlink($tempPath);
                 return ResponseBuilder::serverError(['message' => 'Failed to upload file to storage']);
+            }
+
+            // Delete old resume from storage if exists
+            if ($oldResumeUrl) {
+                try {
+                    $this->firebaseStorage->deleteFile($oldResumeUrl);
+                    error_log("Deleted old resume file: $oldResumeUrl");
+                } catch (\Exception $e) {
+                    error_log("Failed to delete old resume file: " . $e->getMessage());
+                    // Continue even if deletion fails
+                }
             }
 
             // Update user's resume info in database
@@ -213,16 +229,11 @@ class UserController extends BaseController
             // Clean up temp file
             unlink($tempPath);
 
-            // Get updated wishlist count
-            // $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
-
             return ResponseBuilder::ok([
                 'message' => 'Resume uploaded successfully',
                 'resume_url' => $fileUrl,
                 'filename' => $resumeFile->getClientFilename(),
-                // 'wishlist_info' => [
-                //     'count' => $wishlistCount
-                // ]
+                'old_file_deleted' => $oldResumeUrl !== null
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
@@ -261,6 +272,15 @@ class UserController extends BaseController
         }
 
         try {
+            // Get current profile image info to delete old file
+            if ($user['user_type'] === 'jobseeker') {
+                $currentProfile = $this->jobseekerRepository->findByUserId($user['id']);
+                $oldImageUrl = $currentProfile['profile_image_url'] ?? null;
+            } else {
+                $currentProfile = $this->recruiterRepository->findByUserId($user['id']);
+                $oldImageUrl = $currentProfile['photo_url'] ?? null;
+            }
+
             // Move uploaded file to temporary location
             $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_' . $imageFile->getClientFilename();
             $imageFile->moveTo($tempPath);
@@ -273,7 +293,19 @@ class UserController extends BaseController
             $fileUrl = $this->firebaseStorage->uploadFile($tempPath, $uniqueFilename);
 
             if (!$fileUrl) {
+                unlink($tempPath);
                 return ResponseBuilder::serverError(['message' => 'Failed to upload file to storage']);
+            }
+
+            // Delete old profile image from storage if exists
+            if ($oldImageUrl) {
+                try {
+                    $this->firebaseStorage->deleteFile($oldImageUrl);
+                    error_log("Deleted old profile image: $oldImageUrl");
+                } catch (\Exception $e) {
+                    error_log("Failed to delete old profile image: " . $e->getMessage());
+                    // Continue even if deletion fails
+                }
             }
 
             // Update user's profile image info in database based on user type
@@ -290,16 +322,11 @@ class UserController extends BaseController
             // Clean up temp file
             unlink($tempPath);
 
-            // Get updated wishlist count
-            // $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
-
             return ResponseBuilder::ok([
                 'message' => 'Profile image uploaded successfully',
                 'image_url' => $fileUrl,
                 'filename' => $imageFile->getClientFilename(),
-                // 'wishlist_info' => [
-                //     'count' => $wishlistCount
-                // ]
+                'old_file_deleted' => $oldImageUrl !== null
             ]);
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
@@ -382,6 +409,149 @@ class UserController extends BaseController
                 'error' => $e->getMessage()
             ]);
         }
+    }
+
+    /**
+     * Update jobseeker profile section (partial update)
+     * PATCH /api/users/profile/section/{section}
+     */
+    public function updateJobseekerSection(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        if ($user['user_type'] !== 'jobseeker') {
+            return ResponseBuilder::forbidden(['message' => 'Only jobseekers can update profile sections']);
+        }
+
+        $section = $request->getAttribute('section');
+        $data = $this->getRequestBody($request);
+
+        // Validate section name
+        $allowedSections = ['personal', 'education', 'experience', 'skills', 'location', 'bio'];
+        if (!in_array($section, $allowedSections)) {
+            return ResponseBuilder::badRequest([
+                'message' => 'Invalid section. Allowed sections: ' . implode(', ', $allowedSections)
+            ]);
+        }
+
+        // Validate and filter data based on section
+        $sectionData = $this->validateAndFilterSection($section, $data, $user);
+        if (isset($sectionData['error'])) {
+            return ResponseBuilder::badRequest(['message' => $sectionData['error']]);
+        }
+
+        try {
+            // Update user table if personal info
+            if ($section === 'personal') {
+                $userData = [];
+                if (isset($sectionData['name'])) {
+                    $userData['name'] = $sectionData['name'];
+                }
+                if (isset($sectionData['phone'])) {
+                    $userData['phone'] = $sectionData['phone'];
+                }
+                if (!empty($userData)) {
+                    $this->userRepository->update($user['id'], $userData);
+                }
+            }
+
+            // Update jobseeker profile
+            $this->jobseekerRepository->update($user['id'], $sectionData);
+
+            // Fetch updated profile
+            $updatedProfile = $this->jobseekerRepository->findByUserId($user['id']);
+
+            return ResponseBuilder::ok([
+                'message' => ucfirst($section) . ' section updated successfully',
+                'profile' => $updatedProfile
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to update profile section',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Validate and filter data based on section
+     */
+    private function validateAndFilterSection(string $section, array $data, array $user): array
+    {
+        $result = [];
+
+        switch ($section) {
+            case 'personal':
+                if (isset($data['name'])) {
+                    if (strlen($data['name']) < 1 || strlen($data['name']) > 255) {
+                        return ['error' => 'Name must be between 1 and 255 characters'];
+                    }
+                    $result['name'] = trim($data['name']);
+                }
+                if (isset($data['phone'])) {
+                    if (!$this->validator->isValidPhone($data['phone'])) {
+                        return ['error' => 'Invalid phone number format'];
+                    }
+                    $result['phone'] = $data['phone'];
+                }
+                break;
+
+            case 'education':
+                if (isset($data['qualification'])) {
+                    if (!empty($data['qualification']) && strlen($data['qualification']) > 255) {
+                        return ['error' => 'Qualification must be less than 255 characters'];
+                    }
+                    $result['qualification'] = $data['qualification'];
+                }
+                if (isset($data['date_of_birth'])) {
+                    if (!$this->validator->isValidDate($data['date_of_birth'])) {
+                        return ['error' => 'Invalid date format (YYYY-MM-DD)'];
+                    }
+                    $result['date_of_birth'] = $data['date_of_birth'];
+                }
+                break;
+
+            case 'experience':
+                if (isset($data['experience'])) {
+                    if (!is_numeric($data['experience']) || $data['experience'] < 0) {
+                        return ['error' => 'Experience must be a non-negative number'];
+                    }
+                    $result['experience'] = intval($data['experience']);
+                }
+                break;
+
+            case 'skills':
+                if (isset($data['skills'])) {
+                    if (!is_array($data['skills'])) {
+                        return ['error' => 'Skills must be an array'];
+                    }
+                    $result['skills'] = json_encode(array_map('trim', $data['skills']));
+                }
+                break;
+
+            case 'location':
+                if (isset($data['location'])) {
+                    if (empty($data['location']) || strlen($data['location']) > 255) {
+                        return ['error' => 'Location must be between 1 and 255 characters'];
+                    }
+                    $result['location'] = trim($data['location']);
+                }
+                break;
+
+            case 'bio':
+                if (isset($data['bio'])) {
+                    if (strlen($data['bio']) > 2000) {
+                        return ['error' => 'Bio must be less than 2000 characters'];
+                    }
+                    $result['bio'] = trim($data['bio']);
+                }
+                break;
+        }
+
+        return $result;
     }
 
     private function validateProfileUpdateData(array $data, string $userType): array
