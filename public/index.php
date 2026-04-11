@@ -103,6 +103,11 @@ $router->get('/api/wishlist/check/{jobId}', [WishlistController::class, 'isJobIn
 $router->get('/api/wishlist/ids', [WishlistController::class, 'getUserWishlistIds'])->addMiddleware(new AuthMiddleware());
 $router->post('/api/wishlist/toggle', [WishlistController::class, 'toggleWishlist'])->addMiddleware(new AuthMiddleware());
 
+// Issue report routes
+$router->post('/api/issue-reports', [IssueReportController::class, 'create'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/issue-reports/my', [IssueReportController::class, 'getMyIssueReports'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/issue-reports/{id}', [IssueReportController::class, 'getIssueReportById'])->addMiddleware(new AuthMiddleware());
+
 // Admin panel routes
 $router->get('/api/admin/dashboard/stats', [AdminController::class, 'getStats'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->get('/api/admin/dashboard/full-stats', [AdminController::class, 'getAdminStats'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
