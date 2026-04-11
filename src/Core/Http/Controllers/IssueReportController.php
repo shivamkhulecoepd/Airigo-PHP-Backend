@@ -247,8 +247,8 @@ class IssueReportController extends BaseController
     {
         $errors = [];
 
-        if (empty($data['type']) || !in_array($data['type'], ['issue', 'report'])) {
-            $errors['type'] = 'Type is required and must be either "issue" or "report"';
+        if (empty($data['type']) || !in_array($data['type'], ['issue', 'feedback'])) {
+            $errors['type'] = 'Type is required and must be either "issue" or "feedback"';
         }
 
         if (empty($data['title'])) {

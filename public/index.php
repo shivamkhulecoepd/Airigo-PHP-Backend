@@ -105,8 +105,10 @@ $router->post('/api/wishlist/toggle', [WishlistController::class, 'toggleWishlis
 
 // Issue report routes
 $router->post('/api/issue-reports', [IssueReportController::class, 'create'])->addMiddleware(new AuthMiddleware());
-$router->get('/api/issue-reports/my', [IssueReportController::class, 'getMyIssueReports'])->addMiddleware(new AuthMiddleware());
-$router->get('/api/issue-reports/{id}', [IssueReportController::class, 'getIssueReportById'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/issue-reports/my', [IssueReportController::class, 'getMyReports'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/issue-reports/{id}', [IssueReportController::class, 'getById'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/issue-reports', [IssueReportController::class, 'getAll'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->patch('/api/issue-reports/{id}/status', [IssueReportController::class, 'updateStatus'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 
 // Admin panel routes
 $router->get('/api/admin/dashboard/stats', [AdminController::class, 'getStats'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
