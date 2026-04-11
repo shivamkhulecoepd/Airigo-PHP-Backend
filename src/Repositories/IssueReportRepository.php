@@ -165,7 +165,7 @@ class IssueReportRepository extends BaseRepository
             SELECT 
                 COUNT(*) as total_reports,
                 COUNT(CASE WHEN type = 'issue' THEN 1 END) as total_issues,
-                COUNT(CASE WHEN type = 'report' THEN 1 END) as total_reports,
+                COUNT(CASE WHEN type = 'feedback' THEN 1 END) as total_feedbacks,
                 COUNT(CASE WHEN status = 'pending' THEN 1 END) as pending,
                 COUNT(CASE WHEN status = 'in_progress' THEN 1 END) as in_progress,
                 COUNT(CASE WHEN status = 'resolved' THEN 1 END) as resolved
