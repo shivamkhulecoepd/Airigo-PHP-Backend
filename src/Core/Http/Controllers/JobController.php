@@ -760,6 +760,89 @@ class JobController extends BaseController
     }
 
     /**
+     * Get latest jobs (most recently posted)
+     * GET /api/jobs/latest
+     */
+    public function getLatestJobs(ServerRequestInterface $request)
+    {
+        $page = (int) $this->getQueryParam($request, 'page', 1);
+        $limit = (int) $this->getQueryParam($request, 'limit', 10);
+        $location = $this->getQueryParam($request, 'location');
+        $category = $this->getQueryParam($request, 'category');
+        $jobType = $this->getQueryParam($request, 'job_type');
+
+        $filters = [];
+        if ($location) $filters['location'] = $location;
+        if ($category) $filters['category'] = $category;
+        if ($jobType) $filters['job_type'] = $jobType;
+
+        try {
+            $user = $this->getUser($request);
+            
+            // Fetch latest approved jobs sorted by created_at DESC
+            $jobs = $this->jobRepository->findLatestJobs($filters, $limit, ($page - 1) * $limit);
+            $totalCount = $this->jobRepository->count(['approval_status' => 'approved', 'is_active' => true]);
+
+            // Add wishlist status for authenticated users
+            if ($user) {
+                $userId = $user['id'];
+                $wishlistJobIds = $this->wishlistRepository->getWishlistJobIds($userId);
+                
+                foreach ($jobs as &$job) {
+                    $job['is_in_wishlist'] = in_array($job['id'], $wishlistJobIds);
+                }
+            } else {
+                foreach ($jobs as &$job) {
+                    $job['is_in_wishlist'] = false;
+                }
+            }
+
+            return ResponseBuilder::ok([
+                'jobs' => $jobs,
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => $totalCount,
+                    'pages' => ceil($totalCount / $limit)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch latest jobs',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Get top companies by job count
+     * GET /api/jobs/top-companies
+     */
+    public function getTopCompanies(ServerRequestInterface $request)
+    {
+        $page = (int) $this->getQueryParam($request, 'page', 1);
+        $limit = (int) $this->getQueryParam($request, 'limit', 20);
+
+        try {
+            $companies = $this->jobRepository->getTopCompanies($limit, ($page - 1) * $limit);
+            
+            return ResponseBuilder::ok([
+                'companies' => $companies,
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => count($companies)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to fetch top companies',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * Get complete jobseeker profile with all details
      * GET /api/jobs/jobseeker/:userId
      */

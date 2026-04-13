@@ -438,6 +438,76 @@ class JobRepository extends BaseRepository
         return $stmt->fetchAll();
     }
 
+    /**
+     * Get latest jobs sorted by created_at DESC
+     */
+    public function findLatestJobs(array $filters = [], int $limit = null, int $offset = null): array
+    {
+        $query = "SELECT * FROM {$this->table} WHERE approval_status = 'approved' AND is_active = 1";
+        $params = [];
+
+        if (!empty($filters)) {
+            $conditions = [];
+            foreach ($filters as $column => $value) {
+                $conditions[] = "{$column} = ?";
+                $params[] = $value;
+            }
+            $query .= " AND " . implode(' AND ', $conditions);
+        }
+
+        // Sort by created_at DESC to get latest jobs first
+        $query .= " ORDER BY created_at DESC";
+
+        if ($limit !== null) {
+            $query .= " LIMIT ?";
+            $params[] = $limit;
+
+            if ($offset !== null) {
+                $query .= " OFFSET ?";
+                $params[] = $offset;
+            }
+        }
+
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute($params);
+        $jobs = $stmt->fetchAll();
+        
+        // Decode JSON fields
+        foreach ($jobs as &$job) {
+            $this->decodeJsonFields($job);
+        }
+        
+        return $jobs;
+    }
+
+    /**
+     * Get top companies by job count
+     */
+    public function getTopCompanies(int $limit = 20, int $offset = 0): array
+    {
+        $query = "
+            SELECT 
+                company_name,
+                company_logo_url,
+                company_url,
+                category as industry,
+                location,
+                COUNT(*) as open_positions,
+                MAX(created_at) as latest_post
+            FROM {$this->table}
+            WHERE is_active = 1 AND approval_status = 'approved'
+            GROUP BY company_name, company_logo_url, company_url, category, location
+            ORDER BY open_positions DESC, latest_post DESC
+            LIMIT ? OFFSET ?
+        ";
+        
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([$limit, $offset]);
+        $companies = $stmt->fetchAll();
+        
+        return $companies;
+    }
+
     public function getPaginated(int $page = 1, int $limit = 10, array $filters = []): array
     {
         $offset = ($page - 1) * $limit;

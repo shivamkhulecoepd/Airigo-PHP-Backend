@@ -72,6 +72,8 @@ $router->post('/api/notifications/cleanup-invalid-tokens', [NotificationControll
 // Job management routes
 $router->post('/api/jobs', [JobController::class, 'create'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 $router->get('/api/jobs', [JobController::class, 'getAll'])->addMiddleware(new OptionalAuthMiddleware());
+$router->get('/api/jobs/latest', [JobController::class, 'getLatestJobs'])->addMiddleware(new OptionalAuthMiddleware());
+$router->get('/api/jobs/top-companies', [JobController::class, 'getTopCompanies'])->addMiddleware(new OptionalAuthMiddleware());
 $router->get('/api/jobs/{id}', [JobController::class, 'getById']);
 $router->put('/api/jobs/{id}', [JobController::class, 'update'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 $router->delete('/api/jobs/{id}', [JobController::class, 'delete'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
