@@ -565,6 +565,11 @@ class JobController extends BaseController
 
     public function search(ServerRequestInterface $request)
     {
+        // Debug logging
+        error_log('🔍 SEARCH ENDPOINT HIT');
+        error_log('Request URI: ' . $request->getUri()->getPath());
+        error_log('Query params: ' . json_encode($request->getQueryParams()));
+        
         $page = (int) $this->getQueryParam($request, 'page', 1);
         $limit = (int) $this->getQueryParam($request, 'limit', 10);
         $location = $this->getQueryParam($request, 'location');
@@ -576,6 +581,8 @@ class JobController extends BaseController
         $maxCtc = $this->getQueryParam($request, 'max_ctc');
         $experienceRequired = $this->getQueryParam($request, 'experience_required');
         $isUrgent = $this->getQueryParam($request, 'is_urgent_hiring');
+        
+        error_log('Filters - jobType: ' . ($jobType ?? 'null') . ', location: ' . ($location ?? 'null') . ', category: ' . ($category ?? 'null'));
 
         $searchParams = [];
         if ($location) $searchParams['location'] = $location;
@@ -587,10 +594,14 @@ class JobController extends BaseController
         if ($maxCtc) $searchParams['max_ctc'] = $maxCtc;
         if ($experienceRequired) $searchParams['experience_required'] = $experienceRequired;
         if ($isUrgent !== null) $searchParams['is_urgent_hiring'] = filter_var($isUrgent, FILTER_VALIDATE_BOOLEAN);
+        
+        error_log('Search params: ' . json_encode($searchParams));
 
         try {
             $jobs = $this->jobRepository->searchJobs($searchParams, $limit, ($page - 1) * $limit);
             $totalCount = $this->jobRepository->count(['is_active' => 1, 'approval_status' => 'approved']);
+            
+            error_log('Found ' . count($jobs) . ' jobs out of ' . $totalCount . ' total');
 
             // Add wishlist status for authenticated users
             $user = $this->getUser($request);
@@ -609,6 +620,7 @@ class JobController extends BaseController
                 }
             }
 
+            error_log('✅ Search successful');
             return ResponseBuilder::ok([
                 'jobs' => $jobs,
                 'pagination' => [
@@ -619,6 +631,7 @@ class JobController extends BaseController
                 ]
             ]);
         } catch (\Exception $e) {
+            error_log('❌ Search error: ' . $e->getMessage());
             return ResponseBuilder::serverError([
                 'message' => 'Failed to search jobs',
                 'error' => $e->getMessage()

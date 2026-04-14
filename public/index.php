@@ -74,12 +74,12 @@ $router->post('/api/jobs', [JobController::class, 'create'])->addMiddleware(new 
 $router->get('/api/jobs', [JobController::class, 'getAll'])->addMiddleware(new OptionalAuthMiddleware());
 $router->get('/api/jobs/latest', [JobController::class, 'getLatestJobs'])->addMiddleware(new OptionalAuthMiddleware());
 $router->get('/api/jobs/top-companies', [JobController::class, 'getTopCompanies'])->addMiddleware(new OptionalAuthMiddleware());
-$router->get('/api/jobs/{id}', [JobController::class, 'getById']);
-$router->put('/api/jobs/{id}', [JobController::class, 'update'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
-$router->delete('/api/jobs/{id}', [JobController::class, 'delete'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
-$router->get('/api/jobs/search', [JobController::class, 'search']);
+$router->get('/api/jobs/search', [JobController::class, 'search']);  // MUST BE BEFORE /{id} route
 $router->get('/api/jobs/categories', [JobController::class, 'getCategories']);
 $router->get('/api/jobs/locations', [JobController::class, 'getLocations']);
+$router->get('/api/jobs/{id}', [JobController::class, 'getById']);  // Generic route must be last
+$router->put('/api/jobs/{id}', [JobController::class, 'update'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
+$router->delete('/api/jobs/{id}', [JobController::class, 'delete'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 
 // Jobseeker profile route
 $router->get('/api/jobs/jobseeker/{userId}', [JobController::class, 'getJobseekerProfile']);
