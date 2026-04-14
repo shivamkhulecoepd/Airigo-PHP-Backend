@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use App\Config\AppConfig;
 use App\Repositories\UserRepository;
 use App\Core\Database\Connection;
+use App\Repositories\NotificationRepository;
 
 class FirebaseNotificationService
 {
@@ -18,6 +19,7 @@ class FirebaseNotificationService
     private string $authUri;
     private string $tokenUri;
     private UserRepository $userRepository;
+    private NotificationRepository $notificationRepository;
     private \PDO $connection;
 
     public function __construct()
@@ -37,6 +39,7 @@ class FirebaseNotificationService
         $this->tokenUri = AppConfig::get('firebase.token_uri');
         
         $this->userRepository = new UserRepository();
+        $this->notificationRepository = new NotificationRepository();
         $this->connection = Connection::getInstance();
     }
 
@@ -250,7 +253,7 @@ class FirebaseNotificationService
     {
         try {
             $stmt = $this->connection->prepare(
-                "SELECT token FROM user_fcm_tokens WHERE user_id = ? AND is_active = TRUE LIMIT 1"
+                "SELECT token FROM user_fcm_tokens WHERE user_id = ? AND is_active = TRUE LIMIT 10"
             );
             $stmt->execute([$userId]);
             $tokens = $stmt->fetchAll(\PDO::FETCH_COLUMN);
@@ -364,6 +367,25 @@ class FirebaseNotificationService
     }
 
     /**
+     * Save notification to database
+     */
+    private function saveNotification(int $userId, string $title, string $body, string $type, array $data = []): bool
+    {
+        try {
+            return $this->notificationRepository->create([
+                'user_id' => $userId,
+                'title' => $title,
+                'body' => $body,
+                'type' => $type,
+                'data' => $data
+            ]);
+        } catch (\Exception $e) {
+            error_log("Failed to save notification to database: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
      * Send welcome notification for new user registration
      */
     public function sendWelcomeNotification(int $userId, string $userName, string $userType): bool
@@ -378,6 +400,9 @@ class FirebaseNotificationService
             'user_type' => $userType,
             'action' => 'account_created'
         ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'welcome', $data);
 
         return $this->sendToUser($userId, $notificationData, $data);
     }
@@ -406,6 +431,9 @@ class FirebaseNotificationService
         if ($rejectionReason) {
             $data['rejection_reason'] = $rejectionReason;
         }
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'recruiter_approval', $data);
 
         return $this->sendToUser($userId, $notificationData, $data);
     }
@@ -440,6 +468,9 @@ class FirebaseNotificationService
             'action' => 'status_updated'
         ];
 
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'application_status', $data);
+
         return $this->sendToUser($userId, $notificationData, $data);
     }
 
@@ -466,6 +497,9 @@ class FirebaseNotificationService
             'action' => 'new_application_received'
         ];
 
+        // Save to database
+        $this->saveNotification($recruiterId, $notificationData['title'], $notificationData['body'], 'new_application', $data);
+
         return $this->sendToUser($recruiterId, $notificationData, $data);
     }
 
@@ -489,6 +523,9 @@ class FirebaseNotificationService
             'identifier' => $identifier,
             'action' => 'password_reset_requested'
         ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'password_reset', $data);
 
         return $this->sendToUser($userId, $notificationData, $data);
     }
@@ -523,6 +560,313 @@ class FirebaseNotificationService
         if ($rejectionReason) {
             $data['rejection_reason'] = $rejectionReason;
         }
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'job_approval', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send job matching notification to jobseeker
+     */
+    public function sendJobMatchingNotification(
+        int $userId,
+        string $userName,
+        string $jobTitle,
+        string $companyName,
+        int $jobId
+    ): bool {
+        $notificationData = [
+            'title' => 'New Job Match',
+            'body' => "Hi {$userName}! We found a new job that matches your profile: '{$jobTitle}' at {$companyName}"
+        ];
+
+        $data = [
+            'type' => 'job_matching',
+            'job_title' => $jobTitle,
+            'company_name' => $companyName,
+            'job_id' => (string)$jobId,
+            'action' => 'job_matched'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'job_matching', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send profile view notification to jobseeker
+     */
+    public function sendProfileViewNotification(
+        int $userId,
+        string $userName,
+        string $recruiterCompanyName,
+        string $recruiterName
+    ): bool {
+        $notificationData = [
+            'title' => 'Profile Viewed',
+            'body' => "Hi {$userName}! A recruiter from {$recruiterCompanyName} viewed your profile"
+        ];
+
+        $data = [
+            'type' => 'profile_view',
+            'recruiter_company' => $recruiterCompanyName,
+            'recruiter_name' => $recruiterName,
+            'action' => 'profile_viewed'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'profile_view', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send interview scheduled notification
+     */
+    public function sendInterviewScheduledNotification(
+        int $userId,
+        string $userName,
+        string $jobTitle,
+        string $companyName,
+        string $interviewTime
+    ): bool {
+        $notificationData = [
+            'title' => 'Interview Scheduled',
+            'body' => "Hi {$userName}! Your interview for '{$jobTitle}' at {$companyName} is scheduled for {$interviewTime}"
+        ];
+
+        $data = [
+            'type' => 'interview_scheduled',
+            'job_title' => $jobTitle,
+            'company_name' => $companyName,
+            'interview_time' => $interviewTime,
+            'action' => 'interview_scheduled'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'interview_scheduled', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send offer extended notification
+     */
+    public function sendOfferExtendedNotification(
+        int $userId,
+        string $userName,
+        string $jobTitle,
+        string $companyName,
+        string $offerAmount
+    ): bool {
+        $notificationData = [
+            'title' => 'Job Offer Extended',
+            'body' => "Hi {$userName}! Congratulations! You've received a job offer for '{$jobTitle}' at {$companyName} with CTC of {$offerAmount}"
+        ];
+
+        $data = [
+            'type' => 'offer_extended',
+            'job_title' => $jobTitle,
+            'company_name' => $companyName,
+            'offer_amount' => $offerAmount,
+            'action' => 'offer_extended'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'offer_extended', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send message received notification
+     */
+    public function sendMessageReceivedNotification(
+        int $userId,
+        string $userName,
+        string $senderName,
+        string $messagePreview
+    ): bool {
+        $notificationData = [
+            'title' => 'New Message',
+            'body' => "Hi {$userName}! You have a new message from {$senderName}: {$messagePreview}"
+        ];
+
+        $data = [
+            'type' => 'message_received',
+            'sender_name' => $senderName,
+            'message_preview' => $messagePreview,
+            'action' => 'message_received'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'message_received', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send job expiry notification
+     */
+    public function sendJobExpiryNotification(
+        int $userId,
+        string $userName,
+        string $jobTitle,
+        string $daysLeft
+    ): bool {
+        $notificationData = [
+            'title' => 'Job Expiring Soon',
+            'body' => "Hi {$userName}! The job posting '{$jobTitle}' is expiring in {$daysLeft} days"
+        ];
+
+        $data = [
+            'type' => 'job_expiry',
+            'job_title' => $jobTitle,
+            'days_left' => $daysLeft,
+            'action' => 'job_expiring'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'job_expiry', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send account verification notification
+     */
+    public function sendAccountVerificationNotification(
+        int $userId,
+        string $userName,
+        string $verificationStatus
+    ): bool {
+        $title = $verificationStatus === 'verified' ? 'Account Verified!' : 'Verification Required';
+        $body = $verificationStatus === 'verified' 
+            ? "Hi {$userName}! Your account has been verified successfully."
+            : "Hi {$userName}! Please verify your account to unlock all features.";
+
+        $notificationData = [
+            'title' => $title,
+            'body' => $body
+        ];
+
+        $data = [
+            'type' => 'account_verification',
+            'status' => $verificationStatus,
+            'action' => $verificationStatus === 'verified' ? 'account_verified' : 'verification_required'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'account_verification', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send new user registration notification to admin
+     */
+    public function sendNewUserRegistrationNotification(
+        int $adminUserId,
+        string $adminName,
+        string $newUserName,
+        string $newUserType,
+        string $email
+    ): bool {
+        $notificationData = [
+            'title' => 'New User Registration',
+            'body' => "Hi {$adminName}! A new {$newUserType} has registered: {$newUserName} ({$email})"
+        ];
+
+        $data = [
+            'type' => 'new_user_registration',
+            'new_user_name' => $newUserName,
+            'new_user_type' => $newUserType,
+            'email' => $email,
+            'action' => 'new_user_registered'
+        ];
+
+        // Save to database
+        $this->saveNotification($adminUserId, $notificationData['title'], $notificationData['body'], 'new_user_registration', $data);
+
+        return $this->sendToUser($adminUserId, $notificationData, $data);
+    }
+
+    /**
+     * Send system maintenance notification
+     */
+    public function sendSystemMaintenanceNotification(
+        int $userId,
+        string $userName,
+        string $maintenanceTime,
+        string $duration
+    ): bool {
+        $notificationData = [
+            'title' => 'System Maintenance Scheduled',
+            'body' => "Hi {$userName}! System maintenance is scheduled for {$maintenanceTime} (Duration: {$duration})"
+        ];
+
+        $data = [
+            'type' => 'system_maintenance',
+            'maintenance_time' => $maintenanceTime,
+            'duration' => $duration,
+            'action' => 'maintenance_scheduled'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'system_maintenance', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send platform update notification
+     */
+    public function sendPlatformUpdateNotification(
+        int $userId,
+        string $userName,
+        string $featureName
+    ): bool {
+        $notificationData = [
+            'title' => 'New Feature Available',
+            'body' => "Hi {$userName}! We've launched a new feature: {$featureName}"
+        ];
+
+        $data = [
+            'type' => 'platform_update',
+            'feature_name' => $featureName,
+            'action' => 'feature_launched'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'platform_update', $data);
+
+        return $this->sendToUser($userId, $notificationData, $data);
+    }
+
+    /**
+     * Send policy update notification
+     */
+    public function sendPolicyUpdateNotification(
+        int $userId,
+        string $userName,
+        string $policyType
+    ): bool {
+        $notificationData = [
+            'title' => 'Policy Update',
+            'body' => "Hi {$userName}! Our {$policyType} policy has been updated. Please review the changes."
+        ];
+
+        $data = [
+            'type' => 'policy_update',
+            'policy_type' => $policyType,
+            'action' => 'policy_updated'
+        ];
+
+        // Save to database
+        $this->saveNotification($userId, $notificationData['title'], $notificationData['body'], 'policy_update', $data);
 
         return $this->sendToUser($userId, $notificationData, $data);
     }
