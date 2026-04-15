@@ -20,20 +20,22 @@ class NotificationRepository
     public function create(array $data): int
     {
         $sql = "INSERT INTO notifications (
-                    user_id, 
-                    title, 
-                    body, 
-                    type, 
-                    data, 
-                    is_read, 
+                    user_id,
+                    title,
+                    body,
+                    type,
+                    data,
+                    is_read,
+                    is_archived,
                     created_at
                 ) VALUES (
-                    :user_id, 
-                    :title, 
-                    :body, 
-                    :type, 
-                    :data, 
-                    :is_read, 
+                    :user_id,
+                    :title,
+                    :body,
+                    :type,
+                    :data,
+                    :is_read,
+                    :is_archived,
                     NOW()
                 )";
 
@@ -44,6 +46,7 @@ class NotificationRepository
         $stmt->bindValue(':type', $data['type'], PDO::PARAM_STR);
         $stmt->bindValue(':data', json_encode($data['data']), PDO::PARAM_STR);
         $stmt->bindValue(':is_read', $data['is_read'] ?? false, PDO::PARAM_BOOL);
+        $stmt->bindValue(':is_archived', $data['is_archived'] ?? false, PDO::PARAM_BOOL);
 
         $result = $stmt->execute();
 
@@ -59,19 +62,19 @@ class NotificationRepository
      */
     public function getByUserId(int $userId, int $limit = 50, int $offset = 0, bool $onlyUnread = false, bool $onlyArchived = false): array
     {
-        $sql = "SELECT * FROM notifications 
+        $sql = "SELECT * FROM notifications
                 WHERE user_id = :user_id";
-        
+
         if ($onlyUnread) {
             $sql .= " AND is_read = FALSE";
         }
-        
+
         if ($onlyArchived) {
             $sql .= " AND is_archived = TRUE";
         } else {
-            $sql .= " AND is_archived = FALSE";  // Don't show archived by default
+            $sql .= " AND (is_archived IS NULL OR is_archived = FALSE)";  // Don't show archived by default, treat NULL as FALSE
         }
-        
+
         $sql .= " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
 
         $stmt = $this->connection->prepare($sql);
@@ -136,12 +139,16 @@ class NotificationRepository
     /**
      * Count total notifications for a user
      */
-    public function countByUser(int $userId, bool $onlyUnread = false): int
+    public function countByUser(int $userId, bool $onlyUnread = false, bool $onlyNonArchived = true): int
     {
         $sql = "SELECT COUNT(*) FROM notifications WHERE user_id = :user_id";
-        
+
         if ($onlyUnread) {
             $sql .= " AND is_read = FALSE";
+        }
+
+        if ($onlyNonArchived) {
+            $sql .= " AND (is_archived IS NULL OR is_archived = FALSE)";
         }
 
         $stmt = $this->connection->prepare($sql);
