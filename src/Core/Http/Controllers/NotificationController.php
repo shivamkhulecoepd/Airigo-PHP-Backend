@@ -413,48 +413,6 @@ class NotificationController extends BaseController
     }
 
     /**
-     * Get user's notifications
-     */
-    public function getUserNotifications(ServerRequestInterface $request)
-    {
-        $user = $this->getUser($request);
-        if (!$user) {
-            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
-        }
-
-        $page = (int) $this->getQueryParam($request, 'page', 1);
-        $limit = (int) $this->getQueryParam($request, 'limit', 10);
-
-        try {
-            $offset = ($page - 1) * $limit;
-            $notifications = $this->notificationRepository->getByUserId(
-                $user['id'], 
-                $limit, 
-                $offset
-            );
-            $totalCount = $this->notificationRepository->getCountByUser($user['id']);
-
-            return ResponseBuilder::ok([
-                'notifications' => $notifications,
-                'pagination' => [
-                    'page' => $page,
-                    'limit' => $limit,
-                    'total' => $totalCount,
-                    'pages' => ceil($totalCount / $limit)
-                ]
-            ]);
-        } catch (\Exception $e) {
-            return ResponseBuilder::serverError([
-                'message' => 'Failed to retrieve notifications',
-                'error' => $e->getMessage()
-            ]);
-        }
-    }
-            ]);
-        }
-    }
-
-    /**
      * Delete notification
      */
     public function deleteNotification(ServerRequestInterface $request)
@@ -614,7 +572,6 @@ class NotificationController extends BaseController
 
         return $this->notificationService->sendToUser($userId, $notificationData, $data);
     }
-
 
     /**
      * Send interview scheduled notification to jobseeker
@@ -2379,7 +2336,7 @@ class NotificationController extends BaseController
     }
 
     /**
-     * Send legal request received notification to admin (final copy to ensure it's included)
+     * Send legal request received notification to admin
      */
     public function sendLegalRequestReceivedNotification(
         int $adminUserId,
