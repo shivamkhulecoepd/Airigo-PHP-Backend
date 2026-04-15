@@ -328,39 +328,6 @@ class NotificationController extends BaseController
     }
 
     /**
-     * Send legal request received notification to admin
-     */
-    public function sendLegalRequestReceivedNotification(
-        int $adminUserId,
-        string $adminName,
-        string $requestType,
-        string $details
-    ): bool {
-        $notificationData = [
-            'title' => 'Legal Request Received',
-            'body' => "Hi {$adminName}! Legal request received. Type: {$requestType}. Details: {$details}"
-        ];
-
-        $data = [
-            'type' => 'legal_request_received',
-            'request_type' => $requestType,
-            'details' => $details,
-            'action' => 'legal_request_received'
-        ];
-
-        // Save to database
-        $this->notificationRepository->create([
-            'user_id' => $adminUserId,
-            'title' => $notificationData['title'],
-            'body' => $notificationData['body'],
-            'type' => 'legal_request_received',
-            'data' => $data
-        ]);
-
-        return $this->notificationService->sendToUser($adminUserId, $notificationData, $data);
-    }
-
-    /**
      * Archive notification
      */
     public function archiveNotification(ServerRequestInterface $request)
@@ -567,43 +534,6 @@ class NotificationController extends BaseController
         return $this->notificationService->sendToUser($userId, $notificationData, $data);
     }
 
-    /**
-     * Send legal request received notification to admin
-     */
-    public function sendLegalRequestReceivedNotification(
-        int $adminUserId,
-        string $adminName,
-        string $requestType,
-        string $details
-    ): bool {
-        $notificationData = [
-            'title' => 'Legal Request Received',
-            'body' => "Hi {$adminName}! Legal request received. Type: {$requestType}. Details: {$details}"
-        ];
-
-        $data = [
-            'type' => 'legal_request_received',
-            'request_type' => $requestType,
-            'details' => $details,
-            'action' => 'legal_request_received'
-        ];
-
-        // Save to database
-        $this->notificationRepository->create([
-            'user_id' => $adminUserId,
-            'title' => $notificationData['title'],
-            'body' => $notificationData['body'],
-            'type' => 'legal_request_received',
-            'data' => $data
-        ]);
-
-        return $this->notificationService->sendToUser($adminUserId, $notificationData, $data);
-    }
-}
-        ]);
-
-        return $this->notificationService->sendToUser($userId, $notificationData, $data);
-    }
 
     /**
      * Send interview scheduled notification to jobseeker
@@ -2368,7 +2298,7 @@ class NotificationController extends BaseController
     }
 
     /**
-     * Send legal request received notification to admin
+     * Send legal request received notification to admin (final copy to ensure it's included)
      */
     public function sendLegalRequestReceivedNotification(
         int $adminUserId,
