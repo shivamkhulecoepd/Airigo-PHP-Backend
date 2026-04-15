@@ -175,12 +175,14 @@ CREATE TABLE notifications (
   type VARCHAR(100) NOT NULL,
   data JSON NULL,
   is_read BOOLEAN DEFAULT FALSE,
+  is_archived BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   INDEX idx_user_id (user_id),
   INDEX idx_type (type),
   INDEX idx_is_read (is_read),
+  INDEX idx_is_archived (is_archived),
   INDEX idx_created_at (created_at DESC)
 ) ENGINE=InnoDB;
 

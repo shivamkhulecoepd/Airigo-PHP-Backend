@@ -14,6 +14,7 @@ use App\Core\Http\Controllers\AdminController;
 use App\Core\Http\Controllers\IssueReportController;
 use App\Core\Http\Controllers\WishlistController;
 use App\Core\Http\Controllers\NotificationController;
+use App\Core\Http\Controllers\Admin\AdminNotificationController;
 use App\Core\Utils\ResponseBuilder;
 use GuzzleHttp\Psr7\ServerRequest;
 
@@ -69,6 +70,7 @@ $router->get('/api/notifications', [NotificationController::class, 'getUserNotif
 $router->put('/api/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->addMiddleware(new AuthMiddleware());
 $router->put('/api/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->addMiddleware(new AuthMiddleware());
 $router->get('/api/notifications/count', [NotificationController::class, 'getNotificationCount'])->addMiddleware(new AuthMiddleware());
+$router->put('/api/notifications/{id}/archive', [NotificationController::class, 'archiveNotification'])->addMiddleware(new AuthMiddleware());
 
 // Admin cleanup route
 $router->post('/api/notifications/cleanup-invalid-tokens', [NotificationController::class, 'cleanupInvalidTokens'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
@@ -137,6 +139,17 @@ $router->put('/api/admin/recruiters/{id}/approve', [AdminController::class, 'app
 $router->put('/api/admin/recruiters/{id}/reject', [AdminController::class, 'rejectRecruiter'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->put('/api/admin/applications/{id}/status', [AdminController::class, 'updateApplicationStatus'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 $router->put('/api/admin/issues-reports/{id}/status', [AdminController::class, 'updateIssueReportStatus'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+
+// Admin notification routes
+$router->post('/api/admin/notifications/user/{id}', [AdminNotificationController::class, 'sendNotificationToUser'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->post('/api/admin/notifications/all', [AdminNotificationController::class, 'sendNotificationToAll'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->post('/api/admin/notifications/role/{type}', [AdminNotificationController::class, 'sendNotificationByRole'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->post('/api/admin/notifications/job/{id}/approval', [AdminNotificationController::class, 'sendJobApprovalNotification'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->post('/api/admin/notifications/job/{id}/rejection', [AdminNotificationController::class, 'sendJobRejectionNotification'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->post('/api/admin/notifications/recruiter/{id}/approval', [AdminNotificationController::class, 'sendRecruiterApprovalNotification'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->post('/api/admin/notifications/recruiter/{id}/rejection', [AdminNotificationController::class, 'sendRecruiterRejectionNotification'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->post('/api/admin/notifications/maintenance', [AdminNotificationController::class, 'sendSystemMaintenanceNotification'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
+$router->post('/api/admin/notifications/job/{id}/status-change', [AdminNotificationController::class, 'sendJobStatusChangeNotification'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));
 
 // Admin search route
 $router->get('/api/admin/search', [AdminController::class, 'searchAll'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['admin']));

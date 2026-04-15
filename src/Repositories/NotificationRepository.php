@@ -57,13 +57,19 @@ class NotificationRepository
     /**
      * Get notifications for a specific user
      */
-    public function getByUserId(int $userId, int $limit = 50, int $offset = 0, bool $onlyUnread = false): array
+    public function getByUserId(int $userId, int $limit = 50, int $offset = 0, bool $onlyUnread = false, bool $onlyArchived = false): array
     {
         $sql = "SELECT * FROM notifications 
                 WHERE user_id = :user_id";
         
         if ($onlyUnread) {
             $sql .= " AND is_read = FALSE";
+        }
+        
+        if ($onlyArchived) {
+            $sql .= " AND is_archived = TRUE";
+        } else {
+            $sql .= " AND is_archived = FALSE";  // Don't show archived by default
         }
         
         $sql .= " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
@@ -155,6 +161,43 @@ class NotificationRepository
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
 
         return $stmt->execute();
+    }
+
+    /**
+     * Archive a notification
+     */
+    public function archive(int $id): bool
+    {
+        $sql = "UPDATE notifications SET is_archived = TRUE WHERE id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Get archived notifications for a specific user
+     */
+    public function getArchivedByUserId(int $userId, int $limit = 50, int $offset = 0): array
+    {
+        $sql = "SELECT * FROM notifications 
+                WHERE user_id = :user_id AND is_archived = TRUE
+                ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Decode JSON data
+        foreach ($results as &$result) {
+            $result['data'] = json_decode($result['data'], true) ?: [];
+        }
+
+        return $results;
     }
 
     /**

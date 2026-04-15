@@ -1,0 +1,1 @@
+ALTER TABLE notifications ADD COLUMN is_archived BOOLEAN DEFAULT FALSE;
