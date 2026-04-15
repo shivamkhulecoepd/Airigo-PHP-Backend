@@ -201,6 +201,20 @@ class NotificationRepository
     }
 
     /**
+     * Count archived notifications for a user
+     */
+    public function getArchivedCountByUser(int $userId): int
+    {
+        $sql = "SELECT COUNT(*) FROM notifications WHERE user_id = :user_id AND is_archived = TRUE";
+        
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
      * Delete all notifications for a user
      */
     public function deleteByUser(int $userId): bool

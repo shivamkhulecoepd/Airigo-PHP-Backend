@@ -328,6 +328,45 @@ class NotificationController extends BaseController
     }
 
     /**
+     * Get user's archived notifications
+     */
+    public function getUserArchivedNotifications(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        $page = (int) $this->getQueryParam($request, 'page', 1);
+        $limit = (int) $this->getQueryParam($request, 'limit', 10);
+
+        try {
+            $offset = ($page - 1) * $limit;
+            $notifications = $this->notificationRepository->getArchivedByUserId(
+                $user['id'], 
+                $limit, 
+                $offset
+            );
+            $totalCount = $this->notificationRepository->getArchivedCountByUser($user['id']);
+
+            return ResponseBuilder::ok([
+                'notifications' => $notifications,
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => $totalCount,
+                    'pages' => ceil($totalCount / $limit)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to retrieve archived notifications',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
      * Archive notification
      */
     public function archiveNotification(ServerRequestInterface $request)
@@ -369,6 +408,48 @@ class NotificationController extends BaseController
             return ResponseBuilder::serverError([
                 'message' => 'Failed to archive notification',
                 'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Get user's notifications
+     */
+    public function getUserNotifications(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        $page = (int) $this->getQueryParam($request, 'page', 1);
+        $limit = (int) $this->getQueryParam($request, 'limit', 10);
+
+        try {
+            $offset = ($page - 1) * $limit;
+            $notifications = $this->notificationRepository->getByUserId(
+                $user['id'], 
+                $limit, 
+                $offset
+            );
+            $totalCount = $this->notificationRepository->getCountByUser($user['id']);
+
+            return ResponseBuilder::ok([
+                'notifications' => $notifications,
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => $totalCount,
+                    'pages' => ceil($totalCount / $limit)
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to retrieve notifications',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
             ]);
         }
     }

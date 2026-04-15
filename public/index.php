@@ -67,6 +67,7 @@ $router->delete('/api/notifications/fcm-token', [NotificationController::class, 
 $router->get('/api/notifications/tokens', [NotificationController::class, 'getUserTokens'])->addMiddleware(new AuthMiddleware());
 $router->post('/api/notifications/test', [NotificationController::class, 'sendTestNotification'])->addMiddleware(new AuthMiddleware());
 $router->get('/api/notifications', [NotificationController::class, 'getUserNotifications'])->addMiddleware(new AuthMiddleware());
+$router->get('/api/notifications/archived', [NotificationController::class, 'getUserArchivedNotifications'])->addMiddleware(new AuthMiddleware());
 $router->put('/api/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->addMiddleware(new AuthMiddleware());
 $router->put('/api/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->addMiddleware(new AuthMiddleware());
 $router->get('/api/notifications/count', [NotificationController::class, 'getNotificationCount'])->addMiddleware(new AuthMiddleware());
