@@ -47,9 +47,13 @@ class UserController extends BaseController
         // Get wishlist count
         $wishlistCount = $this->wishlistRepository->getWishlistCount($user['id']);
 
+        // Merge user and profile data for easier consumption by Flutter
+        $mergedData = array_merge($user, $profile ?: []);
+
         return ResponseBuilder::ok([
-            'user' => $user,
+            'user' => $mergedData,
             'profile' => $profile,
+            'user_type' => $user['user_type'],
             'wishlist_info' => [
                 'count' => $wishlistCount
             ]
