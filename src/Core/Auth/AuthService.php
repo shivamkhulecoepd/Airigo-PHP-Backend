@@ -74,6 +74,7 @@ class AuthService
                 'name' => $userData['name'] ?? ($userData['company_name'] ?? ''),
                 'phone' => $userData['phone'] ?? null,
                 'location' => $userData['location'] ?? null,
+                'email' => $userData['email'] ?? null, // Add email from registration
             ];
 
             // Add specific fields based on user type
@@ -89,8 +90,10 @@ class AuthService
                     'bio' => $userData['bio'] ?? null
                 ]);
             } else { // recruiter
+                // Map 'name' from registration to 'recruiter_name' in recruiters table
                 $profileData = array_merge($profileData, [
-                    'company_name' => $userData['company_name'] ?? '',
+                    'recruiter_name' => $userData['name'] ?? '',
+                    'company_name' => $userData['company_name'] ?? $userData['name'] ?? '',
                     'designation' => $userData['designation'] ?? null,
                     'photo_url' => $userData['photo_url'] ?? null,
                     'id_card_url' => $userData['id_card_url'] ?? null,
@@ -99,6 +102,9 @@ class AuthService
                     'approved_at' => null,
                     'rejection_reason' => null
                 ]);
+                
+                // Remove 'name' field as it doesn't exist in recruiters table
+                unset($profileData['name']);
             }
 
             $profileRepo->create($profileData);

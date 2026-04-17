@@ -19,6 +19,11 @@ class RecruiterRepository extends BaseRepository
         ];
 
         $filteredData = array_intersect_key($data, array_flip($allowedColumns));
+        
+        // If email is not provided, use the user's email from users table
+        if (empty($filteredData['email']) && !empty($data['user_id'])) {
+            // This will be handled by the AuthService passing the email
+        }
 
         return parent::create($filteredData);
     }
