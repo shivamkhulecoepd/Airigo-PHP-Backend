@@ -86,6 +86,7 @@ $router->get('/api/jobs/categories', [JobController::class, 'getCategories']);
 $router->get('/api/jobs/locations', [JobController::class, 'getLocations']);
 $router->get('/api/jobs/{id}', [JobController::class, 'getById']);  // Generic route must be last
 $router->put('/api/jobs/{id}', [JobController::class, 'update'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
+$router->post('/api/jobs/{id}/upload-logo', [JobController::class, 'uploadLogo'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 $router->delete('/api/jobs/{id}', [JobController::class, 'delete'])->addMiddleware(new AuthMiddleware())->addMiddleware(new RoleMiddleware(['recruiter']));
 
 // Jobseeker profile route

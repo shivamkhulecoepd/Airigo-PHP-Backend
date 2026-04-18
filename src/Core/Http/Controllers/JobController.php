@@ -396,52 +396,112 @@ class JobController extends BaseController
                 $updateData['perks_and_benefits'] = json_encode($processedData['perks_and_benefits']);
             }
 
-            // Handle company logo upload if provided
+            // Handle company logo upload if provided - support both uploaded files and base64
             if (isset($uploadedFiles['logo']) && $uploadedFiles['logo']->getError() === UPLOAD_ERR_OK) {
-                error_log('[JOB UPDATE] Logo file detected, starting upload process...');
-                
+                error_log('[JOB UPDATE] Logo file detected via uploadedFiles, starting upload process...');
+
                 $logoFile = $uploadedFiles['logo'];
-                
+
                 // Validate file type and size
                 $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
                 $maxFileSize = 2 * 1024 * 1024; // 2MB
-                
+
                 if (!in_array($logoFile->getClientMediaType(), $allowedTypes)) {
                     error_log('[JOB UPDATE] Invalid file type: ' . $logoFile->getClientMediaType());
                     return ResponseBuilder::badRequest(['message' => 'Invalid image type. Only JPEG, PNG, GIF, and WebP images are allowed']);
                 }
-                
+
                 if ($logoFile->getSize() > $maxFileSize) {
                     error_log('[JOB UPDATE] File too large: ' . $logoFile->getSize() . ' bytes');
                     return ResponseBuilder::badRequest(['message' => 'Image size exceeds 2MB limit']);
                 }
-                
+
                 error_log('[JOB UPDATE] File validation passed. Size: ' . $logoFile->getSize() . ', Type: ' . $logoFile->getClientMediaType());
-                
+
                 // Move uploaded file to temporary location
                 $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_' . $logoFile->getClientFilename();
                 $logoFile->moveTo($tempPath);
-                
+
                 error_log('[JOB UPDATE] Temp file created: ' . $tempPath);
-                
+
                 // Generate unique filename
                 $extension = pathinfo($logoFile->getClientFilename(), PATHINFO_EXTENSION);
                 $uniqueFilename = 'company_logo_' . $jobId . '_' . time() . '.' . $extension;
-                
+
                 // Upload to Firebase Storage
                 error_log('[JOB UPDATE] Uploading to Firebase with filename: ' . $uniqueFilename);
                 $fileUrl = $this->firebaseStorage->uploadFile($tempPath, $uniqueFilename);
-                
+
                 if (!$fileUrl) {
                     error_log('[JOB UPDATE] Firebase upload failed!');
                     return ResponseBuilder::serverError(['message' => 'Failed to upload logo to storage']);
                 }
-                
+
                 error_log('[JOB UPDATE] Firebase upload successful! URL: ' . $fileUrl);
-                
+
                 // Add logo URL to update data
                 $updateData['company_logo_url'] = $fileUrl;
-                
+
+                // Clean up temp file
+                unlink($tempPath);
+                error_log('[JOB UPDATE] Temp file cleaned up');
+            } elseif (isset($processedData['company_logo_base64']) && !empty($processedData['company_logo_base64'])) {
+                error_log('[JOB UPDATE] Base64 logo detected, processing...');
+
+                // Handle base64 encoded logo
+                $base64Image = $processedData['company_logo_base64'];
+                $mimeType = $processedData['company_logo_mime_type'] ?? 'image/jpeg';
+                $filename = $processedData['company_logo_filename'] ?? 'logo.jpg';
+
+                // Validate MIME type
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                if (!in_array($mimeType, $allowedTypes)) {
+                    error_log('[JOB UPDATE] Invalid base64 MIME type: ' . $mimeType);
+                    return ResponseBuilder::badRequest(['message' => 'Invalid image type. Only JPEG, PNG, GIF, and WebP images are allowed']);
+                }
+
+                // Decode base64
+                $imageData = base64_decode($base64Image);
+                if ($imageData === false) {
+                    error_log('[JOB UPDATE] Failed to decode base64 image');
+                    return ResponseBuilder::badRequest(['message' => 'Invalid base64 image data']);
+                }
+
+                // Check file size (base64 is ~33% larger than binary)
+                $maxFileSize = 2 * 1024 * 1024; // 2MB
+                if (strlen($imageData) > $maxFileSize) {
+                    error_log('[JOB UPDATE] Base64 image too large: ' . strlen($imageData) . ' bytes');
+                    return ResponseBuilder::badRequest(['message' => 'Image size exceeds 2MB limit']);
+                }
+
+                // Create temporary file
+                $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_base64_' . $filename;
+                if (file_put_contents($tempPath, $imageData) === false) {
+                    error_log('[JOB UPDATE] Failed to write temp file');
+                    return ResponseBuilder::serverError(['message' => 'Failed to process image']);
+                }
+
+                error_log('[JOB UPDATE] Temp file created from base64: ' . $tempPath);
+
+                // Generate unique filename
+                $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                $uniqueFilename = 'company_logo_' . $jobId . '_' . time() . '.' . $extension;
+
+                // Upload to Firebase Storage
+                error_log('[JOB UPDATE] Uploading base64 image to Firebase with filename: ' . $uniqueFilename);
+                $fileUrl = $this->firebaseStorage->uploadFile($tempPath, $uniqueFilename);
+
+                if (!$fileUrl) {
+                    error_log('[JOB UPDATE] Firebase upload failed for base64 image!');
+                    unlink($tempPath);
+                    return ResponseBuilder::serverError(['message' => 'Failed to upload logo to storage']);
+                }
+
+                error_log('[JOB UPDATE] Firebase upload successful for base64! URL: ' . $fileUrl);
+
+                // Add logo URL to update data
+                $updateData['company_logo_url'] = $fileUrl;
+
                 // Clean up temp file
                 unlink($tempPath);
                 error_log('[JOB UPDATE] Temp file cleaned up');
@@ -449,7 +509,7 @@ class JobController extends BaseController
                 if (isset($uploadedFiles['logo'])) {
                     error_log('[JOB UPDATE] Logo file has error code: ' . $uploadedFiles['logo']->getError());
                 } else {
-                    error_log('[JOB UPDATE] No logo file in request');
+                    error_log('[JOB UPDATE] No logo file in request (neither uploaded nor base64)');
                 }
             }
 
@@ -991,7 +1051,7 @@ class JobController extends BaseController
             if ($user) {
                 $userId = $user['id'];
                 $wishlistJobIds = $this->wishlistRepository->getWishlistJobIds($userId);
-                
+
                 // Enhance jobs with wishlist status
                 foreach ($jobs as &$job) {
                     $job['is_in_wishlist'] = in_array($job['id'], $wishlistJobIds);
@@ -1015,6 +1075,95 @@ class JobController extends BaseController
         } catch (\Exception $e) {
             return ResponseBuilder::serverError([
                 'message' => 'Failed to fetch jobs by recruiter',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Upload company logo for a job
+     * POST /api/jobs/:id/upload-logo
+     */
+    public function uploadLogo(ServerRequestInterface $request)
+    {
+        $user = $this->getUser($request);
+        if (!$user) {
+            return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
+        }
+
+        $jobId = (int) $request->getAttribute('id');
+        $uploadedFiles = $request->getUploadedFiles();
+
+        if ($jobId <= 0) {
+            return ResponseBuilder::badRequest(['message' => 'Invalid job ID']);
+        }
+
+        try {
+            $job = $this->jobRepository->findById($jobId);
+
+            if (!$job) {
+                return ResponseBuilder::notFound(['message' => 'Job not found']);
+            }
+
+            if ($user['id'] != $job['recruiter_user_id']) {
+                return ResponseBuilder::forbidden(['message' => 'You can only upload logos for your own jobs']);
+            }
+
+            if (isset($uploadedFiles['logo']) && $uploadedFiles['logo']->getError() === UPLOAD_ERR_OK) {
+                $logoFile = $uploadedFiles['logo'];
+
+                // Validate file type and size
+                $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                $maxFileSize = 2 * 1024 * 1024; // 2MB
+
+                if (!in_array($logoFile->getClientMediaType(), $allowedTypes)) {
+                    return ResponseBuilder::badRequest(['message' => 'Invalid image type. Only JPEG, PNG, GIF, and WebP images are allowed']);
+                }
+
+                if ($logoFile->getSize() > $maxFileSize) {
+                    return ResponseBuilder::badRequest(['message' => 'Image size exceeds 2MB limit']);
+                }
+
+                // Move uploaded file to temporary location
+                $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_' . $logoFile->getClientFilename();
+                $logoFile->moveTo($tempPath);
+
+                // Generate unique filename
+                $extension = pathinfo($logoFile->getClientFilename(), PATHINFO_EXTENSION);
+                $uniqueFilename = 'company_logo_' . $jobId . '_' . time() . '.' . $extension;
+
+                // Upload to Firebase Storage
+                $fileUrl = $this->firebaseStorage->uploadFile($tempPath, $uniqueFilename);
+
+                if (!$fileUrl) {
+                    return ResponseBuilder::serverError(['message' => 'Failed to upload logo to storage']);
+                }
+
+                // Update job with new logo URL
+                $result = $this->jobRepository->update($jobId, [
+                    'company_logo_url' => $fileUrl
+                ]);
+
+                if (!$result) {
+                    return ResponseBuilder::serverError(['message' => 'Failed to update job with new logo']);
+                }
+
+                // Clean up temp file
+                unlink($tempPath);
+
+                // Fetch updated job
+                $updatedJob = $this->jobRepository->findById($jobId);
+
+                return ResponseBuilder::ok([
+                    'message' => 'Logo uploaded successfully',
+                    'job' => $updatedJob
+                ]);
+            } else {
+                return ResponseBuilder::badRequest(['message' => 'No logo file provided']);
+            }
+        } catch (\Exception $e) {
+            return ResponseBuilder::serverError([
+                'message' => 'Failed to upload logo',
                 'error' => $e->getMessage()
             ]);
         }
