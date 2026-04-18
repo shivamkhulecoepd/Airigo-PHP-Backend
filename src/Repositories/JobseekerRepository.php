@@ -326,19 +326,45 @@ class JobseekerRepository extends BaseRepository
     {
         $offset = ($page - 1) * $limit;
 
-        $query = "SELECT * FROM {$this->table}";
+        // JOIN with users table to get complete jobseeker data
+        $query = "
+            SELECT 
+                j.user_id,
+                j.name,
+                j.qualification,
+                j.experience,
+                j.location,
+                j.date_of_birth,
+                j.resume_url,
+                j.resume_filename,
+                j.profile_image_url,
+                j.skills,
+                j.bio,
+                j.created_at,
+                j.updated_at,
+                u.email,
+                u.phone,
+                u.status,
+                u.email_verified,
+                u.user_type,
+                u.created_at as user_created_at
+            FROM {$this->table} j
+            LEFT JOIN users u ON j.user_id = u.id
+        ";
         $params = [];
 
         if (!empty($filters)) {
             $conditions = [];
             foreach ($filters as $column => $value) {
-                $conditions[] = "{$column} = ?";
+                // Prefix jobseeker-specific columns with 'j.'
+                $columnName = in_array($column, ['email', 'status', 'phone']) ? "j.{$column}" : $column;
+                $conditions[] = "{$columnName} = ?";
                 $params[] = $value;
             }
             $query .= " WHERE " . implode(' AND ', $conditions);
         }
 
-        $query .= " ORDER BY {$this->primaryKey} DESC LIMIT ? OFFSET ?";
+        $query .= " ORDER BY j.{$this->primaryKey} DESC LIMIT ? OFFSET ?";
 
         $params[] = $limit;
         $params[] = $offset;
@@ -353,13 +379,14 @@ class JobseekerRepository extends BaseRepository
         }
 
         // Get total count for pagination metadata
-        $countQuery = "SELECT COUNT(*) as total FROM {$this->table}";
+        $countQuery = "SELECT COUNT(*) as total FROM {$this->table} j LEFT JOIN users u ON j.user_id = u.id";
         $countParams = [];
         
         if (!empty($filters)) {
             $conditions = [];
             foreach ($filters as $column => $value) {
-                $conditions[] = "{$column} = ?";
+                $columnName = in_array($column, ['email', 'status', 'phone']) ? "j.{$column}" : $column;
+                $conditions[] = "{$columnName} = ?";
                 $countParams[] = $value;
             }
             $countQuery .= " WHERE " . implode(' AND ', $conditions);
