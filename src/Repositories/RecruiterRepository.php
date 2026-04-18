@@ -276,19 +276,46 @@ class RecruiterRepository extends BaseRepository
     {
         $offset = ($page - 1) * $limit;
 
-        $query = "SELECT * FROM {$this->table}";
+        // JOIN with users table to get complete recruiter data
+        $query = "
+            SELECT 
+                r.user_id,
+                r.email,
+                r.recruiter_name,
+                r.company_name,
+                r.company_website,
+                r.designation,
+                r.location,
+                r.photo_url,
+                r.id_card_url,
+                r.approval_status,
+                r.approved_by,
+                r.approved_at,
+                r.rejection_reason,
+                r.created_at,
+                r.updated_at,
+                u.phone,
+                u.status,
+                u.email_verified,
+                u.user_type,
+                u.created_at as user_created_at
+            FROM {$this->table} r
+            LEFT JOIN users u ON r.user_id = u.id
+        ";
         $params = [];
 
         if (!empty($filters)) {
             $conditions = [];
             foreach ($filters as $column => $value) {
-                $conditions[] = "{$column} = ?";
+                // Prefix recruiter-specific columns with 'r.'
+                $columnName = in_array($column, ['email', 'status']) ? "r.{$column}" : $column;
+                $conditions[] = "{$columnName} = ?";
                 $params[] = $value;
             }
             $query .= " WHERE " . implode(' AND ', $conditions);
         }
 
-        $query .= " ORDER BY {$this->primaryKey} DESC LIMIT ? OFFSET ?";
+        $query .= " ORDER BY r.{$this->primaryKey} DESC LIMIT ? OFFSET ?";
 
         $params[] = $limit;
         $params[] = $offset;
@@ -298,13 +325,14 @@ class RecruiterRepository extends BaseRepository
         $results = $stmt->fetchAll();
 
         // Get total count for pagination metadata
-        $countQuery = "SELECT COUNT(*) as total FROM {$this->table}";
+        $countQuery = "SELECT COUNT(*) as total FROM {$this->table} r LEFT JOIN users u ON r.user_id = u.id";
         $countParams = [];
         
         if (!empty($filters)) {
             $conditions = [];
             foreach ($filters as $column => $value) {
-                $conditions[] = "{$column} = ?";
+                $columnName = in_array($column, ['email', 'status']) ? "r.{$column}" : $column;
+                $conditions[] = "{$columnName} = ?";
                 $countParams[] = $value;
             }
             $countQuery .= " WHERE " . implode(' AND ', $conditions);
