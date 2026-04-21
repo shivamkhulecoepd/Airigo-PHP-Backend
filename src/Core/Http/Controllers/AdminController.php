@@ -205,11 +205,10 @@ class AdminController extends BaseController
             try {
                 $recruiter = $this->userRepository->findById($updatedJob['recruiter_user_id']);
                 if ($recruiter) {
-                    $notificationService = new \App\Core\Http\Controllers\NotificationController();
-                    $notificationService->sendJobApprovalNotification(
+                    $this->notificationService->sendJobApprovalNotification(
                         $recruiter['id'],
                         $recruiter['name'] ?? 'Recruiter',
-                        $updatedJob['title'],
+                        $updatedJob['designation'],
                         'approved'
                     );
                 }
@@ -272,11 +271,10 @@ class AdminController extends BaseController
             try {
                 $recruiter = $this->userRepository->findById($updatedJob['recruiter_user_id']);
                 if ($recruiter) {
-                    $notificationService = new \App\Core\Http\Controllers\NotificationController();
-                    $notificationService->sendJobApprovalNotification(
+                    $this->notificationService->sendJobApprovalNotification(
                         $recruiter['id'],
                         $recruiter['name'] ?? 'Recruiter',
-                        $updatedJob['title'],
+                        $updatedJob['designation'],
                         'rejected',
                         'Job posting does not meet platform guidelines'
                     );
