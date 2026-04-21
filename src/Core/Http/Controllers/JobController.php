@@ -17,6 +17,7 @@ class JobController extends BaseController
     private WishlistRepository $wishlistRepository;
     private \Firebase\FirebaseStorageService $firebaseStorage;
     private JobseekerRepository $jobseekerRepository;
+    private \Firebase\FirebaseNotificationService $notificationService;
 
     public function __construct()
     {
@@ -26,6 +27,7 @@ class JobController extends BaseController
         $this->wishlistRepository = new WishlistRepository();
         $this->firebaseStorage = new \Firebase\FirebaseStorageService();
         $this->jobseekerRepository = new JobseekerRepository();
+        $this->notificationService = new \Firebase\FirebaseNotificationService();
     }
 
     private function processFormData(array $data): array
@@ -177,6 +179,23 @@ class JobController extends BaseController
             // Fetch the created job
             $job = $this->jobRepository->findById($jobId);
             // JSON fields are already decoded in the repository
+
+            // Notify admins that a new job needs approval
+            try {
+                $admins = $this->userRepository->findByUserType('admin');
+                foreach ($admins as $admin) {
+                    $this->notificationService->sendNewJobPostedNotification(
+                        $admin['id'],
+                        'Admin',
+                        $job['designation'],
+                        $job['company_name'],
+                        $jobId
+                    );
+                }
+            } catch (\Exception $e) {
+                // Log notification failure but don't fail the job creation
+                error_log("Failed to send new job notifications to admins: " . $e->getMessage());
+            }
 
             return ResponseBuilder::created([
                 'message' => 'Job created successfully. Awaiting admin approval.',

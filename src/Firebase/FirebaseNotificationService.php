@@ -870,4 +870,33 @@ class FirebaseNotificationService
 
         return $this->sendToUser($userId, $notificationData, $data);
     }
+
+    /**
+     * Send new job posted notification to admin
+     */
+    public function sendNewJobPostedNotification(
+        int $adminUserId,
+        string $adminName,
+        string $jobTitle,
+        string $companyName,
+        int $jobId
+    ): bool {
+        $notificationData = [
+            'title' => 'New Job for Approval',
+            'body' => "Hi {$adminName}! A new job '{$jobTitle}' has been posted by {$companyName} and requires your approval."
+        ];
+
+        $data = [
+            'type' => 'new_job_posted',
+            'job_title' => $jobTitle,
+            'company_name' => $companyName,
+            'job_id' => (string)$jobId,
+            'action' => 'job_posted_for_approval'
+        ];
+
+        // Save to database
+        $this->saveNotification($adminUserId, $notificationData['title'], $notificationData['body'], 'new_job_posted', $data);
+
+        return $this->sendToUser($adminUserId, $notificationData, $data);
+    }
 }

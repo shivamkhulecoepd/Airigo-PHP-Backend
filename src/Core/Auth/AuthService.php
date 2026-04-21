@@ -128,9 +128,23 @@ class AuthService
         try {
             $userName = $userData['name'] ?? $userData['company_name'] ?? 'User';
             $this->notificationService->sendWelcomeNotification($userId, $userName, $userData['user_type']);
+
+            // Notify admins if it's a recruiter registration
+            if ($userData['user_type'] === 'recruiter') {
+                $admins = $this->userRepository->findByUserType('admin');
+                foreach ($admins as $admin) {
+                    $this->notificationService->sendNewUserRegistrationNotification(
+                        $admin['id'], 
+                        'Admin', 
+                        $userName, 
+                        'recruiter', 
+                        $userData['email']
+                    );
+                }
+            }
         } catch (\Exception $e) {
             // Log error but don't fail registration
-            error_log("Failed to send welcome notification: " . $e->getMessage());
+            error_log("Failed to send registration notifications: " . $e->getMessage());
         }
 
         return [
