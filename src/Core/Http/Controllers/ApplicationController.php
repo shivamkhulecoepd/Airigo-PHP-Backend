@@ -432,8 +432,8 @@ class ApplicationController extends BaseController
                     'user_type' => 'jobseeker'
                 ]);
             } elseif ($user['user_type'] === 'recruiter') {
-                // Get overall stats for recruiter (could be expanded to show stats for all their jobs)
-                $stats = $this->applicationRepository->getStats();
+                // Get overall stats for recruiter
+                $stats = $this->applicationRepository->getApplicationStatsForRecruiter($user['id']);
                 
                 return ResponseBuilder::ok([
                     'stats' => $stats,

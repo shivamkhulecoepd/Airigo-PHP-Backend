@@ -221,7 +221,13 @@ class ApplicationRepository extends BaseRepository
         
         $stmt = $this->connection->prepare($query);
         $stmt->execute([$applicationId]);
-        return $stmt->fetch() ?: null;
+        $result = $stmt->fetch();
+
+        if ($result) {
+            $this->decodeJsonFields($result);
+        }
+
+        return $result ?: null;
     }
 
     public function getApplicationsForRecruiter(int $recruiterUserId, array $filters = [], int $limit = null, int $offset = null): array
@@ -290,7 +296,13 @@ class ApplicationRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+
+        return $results;
     }
 
     public function getApplicationsWithJobDetails(array $filters = [], int $limit = null, int $offset = null): array
@@ -353,7 +365,13 @@ class ApplicationRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+
+        return $results;
     }
 
     /**
@@ -419,7 +437,13 @@ class ApplicationRepository extends BaseRepository
 
         $stmt = $this->connection->prepare($query);
         $stmt->execute($params);
-        return $stmt->fetchAll();
+        $results = $stmt->fetchAll();
+
+        foreach ($results as &$result) {
+            $this->decodeJsonFields($result);
+        }
+
+        return $results;
     }
 
     public function getStats(): array
@@ -526,4 +550,47 @@ class ApplicationRepository extends BaseRepository
         
         return (int)$result['count'];
     }
-}
+
+
+    public function getApplicationStatsForRecruiter(int $recruiterUserId): array
+    {
+        $query = "
+            SELECT 
+                COUNT(*) as total_applications,
+                COUNT(CASE WHEN a.status = 'pending' THEN 1 END) as pending,
+                COUNT(CASE WHEN a.status = 'shortlisted' THEN 1 END) as shortlisted,
+                COUNT(CASE WHEN a.status = 'rejected' THEN 1 END) as rejected,
+                COUNT(CASE WHEN a.status = 'accepted' THEN 1 END) as accepted
+            FROM {$this->table} a
+            JOIN jobs j ON a.job_id = j.id
+            WHERE j.recruiter_user_id = ?
+        ";
+        
+        $stmt = $this->connection->prepare($query);
+        $stmt->execute([$recruiterUserId]);
+        return $stmt->fetch();
+    }
+
+    /**
+     * Decode JSON fields for job and jobseeker details
+     */
+    private function decodeJsonFields(array &$result): void
+    {
+        // Decode job fields if they exist
+        if (!empty($result['requirements'])) {
+            $result['requirements'] = json_decode($result['requirements'], true);
+        }
+        if (!empty($result['skills_required'])) {
+            $result['skills_required'] = json_decode($result['skills_required'], true);
+        }
+        if (!empty($result['perks_and_benefits'])) {
+            $result['perks_and_benefits'] = json_decode($result['perks_and_benefits'], true);
+        }
+
+        // Decode jobseeker skills if it exists (usually comes from JS table)
+        if (!empty($result['jobseeker_skills'])) {
+            $decoded = json_decode($result['jobseeker_skills'], true);
+            $result['jobseeker_skills'] = $decoded ?? json_decode($result['jobseeker_skills'], false) ?? $result['jobseeker_skills'];
+        }
+    }
+}

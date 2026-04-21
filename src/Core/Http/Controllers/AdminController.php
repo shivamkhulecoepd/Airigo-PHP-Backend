@@ -201,6 +201,22 @@ class AdminController extends BaseController
             // Fetch updated job
             $updatedJob = $this->jobRepository->findById($jobId);
 
+            // Send notification to recruiter
+            try {
+                $recruiter = $this->userRepository->findById($updatedJob['recruiter_user_id']);
+                if ($recruiter) {
+                    $notificationService = new \App\Core\Http\Controllers\NotificationController();
+                    $notificationService->sendJobApprovalNotification(
+                        $recruiter['id'],
+                        $recruiter['name'] ?? 'Recruiter',
+                        $updatedJob['title'],
+                        'approved'
+                    );
+                }
+            } catch (\Exception $e) {
+                error_log('Failed to send job approval notification: ' . $e->getMessage());
+            }
+
             return ResponseBuilder::ok([
                 'message' => 'Job approved successfully',
                 'job' => $updatedJob
@@ -251,6 +267,23 @@ class AdminController extends BaseController
 
             // Fetch updated job
             $updatedJob = $this->jobRepository->findById($jobId);
+
+            // Send notification to recruiter
+            try {
+                $recruiter = $this->userRepository->findById($updatedJob['recruiter_user_id']);
+                if ($recruiter) {
+                    $notificationService = new \App\Core\Http\Controllers\NotificationController();
+                    $notificationService->sendJobApprovalNotification(
+                        $recruiter['id'],
+                        $recruiter['name'] ?? 'Recruiter',
+                        $updatedJob['title'],
+                        'rejected',
+                        'Job posting does not meet platform guidelines'
+                    );
+                }
+            } catch (\Exception $e) {
+                error_log('Failed to send job rejection notification: ' . $e->getMessage());
+            }
 
             return ResponseBuilder::ok([
                 'message' => 'Job rejected successfully',
