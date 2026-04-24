@@ -34,34 +34,47 @@ class ApplicationController extends BaseController
 
     public function apply(ServerRequestInterface $request)
     {
+        error_log("========== APPLICATION SUBMISSION STARTED ==========");
         $user = $this->getUser($request);
         if (!$user) {
+            error_log("ApplicationController: User not authenticated");
             return ResponseBuilder::unauthorized(['message' => 'User not authenticated']);
         }
 
+        error_log("ApplicationController: User ID: " . $user['id'] . ", User Type: " . $user['user_type']);
+
         if ($user['user_type'] !== 'jobseeker') {
+            error_log("ApplicationController: Forbidden - Only jobseekers can apply");
             return ResponseBuilder::forbidden(['message' => 'Only jobseekers can apply for jobs']);
         }
 
         $data = $this->getRequestBody($request);
         $jobId = (int) ($data['job_id'] ?? 0);
+        error_log("ApplicationController: Job ID from request: " . $jobId);
 
         if ($jobId <= 0) {
+            error_log("ApplicationController: Bad Request - Job ID is missing or invalid");
             return ResponseBuilder::badRequest(['message' => 'Job ID is required']);
         }
 
         // Check if job exists and is active
         $job = $this->jobRepository->findById($jobId);
         if (!$job) {
+            error_log("ApplicationController: Not Found - Job ID " . $jobId . " does not exist");
             return ResponseBuilder::notFound(['message' => 'Job not found']);
         }
 
+        error_log("ApplicationController: Job found: " . $job['designation'] . " at " . $job['company_name']);
+        error_log("ApplicationController: Job Status: is_active=" . ($job['is_active'] ? 'true' : 'false') . ", approval_status=" . $job['approval_status']);
+
         if (!$job['is_active'] || $job['approval_status'] !== 'approved') {
+            error_log("ApplicationController: Forbidden - Job is not available for applications");
             return ResponseBuilder::forbidden(['message' => 'Job is not available for applications']);
         }
 
         // Check if user has already applied for this job
         if ($this->applicationRepository->hasApplied($jobId, $user['id'])) {
+            error_log("ApplicationController: Conflict - User already applied for Job ID " . $jobId);
             return ResponseBuilder::conflict(['message' => 'You have already applied for this job']);
         }
 
@@ -75,37 +88,47 @@ class ApplicationController extends BaseController
                 'status' => 'pending'
             ];
 
+            error_log("ApplicationController: Preparing application data. Recruiter ID: " . $job['recruiter_user_id']);
+
             // Handle resume if provided
             $uploadedFiles = $request->getUploadedFiles();
             if (isset($uploadedFiles['resume']) && $uploadedFiles['resume']->getError() === UPLOAD_ERR_OK) {
                 $resumeFile = $uploadedFiles['resume'];
+                error_log("ApplicationController: Resume file uploaded: " . $resumeFile->getClientFilename() . " (" . $resumeFile->getClientMediaType() . ")");
                 
                 // Validate file type and size
                 $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
                 $maxFileSize = 5 * 1024 * 1024; // 5MB
 
                 if (!in_array($resumeFile->getClientMediaType(), $allowedTypes)) {
+                    error_log("ApplicationController: Invalid file type: " . $resumeFile->getClientMediaType());
                     return ResponseBuilder::badRequest(['message' => 'Invalid resume file type. Only PDF, DOC, and DOCX files are allowed']);
                 }
 
                 if ($resumeFile->getSize() > $maxFileSize) {
+                    error_log("ApplicationController: File size too large: " . $resumeFile->getSize());
                     return ResponseBuilder::badRequest(['message' => 'Resume file size exceeds 5MB limit']);
                 }
 
                 // Move uploaded file to temporary location
                 $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_' . $resumeFile->getClientFilename();
                 $resumeFile->moveTo($tempPath);
+                error_log("ApplicationController: File moved to temp: " . $tempPath);
 
                 // Generate unique filename
                 $extension = pathinfo($resumeFile->getClientFilename(), PATHINFO_EXTENSION);
                 $uniqueFilename = 'application_resume_' . $user['id'] . '_' . $jobId . '_' . time() . '.' . $extension;
                 
                 // Upload to Firebase Storage
+                error_log("ApplicationController: Uploading to Firebase Storage as: " . $uniqueFilename);
                 $fileUrl = $this->firebaseStorage->uploadFile($tempPath, $uniqueFilename);
 
                 if (!$fileUrl) {
+                    error_log("ApplicationController: Firebase upload failed");
                     return ResponseBuilder::serverError(['message' => 'Failed to upload resume to storage']);
                 }
+
+                error_log("ApplicationController: Resume uploaded successfully: " . $fileUrl);
 
                 // Add resume URL to application data
                 $applicationData['resume_url'] = $fileUrl;
@@ -113,24 +136,33 @@ class ApplicationController extends BaseController
                 // Clean up temp file
                 unlink($tempPath);
             } else {
+                error_log("ApplicationController: No resume file uploaded, checking jobseeker profile");
                 // Use existing resume from jobseeker profile if available
                 $jobseeker = $this->jobseekerRepository->findByUserId($user['id']);
                 if ($jobseeker && !empty($jobseeker['resume_url'])) {
+                    error_log("ApplicationController: Found resume in profile: " . $jobseeker['resume_url']);
                     $applicationData['resume_url'] = $jobseeker['resume_url'];
+                } else {
+                    error_log("ApplicationController: No resume found in profile or upload");
                 }
             }
 
+            error_log("ApplicationController: Creating application record in database");
             $applicationId = $this->applicationRepository->create($applicationData);
 
             if (!$applicationId) {
+                error_log("ApplicationController: Database insertion failed");
                 return ResponseBuilder::serverError(['message' => 'Failed to submit application']);
             }
+
+            error_log("ApplicationController: Application record created with ID: " . $applicationId);
 
             // Fetch the created application
             $application = $this->applicationRepository->findById($applicationId);
 
             // Send notification to recruiter about new application
             try {
+                error_log("ApplicationController: Sending notification to recruiter");
                 $jobseeker = $this->jobseekerRepository->findByUserId($user['id']);
                 $jobseekerName = $jobseeker['name'] ?? 'Jobseeker';
                 $recruiter = $this->recruiterRepository->findByUserId($job['recruiter_user_id']);
@@ -145,16 +177,22 @@ class ApplicationController extends BaseController
                         $jobseekerName,
                         $applicationId
                     );
+                    error_log("ApplicationController: Notification sent to Recruiter ID: " . $job['recruiter_user_id']);
+                } else {
+                    error_log("ApplicationController: Recruiter not found, skipping notification");
                 }
             } catch (\Exception $e) {
-                error_log("Failed to send new application notification: " . $e->getMessage());
+                error_log("ApplicationController: Failed to send new application notification: " . $e->getMessage());
             }
 
+            error_log("========== APPLICATION SUBMISSION COMPLETED SUCCESSFULLY ==========");
             return ResponseBuilder::created([
                 'message' => 'Application submitted successfully',
                 'application' => $application
             ]);
         } catch (\Exception $e) {
+            error_log("ApplicationController: EXCEPTION - " . $e->getMessage());
+            error_log("ApplicationController: Stack trace: " . $e->getTraceAsString());
             return ResponseBuilder::serverError([
                 'message' => 'Failed to submit application',
                 'error' => $e->getMessage()

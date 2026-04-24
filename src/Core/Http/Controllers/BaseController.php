@@ -31,7 +31,16 @@ abstract class BaseController
 
     protected function getRequestBody(ServerRequestInterface $request): array
     {
+        $parsedBody = $request->getParsedBody();
+        if (!empty($parsedBody) && is_array($parsedBody)) {
+            return $parsedBody;
+        }
+
         $body = $request->getBody()->getContents();
+        if (empty($body)) {
+            return [];
+        }
+
         return json_decode($body, true) ?: [];
     }
 
