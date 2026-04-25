@@ -132,6 +132,15 @@ class JobRepository extends BaseRepository
         if (!empty($searchParams)) {
             $conditions = [];
             
+            if (isset($searchParams['query']) && !empty($searchParams['query'])) {
+                $q = "%{$searchParams['query']}%";
+                $conditions[] = "(designation LIKE ? OR company_name LIKE ? OR description LIKE ? OR category LIKE ?)";
+                $params[] = $q;
+                $params[] = $q;
+                $params[] = $q;
+                $params[] = $q;
+            }
+            
             if (isset($searchParams['location'])) {
                 $conditions[] = "location LIKE ?";
                 $params[] = "%{$searchParams['location']}%";

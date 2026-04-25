@@ -651,6 +651,7 @@ class JobController extends BaseController
         
         $page = (int) $this->getQueryParam($request, 'page', 1);
         $limit = (int) $this->getQueryParam($request, 'limit', 10);
+        $queryText = $this->getQueryParam($request, 'query');
         $location = $this->getQueryParam($request, 'location');
         $category = $this->getQueryParam($request, 'category');
         $designation = $this->getQueryParam($request, 'designation');
@@ -661,9 +662,10 @@ class JobController extends BaseController
         $experienceRequired = $this->getQueryParam($request, 'experience_required');
         $isUrgent = $this->getQueryParam($request, 'is_urgent_hiring');
         
-        error_log('Filters - jobType: ' . ($jobType ?? 'null') . ', location: ' . ($location ?? 'null') . ', category: ' . ($category ?? 'null'));
+        error_log('Filters - query: ' . ($queryText ?? 'null') . ', jobType: ' . ($jobType ?? 'null') . ', location: ' . ($location ?? 'null') . ', category: ' . ($category ?? 'null'));
 
         $searchParams = [];
+        if ($queryText) $searchParams['query'] = $queryText;
         if ($location) $searchParams['location'] = $location;
         if ($category) $searchParams['category'] = $category;
         if ($designation) $searchParams['designation'] = $designation;
