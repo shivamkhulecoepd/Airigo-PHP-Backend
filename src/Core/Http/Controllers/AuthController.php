@@ -200,12 +200,14 @@ class AuthController extends BaseController
             ]);
         }
 
-        // Get user profile based on user type
-        $profileRepo = $user['user_type'] === 'jobseeker' ? 
-            new \App\Repositories\JobseekerRepository() : 
-            new \App\Repositories\RecruiterRepository();
-
-        $profile = $profileRepo->findById($user['id']);
+        // Get user profile with details
+        if ($user['user_type'] === 'jobseeker') {
+            $profileRepo = new \App\Repositories\JobseekerRepository();
+            $profile = $profileRepo->getJobseekerWithUserDetails($user['id']);
+        } else {
+            $profileRepo = new \App\Repositories\RecruiterRepository();
+            $profile = $profileRepo->getRecruiterWithUserDetails($user['id']);
+        }
 
         return ResponseBuilder::ok([
             'user' => [

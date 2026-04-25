@@ -38,10 +38,9 @@ class UserController extends BaseController
 
         // Get profile based on user type
         if ($user['user_type'] === 'jobseeker') {
-            $profile = $this->jobseekerRepository->findByUserId($user['id']);
-            // Skills field is already decoded in the repository
+            $profile = $this->jobseekerRepository->getJobseekerWithUserDetails($user['id']);
         } else { // recruiter
-            $profile = $this->recruiterRepository->findByUserId($user['id']);
+            $profile = $this->recruiterRepository->getRecruiterWithUserDetails($user['id']);
         }
 
         // Get wishlist count
@@ -104,8 +103,8 @@ class UserController extends BaseController
             // Fetch updated user and profile
             $updatedUser = $this->userRepository->findById($user['id']);
             $updatedProfile = $user['user_type'] === 'jobseeker' ? 
-                $this->jobseekerRepository->findByUserId($user['id']) : 
-                $this->recruiterRepository->findByUserId($user['id']);
+                $this->jobseekerRepository->getJobseekerWithUserDetails($user['id']) : 
+                $this->recruiterRepository->getRecruiterWithUserDetails($user['id']);
             
             // Skills field is already decoded in the repository
 
@@ -465,13 +464,12 @@ class UserController extends BaseController
             // Update jobseeker profile
             $this->jobseekerRepository->update($user['id'], $sectionData);
 
-            // Fetch updated profile
-            $updatedProfile = $this->jobseekerRepository->findByUserId($user['id']);
-            
-            // Add email and phone from users table to profile response
-            $updatedUser = $this->userRepository->findById($user['id']);
-            $updatedProfile['email'] = $updatedUser['email'] ?? null;
-            $updatedProfile['phone'] = $updatedUser['phone'] ?? null;
+            // Fetch updated profile with user details (email, phone)
+            if ($user['user_type'] === 'jobseeker') {
+                $updatedProfile = $this->jobseekerRepository->getJobseekerWithUserDetails($user['id']);
+            } else {
+                $updatedProfile = $this->recruiterRepository->getRecruiterWithUserDetails($user['id']);
+            }
 
             return ResponseBuilder::ok([
                 'message' => ucfirst($section) . ' section updated successfully',
