@@ -93,7 +93,10 @@ class EmailService
      */
     private function buildPasswordResetEmailBody(string $userName, string $resetToken): string
     {
-        $appUrl = $_ENV['APP_URL'] ?? 'localhost:8000';
+        $appUrl = rtrim($_ENV['APP_URL'] ?? 'https://app.airigojobs.com/public', '/');
+        if (!preg_match('#^https?://#i', $appUrl)) {
+            $appUrl = 'http://' . $appUrl;
+        }
         
         return "
         <!DOCTYPE html>
@@ -119,13 +122,12 @@ class EmailService
                     <p>Hello {$userName},</p>
                     <p>We received a request to reset your password for your Airigo Jobs account.</p>
                     
+                    <p>Your 6-digit OTP is:</p>
                     <div class='token-box'>
                         {$resetToken}
                     </div>
                     
-                    <p>You can use this token to reset your password. The token is valid for 24 hours.</p>
-                    
-                    <a href='http://{$appUrl}/reset-password?token={$resetToken}' class='button'>Reset Password</a>
+                    <p>Please enter this OTP in the app to reset your password. The OTP is valid for 24 hours.</p>
                     
                     <p>If you didn't request this, please ignore this email.</p>
                     
@@ -145,7 +147,11 @@ class EmailService
      */
     private function buildWelcomeEmailBody(string $userName): string
     {
-        $appUrl = $_ENV['APP_URL'] ?? 'localhost:8000';
+        // $appUrl = $_ENV['APP_URL'] ?? 'localhost:8000';
+        $appUrl = rtrim($_ENV['APP_URL'] ?? 'https://app.airigojobs.com/public', '/');
+        if (!preg_match('#^https?://#i', $appUrl)) {
+            $appUrl = 'http://' . $appUrl;
+        }
         
         return "
         <!DOCTYPE html>

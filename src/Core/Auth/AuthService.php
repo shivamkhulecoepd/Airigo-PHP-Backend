@@ -319,8 +319,8 @@ class AuthService
             // Delete any existing tokens for this user
             $this->passwordResetTokenRepository->deleteByUserId($user['id']);
             
-            // Generate reset token
-            $resetToken = Uuid::uuid4()->toString();
+            // Generate reset token (6-digit OTP)
+            $resetToken = str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);
             
             // Create token in database (expires in 24 hours)
             $tokenId = $this->passwordResetTokenRepository->createToken($user['id'], $resetToken, 24);
@@ -359,7 +359,7 @@ class AuthService
             // Only return reset_token in debug mode for testing purposes
             $response = [
                 'success' => true,
-                'message' => 'Password reset instructions sent successfully'
+                'message' => 'If account exists, Password reset instructions sent successfully'
             ];
             
             if ($_ENV['APP_DEBUG'] ?? false) {

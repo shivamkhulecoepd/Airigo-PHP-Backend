@@ -141,6 +141,7 @@ class AuthController extends BaseController
 
         if ($result['success']) {
             return ResponseBuilder::ok([
+                'success' => true,
                 'message' => $result['message']
             ]);
         }
@@ -164,6 +165,7 @@ class AuthController extends BaseController
         $result = $this->authService->forgotPassword($identifier);
 
         return ResponseBuilder::ok([
+            'success' => true,
             'message' => $result['message']
         ]);
     }
@@ -182,6 +184,7 @@ class AuthController extends BaseController
 
         if ($result['success']) {
             return ResponseBuilder::ok([
+                'success' => true,
                 'message' => $result['message']
             ]);
         }
